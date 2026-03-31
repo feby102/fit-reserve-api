@@ -137,4 +137,14 @@ public function reset(Request $request)
         'message' => __($status)
     ]);
     }
+
+
+    public function logout(Request $request)
+{
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json([
+        'message' => 'Logged out successfully'
+    ]);
+}
 }
