@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/videos/{id}/stats
+url: "{{baseUrl}}/api/videos/:id/stats"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the video.
+auth:
+  type: noauth
+examples: ./.resources/GET api-videos-{id}-stats.resources/examples
+order: 53000

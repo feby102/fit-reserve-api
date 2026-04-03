@@ -1,0 +1,14 @@
+$kind: http-request
+name: POST api/chats/{id}/close
+url: "{{baseUrl}}/api/chats/:id/close"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the chat.
+auth:
+  type: noauth
+order: 58000

@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/coaches
+url: "{{baseUrl}}/api/coaches"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-coaches.resources/examples
+order: 24000

@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/pages
+url: "{{baseUrl}}/api/pages"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-pages.resources/examples
+order: 67000

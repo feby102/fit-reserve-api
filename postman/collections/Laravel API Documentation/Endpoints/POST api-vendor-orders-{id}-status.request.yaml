@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST api/vendor/orders/{id}/status
+url: "{{baseUrl}}/api/vendor/orders/:id/status"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the order.
+body:
+  type: text
+  content: '{"status":"confirmed"}'
+auth:
+  type: noauth
+order: 111000

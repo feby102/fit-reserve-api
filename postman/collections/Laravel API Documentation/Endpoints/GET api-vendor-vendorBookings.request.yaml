@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/vendor/vendorBookings
+url: "{{baseUrl}}/api/vendor/vendorBookings"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-vendorBookings.resources/examples
+order: 135000

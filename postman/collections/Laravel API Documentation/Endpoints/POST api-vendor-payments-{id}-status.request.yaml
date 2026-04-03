@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST api/vendor/payments/{id}/status
+url: "{{baseUrl}}/api/vendor/payments/:id/status"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the payment.
+body:
+  type: text
+  content: '{"status":"refunded"}'
+auth:
+  type: noauth
+order: 136000

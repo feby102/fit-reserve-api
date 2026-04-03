@@ -1,0 +1,14 @@
+$kind: http-request
+name: PATCH api/{id}/verify
+url: "{{baseUrl}}/api/:id/verify"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the api.
+auth:
+  type: noauth
+order: 175000

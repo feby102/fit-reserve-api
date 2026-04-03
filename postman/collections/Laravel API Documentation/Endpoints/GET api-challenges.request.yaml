@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/challenges
+url: "{{baseUrl}}/api/challenges"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-challenges.resources/examples
+order: 33000

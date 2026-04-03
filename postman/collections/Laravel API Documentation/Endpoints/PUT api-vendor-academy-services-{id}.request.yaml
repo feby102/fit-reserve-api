@@ -1,0 +1,14 @@
+$kind: http-request
+name: PUT api/vendor/academy-services/{id}
+url: "{{baseUrl}}/api/vendor/academy-services/:id"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the academy service.
+auth:
+  type: noauth
+order: 89000

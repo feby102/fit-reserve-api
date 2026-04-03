@@ -1,0 +1,4 @@
+$kind: collection
+name: Laravel API Documentation
+variables:
+  baseUrl: http://localhost:8000

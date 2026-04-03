@@ -1,0 +1,17 @@
+$kind: http-request
+name: PATCH api/vendor/challenges/{id}/status
+url: "{{baseUrl}}/api/vendor/challenges/:id/status"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the challenge.
+body:
+  type: text
+  content: '{"status":"upcoming"}'
+auth:
+  type: noauth
+order: 154000

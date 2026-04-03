@@ -1,0 +1,31 @@
+$kind: http-request
+name: PUT api/banners/{id}
+url: "{{baseUrl}}/api/banners/:id"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the banner.
+body:
+  type: formdata
+  content:
+    - type: text
+      key: title
+      value: vmqeopfuudtdsufvyvddq
+      description: Must not be greater than 255 characters.
+    - type: text
+      key: link
+      value: http://www.kunde.com/
+      description: Must be a valid URL.
+    - type: file
+      key: image
+      src: []
+    - type: text
+      key: _method
+      value: PUT
+auth:
+  type: noauth
+order: 168000

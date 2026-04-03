@@ -1,0 +1,19 @@
+$kind: http-request
+name: POST api/vendor/categories
+url: "{{baseUrl}}/api/vendor/categories"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: name
+      value: consequatur
+    - type: file
+      key: image
+      src: []
+auth:
+  type: noauth
+order: 107000

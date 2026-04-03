@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/users/{id}
+url: "{{baseUrl}}/api/users/:id"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the user.
+auth:
+  type: noauth
+examples: ./.resources/GET api-users-{id}.resources/examples
+order: 176000

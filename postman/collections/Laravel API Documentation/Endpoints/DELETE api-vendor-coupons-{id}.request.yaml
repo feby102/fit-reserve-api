@@ -1,0 +1,14 @@
+$kind: http-request
+name: DELETE api/vendor/coupons/{id}
+url: "{{baseUrl}}/api/vendor/coupons/:id"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the coupon.
+auth:
+  type: noauth
+order: 142000

@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/latestVideos
+url: "{{baseUrl}}/api/latestVideos"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-latestVideos.resources/examples
+order: 54000

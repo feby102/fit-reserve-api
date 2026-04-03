@@ -1,0 +1,10 @@
+$kind: http-request
+name: POST api/vendor/coaches/location
+url: "{{baseUrl}}/api/vendor/coaches/location"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+order: 131000

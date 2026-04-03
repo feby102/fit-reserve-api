@@ -1,0 +1,14 @@
+$kind: http-request
+name: Update the specified resource in storage.
+url: "{{baseUrl}}/api/vendor/gyms/:id"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the gym.
+auth:
+  type: noauth
+order: 116000

@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST api/bookings/{id}/status
+url: "{{baseUrl}}/api/bookings/:id/status"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the booking.
+body:
+  type: text
+  content: '{"status":"confirmed","rejection_reason":"vmqeopfuudtdsufvyvddq"}'
+auth:
+  type: noauth
+order: 11000

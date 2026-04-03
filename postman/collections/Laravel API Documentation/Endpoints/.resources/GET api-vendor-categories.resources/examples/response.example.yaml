@@ -1,0 +1,18 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/vendor/categories"
+  method: GET
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+response:
+  statusCode: 401
+  statusText: OK
+  headers:
+    cache-control: no-cache, private
+    content-type: application/json
+    access-control-allow-origin: "*"
+  body:
+    type: text
+    content: '{"message":"Unauthenticated."}'
+order: 1000

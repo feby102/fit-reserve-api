@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/vendor/private-coaches
+url: "{{baseUrl}}/api/vendor/private-coaches"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"academy_id":"consequatur","name":"consequatur","sport":"consequatur","price_per_hour":"consequatur"}'
+auth:
+  type: noauth
+order: 127000

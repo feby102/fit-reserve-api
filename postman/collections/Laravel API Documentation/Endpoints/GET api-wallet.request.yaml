@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/wallet
+url: "{{baseUrl}}/api/wallet"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-wallet.resources/examples
+order: 5000

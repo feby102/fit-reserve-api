@@ -1,0 +1,24 @@
+$kind: http-request
+name: POST api/banners
+url: "{{baseUrl}}/api/banners"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: title
+      value: vmqeopfuudtdsufvyvddq
+      description: Must not be greater than 255 characters.
+    - type: text
+      key: link
+      value: http://www.kunde.com/
+      description: Must be a valid URL.
+    - type: file
+      key: image
+      src: []
+auth:
+  type: noauth
+order: 167000

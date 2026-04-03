@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/gym-plans
+url: "{{baseUrl}}/api/gym-plans"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-gym-plans.resources/examples
+order: 31000

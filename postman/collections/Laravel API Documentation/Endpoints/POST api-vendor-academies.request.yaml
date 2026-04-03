@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/vendor/academies
+url: "{{baseUrl}}/api/vendor/academies"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"academy_type_id":"consequatur","name":"consequatur","location":"consequatur","price_per_hour":"consequatur"}'
+auth:
+  type: noauth
+order: 84000

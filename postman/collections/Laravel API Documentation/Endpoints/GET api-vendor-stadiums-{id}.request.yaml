@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/vendor/stadiums/{id}
+url: "{{baseUrl}}/api/vendor/stadiums/:id"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the stadium.
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-stadiums-{id}.resources/examples
+order: 72000

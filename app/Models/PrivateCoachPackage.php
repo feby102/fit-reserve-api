@@ -20,4 +20,12 @@ class PrivateCoachPackage extends Model
         return $this->morphMany(Booking::class, 'bookable');
     }
 
+
+
+
+    public function reviews()
+{
+return $this->morphMany(Review::class,'reviewable');
+}
+
 }

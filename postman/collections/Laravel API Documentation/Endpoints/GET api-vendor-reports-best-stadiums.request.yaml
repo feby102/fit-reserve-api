@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/vendor/reports/best-stadiums
+url: "{{baseUrl}}/api/vendor/reports/best-stadiums"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-reports-best-stadiums.resources/examples
+order: 157000

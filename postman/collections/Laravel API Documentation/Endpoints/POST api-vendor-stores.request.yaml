@@ -1,0 +1,22 @@
+$kind: http-request
+name: POST api/vendor/stores
+url: "{{baseUrl}}/api/vendor/stores"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: name
+      value: consequatur
+    - type: text
+      key: description
+      value: Dolores dolorum amet iste laborum eius est dolor.
+    - type: file
+      key: logo
+      src: []
+auth:
+  type: noauth
+order: 98000

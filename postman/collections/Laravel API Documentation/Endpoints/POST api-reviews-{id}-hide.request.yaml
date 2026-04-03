@@ -1,0 +1,14 @@
+$kind: http-request
+name: POST api/reviews/{id}/hide
+url: "{{baseUrl}}/api/reviews/:id/hide"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the review.
+auth:
+  type: noauth
+order: 28000

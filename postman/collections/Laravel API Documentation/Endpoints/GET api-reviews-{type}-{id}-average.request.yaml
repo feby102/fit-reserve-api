@@ -1,0 +1,17 @@
+$kind: http-request
+name: GET api/reviews/{type}/{id}/average
+url: "{{baseUrl}}/api/reviews/:type/:id/average"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: type
+    value: consequatur
+  - key: id
+    value: consequatur
+    description: The ID of the {type}.
+auth:
+  type: noauth
+examples: ./.resources/GET api-reviews-{type}-{id}-average.resources/examples
+order: 29000

@@ -1,0 +1,14 @@
+$kind: http-request
+name: POST api/conversations/{conversation_id}/assign
+url: "{{baseUrl}}/api/conversations/:conversation_id/assign"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: conversation_id
+    value: "17"
+    description: The ID of the conversation.
+auth:
+  type: noauth
+order: 65000

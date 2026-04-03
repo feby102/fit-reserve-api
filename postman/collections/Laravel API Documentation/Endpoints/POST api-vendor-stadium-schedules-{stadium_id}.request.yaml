@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST api/vendor/stadium-schedules/{stadium_id}
+url: "{{baseUrl}}/api/vendor/stadium-schedules/:stadium_id"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: stadium_id
+    value: consequatur
+    description: The ID of the stadium.
+body:
+  type: text
+  content: '{"day":"consequatur","start_time":"consequatur","end_time":"consequatur"}'
+auth:
+  type: noauth
+order: 77000

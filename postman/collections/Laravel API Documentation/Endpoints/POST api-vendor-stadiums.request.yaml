@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/vendor/stadiums
+url: "{{baseUrl}}/api/vendor/stadiums"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"name":"consequatur","city":"consequatur","address":"consequatur","price_per_hour":11613.31890586}'
+auth:
+  type: noauth
+order: 71000

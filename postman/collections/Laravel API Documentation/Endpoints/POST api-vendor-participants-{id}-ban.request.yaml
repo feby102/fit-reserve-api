@@ -1,0 +1,14 @@
+$kind: http-request
+name: POST api/vendor/participants/{id}/ban
+url: "{{baseUrl}}/api/vendor/participants/:id/ban"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the participant.
+auth:
+  type: noauth
+order: 152000

@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/vendor/coupons
+url: "{{baseUrl}}/api/vendor/coupons"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"code":"consequatur","type":"fixed","value":11613.31890586,"max_usage":17,"expires_at":"2026-03-30T15:53:07"}'
+auth:
+  type: noauth
+order: 140000

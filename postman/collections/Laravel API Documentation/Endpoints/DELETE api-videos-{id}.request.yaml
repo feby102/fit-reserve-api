@@ -1,0 +1,14 @@
+$kind: http-request
+name: DELETE api/videos/{id}
+url: "{{baseUrl}}/api/videos/:id"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the video.
+auth:
+  type: noauth
+order: 52000

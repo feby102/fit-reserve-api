@@ -1,0 +1,75 @@
+$kind: http-request
+name: POST api/bookings
+url: "{{baseUrl}}/api/bookings"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: bookable_type
+      value: coach_service
+    - type: text
+      key: bookable_id
+      value: "17"
+    - type: text
+      key: start_time
+      value: 15:52
+      description: Must be a valid date in the format <code>H:i</code>.
+    - type: text
+      key: date
+      value: 2026-03-30T15:52:57
+      description: Must be a valid date.
+    - type: text
+      key: hours
+      value: "45"
+      description: This field is required when <code>type</code> is
+        <code>daily</code>. Must be at least 1.
+    - type: text
+      key: payment_method
+      value: visa
+    - type: text
+      key: type
+      value: package
+    - type: text
+      key: package_id
+      value: "17"
+      description: This field is required when <code>type</code> is <code>package</code>.
+    - type: text
+      key: use_points
+      value: "45"
+      description: Must be at least 0.
+    - type: text
+      key: full_name
+      value: qeopfuudtdsufvyvddqam
+      description: للاكاديميات. This field is required when <code>bookable_type</code>
+        is <code>academy</code>. Must not be greater than 255 characters.
+    - type: text
+      key: age
+      value: "17"
+      description: This field is required when <code>bookable_type</code> is
+        <code>academy</code>.
+    - type: text
+      key: coupon_code
+      value: consequatur
+      description: The <code>code</code> of an existing record in the coupons table.
+    - type: text
+      key: is_recurring
+      value: "1"
+      description: للملعب.
+    - type: text
+      key: recurring_weeks
+      value: "2"
+      description: This field is required when <code>is_recurring</code> is
+        <code>true</code>. Must be at least 1. Must not be greater than 4.
+    - type: file
+      key: parent_id_card
+      src: []
+    - type: file
+      key: personal_photo
+      src: []
+auth:
+  type: noauth
+order: 8000

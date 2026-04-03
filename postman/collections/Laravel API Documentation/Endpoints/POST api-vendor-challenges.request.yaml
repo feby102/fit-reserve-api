@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/vendor/challenges
+url: "{{baseUrl}}/api/vendor/challenges"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"title":"consequatur","academy_id":"consequatur","max_players":17,"price":11613.31890586,"duration":17,"status":"completed"}'
+auth:
+  type: noauth
+order: 148000

@@ -1,0 +1,13 @@
+$kind: http-request
+name: Store a newly created resource in storage.
+url: "{{baseUrl}}/api/conversations"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"title":"consequatur"}'
+auth:
+  type: noauth
+order: 64000

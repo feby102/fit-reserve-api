@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST api/challenges/{challenge_id}/rate-player
+url: "{{baseUrl}}/api/challenges/:challenge_id/rate-player"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: challenge_id
+    value: consequatur
+    description: The ID of the challenge.
+body:
+  type: text
+  content: '{"rated_player_id":"consequatur","rating":3,"comment":"consequatur"}'
+auth:
+  type: noauth
+order: 37000

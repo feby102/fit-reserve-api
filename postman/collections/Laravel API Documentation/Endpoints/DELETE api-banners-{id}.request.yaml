@@ -1,0 +1,14 @@
+$kind: http-request
+name: DELETE api/banners/{id}
+url: "{{baseUrl}}/api/banners/:id"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the banner.
+auth:
+  type: noauth
+order: 169000

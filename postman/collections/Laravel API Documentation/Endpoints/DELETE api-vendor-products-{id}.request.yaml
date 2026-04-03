@@ -1,0 +1,14 @@
+$kind: http-request
+name: DELETE api/vendor/products/{id}
+url: "{{baseUrl}}/api/vendor/products/:id"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the product.
+auth:
+  type: noauth
+order: 105000

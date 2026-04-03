@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/academy-subscriptions
+url: "{{baseUrl}}/api/academy-subscriptions"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"academy_plan_id":"consequatur"}'
+auth:
+  type: noauth
+order: 22000

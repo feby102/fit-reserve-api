@@ -1,0 +1,17 @@
+$kind: http-request
+name: PUT api/cart/{id}
+url: "{{baseUrl}}/api/cart/:id"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the cart.
+body:
+  type: text
+  content: '{"quantity":73}'
+auth:
+  type: noauth
+order: 45000

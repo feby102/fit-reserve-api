@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST api/vendor/products
+url: "{{baseUrl}}/api/vendor/products"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"name":"consequatur","description":"Dolorum amet iste laborum eius
+    est
+    dolor.","price":11613.31890586,"discount":11613.31890586,"store_id":"consequatur","category_id":"consequatur"}'
+auth:
+  type: noauth
+order: 104000

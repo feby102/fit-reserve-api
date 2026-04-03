@@ -1,0 +1,14 @@
+$kind: http-request
+name: POST api/challenges/{id}/join
+url: "{{baseUrl}}/api/challenges/:id/join"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the challenge.
+auth:
+  type: noauth
+order: 35000

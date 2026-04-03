@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/my-notifications
+url: "{{baseUrl}}/api/my-notifications"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-my-notifications.resources/examples
+order: 66000

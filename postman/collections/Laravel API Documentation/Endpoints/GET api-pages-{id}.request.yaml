@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/pages/{id}
+url: "{{baseUrl}}/api/pages/:id"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the page.
+auth:
+  type: noauth
+examples: ./.resources/GET api-pages-{id}.resources/examples
+order: 68000

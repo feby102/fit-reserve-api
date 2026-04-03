@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/vendor/gyms/{id}/subscribers
+url: "{{baseUrl}}/api/vendor/gyms/:id/subscribers"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the gym.
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-gyms-{id}-subscribers.resources/examples
+order: 123000

@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST api/orders/{id}/pay
+url: "{{baseUrl}}/api/orders/:id/pay"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the order.
+body:
+  type: text
+  content: '{"payment_method":"visa"}'
+auth:
+  type: noauth
+order: 49000

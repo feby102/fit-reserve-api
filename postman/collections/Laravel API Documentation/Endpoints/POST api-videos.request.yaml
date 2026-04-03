@@ -1,0 +1,15 @@
+$kind: http-request
+name: POST api/videos
+url: "{{baseUrl}}/api/videos"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"title":"vmqeopfuudtdsufvyvddq","description":"Dolores dolorum amet
+    iste laborum eius est
+    dolor.","url":"http:\/\/reynolds.com\/","type":"coach"}'
+auth:
+  type: noauth
+order: 55000

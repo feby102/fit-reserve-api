@@ -1,0 +1,17 @@
+$kind: http-request
+name: PUT api/vendor/challenges/{id}
+url: "{{baseUrl}}/api/vendor/challenges/:id"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the challenge.
+body:
+  type: text
+  content: '{"title":"consequatur","max_players":17,"price":11613.31890586,"duration":17,"status":"ongoing"}'
+auth:
+  type: noauth
+order: 149000

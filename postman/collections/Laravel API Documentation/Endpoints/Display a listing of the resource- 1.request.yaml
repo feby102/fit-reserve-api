@@ -1,0 +1,11 @@
+$kind: http-request
+name: Display a listing of the resource.
+url: "{{baseUrl}}/api/conversations"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/Display a listing of the resource- 1.resources/examples
+order: 63000

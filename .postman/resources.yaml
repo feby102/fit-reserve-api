@@ -1,0 +1,15 @@
+# Use this workspace to collaborate
+workspace:
+  id: 7f685d2d-8781-41f2-a15e-bb09ce6b6683
+
+localResources:
+  collections:
+    - ..\public\docs\postman.json
+    - ..\storage\app\public\docs\collection.json
+  specs:
+    - ..\storage\app\private\scribe\openapi.yaml
+    - ..\vendor\google\grpc-gcp\src\grpc_gcp.proto
+    - ..\vendor\google\gax\src\Testing\mocks.proto
+cloudResources:
+  collections:
+    ..\postman\collections\Laravel API Documentation: cd023de1-78ef-4a63-a1fa-70c703fbe82f

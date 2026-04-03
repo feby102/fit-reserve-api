@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/vendor/notifications/user
+url: "{{baseUrl}}/api/vendor/notifications/user"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"user_id":"consequatur","title":"consequatur","message":"consequatur"}'
+auth:
+  type: noauth
+order: 143000

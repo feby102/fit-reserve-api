@@ -1,0 +1,17 @@
+$kind: http-request
+name: POST api/videos/{id}/report
+url: "{{baseUrl}}/api/videos/:id/report"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the video.
+body:
+  type: text
+  content: '{"reason":"vmqeopfuudtdsufvyvddq"}'
+auth:
+  type: noauth
+order: 56000

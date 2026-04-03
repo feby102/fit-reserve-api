@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/vendor/coach/{id}/stats
+url: "{{baseUrl}}/api/vendor/coach/:id/stats"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the coach.
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-coach-{id}-stats.resources/examples
+order: 134000

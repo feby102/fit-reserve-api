@@ -1,0 +1,14 @@
+$kind: http-request
+name: POST api/stadiums/{id}/reject
+url: "{{baseUrl}}/api/stadiums/:id/reject"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the stadium.
+auth:
+  type: noauth
+order: 162000

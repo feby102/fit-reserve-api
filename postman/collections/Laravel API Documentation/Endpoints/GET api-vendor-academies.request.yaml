@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/vendor/academies
+url: "{{baseUrl}}/api/vendor/academies"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-academies.resources/examples
+order: 83000

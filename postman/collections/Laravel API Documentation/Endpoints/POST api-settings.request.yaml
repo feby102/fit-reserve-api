@@ -1,0 +1,42 @@
+$kind: http-request
+name: POST api/settings
+url: "{{baseUrl}}/api/settings"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: commission_rate
+      value: "21"
+      description: Must be at least 0. Must not be greater than 100.
+    - type: text
+      key: cancellation_policy
+      value: consequatur
+    - type: text
+      key: is_store_enabled
+      value: "0"
+    - type: text
+      key: is_challenges_enabled
+      value: "0"
+      description: تعديل بسيط لضمان القبول.
+    - type: text
+      key: is_videos_enabled
+      value: "false"
+    - type: text
+      key: terms
+      value: consequatur
+    - type: text
+      key: privacy_policy
+      value: consequatur
+    - type: text
+      key: about_us
+      value: consequatur
+    - type: file
+      key: banner
+      src: []
+auth:
+  type: noauth
+order: 165000

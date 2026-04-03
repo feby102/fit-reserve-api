@@ -1,0 +1,14 @@
+$kind: http-request
+name: POST api/users/{id}/block
+url: "{{baseUrl}}/api/users/:id/block"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the user.
+auth:
+  type: noauth
+order: 59000

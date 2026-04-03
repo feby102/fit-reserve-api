@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/vendor/private-coaches
+url: "{{baseUrl}}/api/vendor/private-coaches"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-private-coaches.resources/examples
+order: 126000

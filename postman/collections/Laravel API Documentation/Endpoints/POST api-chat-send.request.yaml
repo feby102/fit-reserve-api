@@ -1,0 +1,30 @@
+$kind: http-request
+name: POST api/chat/send
+url: "{{baseUrl}}/api/chat/send"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: conversation_id
+      value: consequatur
+      description: The <code>id</code> of an existing record in the conversations table.
+    - type: text
+      key: message
+      value: consequatur
+    - type: text
+      key: type
+      value: audio
+    - type: text
+      key: receiver_id
+      value: consequatur
+      description: The <code>id</code> of an existing record in the users table.
+    - type: file
+      key: file
+      src: []
+auth:
+  type: noauth
+order: 62000

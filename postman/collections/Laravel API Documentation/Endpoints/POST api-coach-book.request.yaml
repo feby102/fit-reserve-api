@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/coach-book
+url: "{{baseUrl}}/api/coach-book"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"private_coach_id":"consequatur","start_time":"2026-03-30T15:52:58","hours":17}'
+auth:
+  type: noauth
+order: 26000

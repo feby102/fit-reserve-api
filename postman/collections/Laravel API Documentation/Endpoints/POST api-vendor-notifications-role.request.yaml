@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/vendor/notifications/role
+url: "{{baseUrl}}/api/vendor/notifications/role"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"title":"consequatur","message":"consequatur","role":"consequatur"}'
+auth:
+  type: noauth
+order: 145000

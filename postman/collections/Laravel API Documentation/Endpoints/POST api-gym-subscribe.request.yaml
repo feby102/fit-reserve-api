@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/gym-subscribe
+url: "{{baseUrl}}/api/gym-subscribe"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"plan_id":"consequatur"}'
+auth:
+  type: noauth
+order: 32000

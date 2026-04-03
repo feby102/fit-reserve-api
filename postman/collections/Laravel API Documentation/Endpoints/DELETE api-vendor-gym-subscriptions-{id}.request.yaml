@@ -1,0 +1,14 @@
+$kind: http-request
+name: DELETE api/vendor/gym-subscriptions/{id}
+url: "{{baseUrl}}/api/vendor/gym-subscriptions/:id"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the gym subscription.
+auth:
+  type: noauth
+order: 122000

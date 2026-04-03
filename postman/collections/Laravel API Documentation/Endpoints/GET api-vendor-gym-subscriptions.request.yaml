@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/vendor/gym-subscriptions
+url: "{{baseUrl}}/api/vendor/gym-subscriptions"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-gym-subscriptions.resources/examples
+order: 121000

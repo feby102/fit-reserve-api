@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/totaluser
+url: "{{baseUrl}}/api/totaluser"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-totaluser.resources/examples
+order: 180000

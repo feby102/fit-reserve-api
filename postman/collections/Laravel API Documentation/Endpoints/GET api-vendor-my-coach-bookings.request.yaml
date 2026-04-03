@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/vendor/my-coach-bookings
+url: "{{baseUrl}}/api/vendor/my-coach-bookings"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-my-coach-bookings.resources/examples
+order: 133000

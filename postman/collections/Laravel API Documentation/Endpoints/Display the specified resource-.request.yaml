@@ -1,0 +1,15 @@
+$kind: http-request
+name: Display the specified resource.
+url: "{{baseUrl}}/api/vendor/gyms/:id"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the gym.
+auth:
+  type: noauth
+examples: ./.resources/Display the specified resource-.resources/examples
+order: 115000

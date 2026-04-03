@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/chats
+url: "{{baseUrl}}/api/chats"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-chats.resources/examples
+order: 57000

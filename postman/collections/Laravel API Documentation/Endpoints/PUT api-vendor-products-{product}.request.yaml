@@ -1,0 +1,14 @@
+$kind: http-request
+name: PUT api/vendor/products/{product}
+url: "{{baseUrl}}/api/vendor/products/:product"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: product
+    value: consequatur
+    description: The product.
+auth:
+  type: noauth
+order: 103000

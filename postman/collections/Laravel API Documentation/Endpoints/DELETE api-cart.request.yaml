@@ -1,0 +1,10 @@
+$kind: http-request
+name: DELETE api/cart
+url: "{{baseUrl}}/api/cart"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+order: 47000

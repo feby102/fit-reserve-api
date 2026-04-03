@@ -1,0 +1,17 @@
+$kind: http-request
+name: PUT api/vendor/stadiums/{id}
+url: "{{baseUrl}}/api/vendor/stadiums/:id"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the stadium.
+body:
+  type: text
+  content: '{"price_per_hour":11613.31890586}'
+auth:
+  type: noauth
+order: 73000

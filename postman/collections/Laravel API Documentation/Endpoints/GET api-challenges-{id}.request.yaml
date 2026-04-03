@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/challenges/{id}
+url: "{{baseUrl}}/api/challenges/:id"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the challenge.
+auth:
+  type: noauth
+examples: ./.resources/GET api-challenges-{id}.resources/examples
+order: 34000

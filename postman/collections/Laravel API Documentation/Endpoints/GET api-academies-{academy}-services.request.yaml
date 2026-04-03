@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/academies/{academy}/services
+url: "{{baseUrl}}/api/academies/:academy/services"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: academy
+    value: consequatur
+    description: The academy.
+auth:
+  type: noauth
+examples: ./.resources/GET api-academies-{academy}-services.resources/examples
+order: 23000

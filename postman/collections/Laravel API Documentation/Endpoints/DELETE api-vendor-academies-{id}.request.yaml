@@ -1,0 +1,14 @@
+$kind: http-request
+name: DELETE api/vendor/academies/{id}
+url: "{{baseUrl}}/api/vendor/academies/:id"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the academy.
+auth:
+  type: noauth
+order: 87000

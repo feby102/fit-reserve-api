@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/stadiums
+url: "{{baseUrl}}/api/stadiums"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-stadiums.resources/examples
+order: 12000

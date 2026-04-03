@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/reviews
+url: "{{baseUrl}}/api/reviews"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"reviewable_type":"consequatur","reviewable_id":17,"rating":3,"comment":"consequatur"}'
+auth:
+  type: noauth
+order: 27000

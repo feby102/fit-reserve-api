@@ -1,0 +1,10 @@
+$kind: http-request
+name: POST api/vendor/gym-auto-renew
+url: "{{baseUrl}}/api/vendor/gym-auto-renew"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+order: 124000

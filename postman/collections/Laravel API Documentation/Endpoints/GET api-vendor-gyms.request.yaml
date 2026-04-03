@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/vendor/gyms
+url: "{{baseUrl}}/api/vendor/gyms"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-gyms.resources/examples
+order: 113000

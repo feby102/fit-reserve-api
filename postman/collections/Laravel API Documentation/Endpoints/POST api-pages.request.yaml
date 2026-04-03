@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/pages
+url: "{{baseUrl}}/api/pages"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"title":"vmqeopfuudtdsufvyvddq","content":"consequatur","type":"terms"}'
+auth:
+  type: noauth
+order: 181000

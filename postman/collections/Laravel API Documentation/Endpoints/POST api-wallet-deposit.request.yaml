@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/wallet/deposit
+url: "{{baseUrl}}/api/wallet/deposit"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"amount":73}'
+auth:
+  type: noauth
+order: 6000

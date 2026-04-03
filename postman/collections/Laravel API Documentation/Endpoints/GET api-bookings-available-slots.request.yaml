@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/bookings/available-slots
+url: "{{baseUrl}}/api/bookings/available-slots"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-bookings-available-slots.resources/examples
+order: 10000

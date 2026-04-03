@@ -1,0 +1,13 @@
+$kind: http-request
+name: Store a newly created resource in storage.
+url: "{{baseUrl}}/api/vendor/gyms"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"name":"consequatur","type":"consequatur","location":"consequatur","description":"consequatur"}'
+auth:
+  type: noauth
+order: 114000

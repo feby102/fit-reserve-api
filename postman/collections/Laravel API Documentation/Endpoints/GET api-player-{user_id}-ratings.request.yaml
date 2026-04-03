@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/player/{user_id}/ratings
+url: "{{baseUrl}}/api/player/:user_id/ratings"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: user_id
+    value: consequatur
+    description: The ID of the user.
+auth:
+  type: noauth
+examples: ./.resources/GET api-player-{user_id}-ratings.resources/examples
+order: 38000

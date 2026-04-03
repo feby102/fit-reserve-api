@@ -1,0 +1,14 @@
+$kind: http-request
+name: DELETE api/vendor/private-coaches/{id}
+url: "{{baseUrl}}/api/vendor/private-coaches/:id"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the private coach.
+auth:
+  type: noauth
+order: 130000

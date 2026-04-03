@@ -1,0 +1,14 @@
+$kind: http-request
+name: DELETE api/vendor/categories/{id}
+url: "{{baseUrl}}/api/vendor/categories/:id"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the category.
+auth:
+  type: noauth
+order: 109000

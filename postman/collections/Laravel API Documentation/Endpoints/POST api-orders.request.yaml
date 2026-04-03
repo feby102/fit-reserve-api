@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST api/orders
+url: "{{baseUrl}}/api/orders"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: text
+  content: '{"items":[{"product_id":"consequatur","quantity":45}]}'
+auth:
+  type: noauth
+order: 42000

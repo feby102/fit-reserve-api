@@ -1,0 +1,15 @@
+$kind: http-request
+name: GET api/vendor/stores/{id}
+url: "{{baseUrl}}/api/vendor/stores/:id"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the store.
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-stores-{id}.resources/examples
+order: 99000

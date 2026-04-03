@@ -1,0 +1,17 @@
+$kind: http-request
+name: PUT api/vendor/coupons/{id}
+url: "{{baseUrl}}/api/vendor/coupons/:id"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the coupon.
+body:
+  type: text
+  content: '{"type":"specific","value":11613.31890586,"max_usage":17,"expires_at":"2026-03-30T15:53:07"}'
+auth:
+  type: noauth
+order: 141000

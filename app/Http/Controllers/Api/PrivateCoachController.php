@@ -168,4 +168,21 @@ return CoachService::create([
 
 }
 
+
+public function topCoaches()
+{
+         $topCoaches = PrivateCoach::withAvg(['reviews' => function ($query) {
+            $query->where('is_hidden', false);
+        }], 'rating')
+        ->with(['academy', 'locations', 'services'])   
+                ->orderByDesc('reviews_avg_rating')   
+        ->take(10)   
+               ->get()
+        ->makeHidden(['vendor_id', 'status', 'created_at', 'updated_at']);
+
+    return response()->json($topCoaches);
+}
+
+
+
 }

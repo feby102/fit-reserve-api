@@ -1,0 +1,32 @@
+$kind: http-request
+name: PUT api/vendor/stores/{id}
+url: "{{baseUrl}}/api/vendor/stores/:id"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: consequatur
+    description: The ID of the store.
+body:
+  type: formdata
+  content:
+    - type: text
+      key: name
+      value: consequatur
+    - type: text
+      key: description
+      value: Dolores dolorum amet iste laborum eius est dolor.
+    - type: text
+      key: is_active
+      value: ""
+    - type: file
+      key: logo
+      src: []
+    - type: text
+      key: _method
+      value: PUT
+auth:
+  type: noauth
+order: 100000
