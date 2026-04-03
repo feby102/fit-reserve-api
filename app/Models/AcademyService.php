@@ -37,4 +37,8 @@ public function vendor()
 {
     return $this->belongsTo(Vendor::class);
 }
+public function reviews()
+{
+return $this->morphMany(Review::class,'reviewable');
+}
 }
