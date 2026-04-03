@@ -193,4 +193,16 @@ public function mostRequestedServices()
     return response()->json($services);
 }
 
+
+
+public function topServices()
+{
+    $services = AcademyService::with('academy')
+        ->withCount('bookings')
+        ->orderByDesc('bookings_count')
+        ->take(10)
+        ->get();
+
+    return response()->json($services);
+}
 }

@@ -289,4 +289,16 @@ public function review($gym_id){
 $gym=Gym::with('reviews')->findOrFail($gym_id);
 return \response()->json($gym->reviews);
 }
+
+
+public function topGyms()
+{
+    $top = Gym::withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->withCount('subscriptions')
+        ->orderByDesc('reviews_avg_rating')
+        ->take(5)
+        ->get();
+
+    return response()->json($top);
+}
     }

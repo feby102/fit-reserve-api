@@ -230,4 +230,19 @@ public function heatmap()
     return response()->json($stadiums);
 }
 
+
+
+public function topStadiums()
+{
+    $top = Stadium::withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->withCount('bookings')
+        ->orderByDesc('reviews_avg_rating') 
+        ->orderByDesc('bookings_count')  
+                ->take(5)
+        ->get()
+        ->makeHidden(['vendor_id', 'status']);
+
+    return response()->json($top);
+}
+
 }

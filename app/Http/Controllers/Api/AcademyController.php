@@ -187,4 +187,16 @@ public function storeAcademyType(Request $request)
 
     }
 
+
+    public function topAcademies()
+{
+    $top = Academy::withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->withCount('subscriptions')   
+        ->orderByDesc('reviews_avg_rating')
+        ->take(5)
+        ->get();
+
+    return response()->json($top);
+}
+
 }
