@@ -180,15 +180,15 @@ Route::get('/pages/{id}', [PageController::class, 'show']);
 // transfer
 Route::post('wallet/transfer',[UserController::class,'transfer']);
 
+});
+
+
+ 
     Route::get('/Topcoaches', [PrivateCoachController::class, 'topCoaches']);
     Route::get('/Topacademies', [AcademyController::class, 'topAcademies']);
     Route::get('/Topstadiums', [StadiumController::class, 'topStadiums']);
     Route::get('/Topgyms', [GymController::class, 'topGyms']);
     Route::get('/Topcoaches', [PrivateCoachController::class, 'topCoaches']);
-});
-
-
- 
  
 
 

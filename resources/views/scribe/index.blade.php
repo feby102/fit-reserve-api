@@ -696,10 +696,10 @@ You can switch the language used with the tabs at the top right (or from the nav
     \"email\": \"kunde.eloisa@example.com\",
     \"password\": \"4[*UyPJ\\\"}6\",
     \"city\": \"consequatur\",
-    \"role\": \"admin\",
+    \"role\": \"player\",
     \"referral_code\": \"consequatur\",
-    \"birth_date\": \"2026-04-05T01:12:12\",
-    \"gender\": \"female\"
+    \"birth_date\": \"2026-04-05T01:16:56\",
+    \"gender\": \"male\"
 }"
 </code></pre></div>
 
@@ -719,10 +719,10 @@ let body = {
     "email": "kunde.eloisa@example.com",
     "password": "4[*UyPJ\"}6",
     "city": "consequatur",
-    "role": "admin",
+    "role": "player",
     "referral_code": "consequatur",
-    "birth_date": "2026-04-05T01:12:12",
-    "gender": "female"
+    "birth_date": "2026-04-05T01:16:56",
+    "gender": "male"
 };
 
 fetch(url, {
@@ -862,10 +862,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role"                data-endpoint="POSTapi-register"
-               value="admin"
+               value="player"
                data-component="body">
     <br>
-<p>Example: <code>admin</code></p>
+<p>Example: <code>player</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>player</code></li> <li><code>coach</code></li> <li><code>vendor</code></li> <li><code>merchant</code></li> <li><code>admin</code></li> <li><code>photographer</code></li></ul>
         </div>
@@ -888,10 +888,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="birth_date"                data-endpoint="POSTapi-register"
-               value="2026-04-05T01:12:12"
+               value="2026-04-05T01:16:56"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T01:12:12</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:16:56</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -900,10 +900,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="gender"                data-endpoint="POSTapi-register"
-               value="female"
+               value="male"
                data-component="body">
     <br>
-<p>Example: <code>female</code></p>
+<p>Example: <code>male</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>male</code></li> <li><code>female</code></li></ul>
         </div>
@@ -1867,20 +1867,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "bookable_type=stadium"\
     --form "bookable_id=17"\
-    --form "start_time=01:12"\
-    --form "date=2026-04-05T01:12:12"\
+    --form "start_time=01:16"\
+    --form "date=2026-04-05T01:16:57"\
     --form "hours=45"\
-    --form "payment_method=cash"\
-    --form "type=daily"\
+    --form "payment_method=wallet"\
+    --form "type=package"\
     --form "package_id=17"\
     --form "use_points=45"\
     --form "full_name=qeopfuudtdsufvyvddqam"\
     --form "age=17"\
     --form "coupon_code=consequatur"\
-    --form "is_recurring="\
+    --form "is_recurring=1"\
     --form "recurring_weeks=2"\
-    --form "parent_id_card=@C:\Users\Feby Emad\AppData\Local\Temp\php2F98.tmp" \
-    --form "personal_photo=@C:\Users\Feby Emad\AppData\Local\Temp\php2FA9.tmp" </code></pre></div>
+    --form "parent_id_card=@C:\Users\Feby Emad\AppData\Local\Temp\php8805.tmp" \
+    --form "personal_photo=@C:\Users\Feby Emad\AppData\Local\Temp\php8806.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -1896,17 +1896,17 @@ const headers = {
 const body = new FormData();
 body.append('bookable_type', 'stadium');
 body.append('bookable_id', '17');
-body.append('start_time', '01:12');
-body.append('date', '2026-04-05T01:12:12');
+body.append('start_time', '01:16');
+body.append('date', '2026-04-05T01:16:57');
 body.append('hours', '45');
-body.append('payment_method', 'cash');
-body.append('type', 'daily');
+body.append('payment_method', 'wallet');
+body.append('type', 'package');
 body.append('package_id', '17');
 body.append('use_points', '45');
 body.append('full_name', 'qeopfuudtdsufvyvddqam');
 body.append('age', '17');
 body.append('coupon_code', 'consequatur');
-body.append('is_recurring', '');
+body.append('is_recurring', '1');
 body.append('recurring_weeks', '2');
 body.append('parent_id_card', document.querySelector('input[name="parent_id_card"]').files[0]);
 body.append('personal_photo', document.querySelector('input[name="personal_photo"]').files[0]);
@@ -2026,10 +2026,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="start_time"                data-endpoint="POSTapi-bookings"
-               value="01:12"
+               value="01:16"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>H:i</code>. Example: <code>01:12</code></p>
+<p>Must be a valid date in the format <code>H:i</code>. Example: <code>01:16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date</code></b>&nbsp;&nbsp;
@@ -2038,10 +2038,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date"                data-endpoint="POSTapi-bookings"
-               value="2026-04-05T01:12:12"
+               value="2026-04-05T01:16:57"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T01:12:12</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:16:57</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>hours</code></b>&nbsp;&nbsp;
@@ -2062,10 +2062,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="payment_method"                data-endpoint="POSTapi-bookings"
-               value="cash"
+               value="wallet"
                data-component="body">
     <br>
-<p>Example: <code>cash</code></p>
+<p>Example: <code>wallet</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>visa</code></li> <li><code>cash</code></li> <li><code>wallet</code></li></ul>
         </div>
@@ -2076,10 +2076,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-bookings"
-               value="daily"
+               value="package"
                data-component="body">
     <br>
-<p>Example: <code>daily</code></p>
+<p>Example: <code>package</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>daily</code></li> <li><code>package</code></li></ul>
         </div>
@@ -2141,7 +2141,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php2F98.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php8805.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>personal_photo</code></b>&nbsp;&nbsp;
@@ -2153,7 +2153,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php2FA9.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php8806.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>coupon_code</code></b>&nbsp;&nbsp;
@@ -2187,7 +2187,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>للملعب. Example: <code>false</code></p>
+<p>للملعب. Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>recurring_weeks</code></b>&nbsp;&nbsp;
@@ -2347,9 +2347,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"date\": \"2026-04-05T01:12:12\",
+    \"date\": \"2026-04-05T01:16:57\",
     \"bookable_id\": 17,
-    \"bookable_type\": \"academy\"
+    \"bookable_type\": \"coach\"
 }"
 </code></pre></div>
 
@@ -2365,9 +2365,9 @@ const headers = {
 };
 
 let body = {
-    "date": "2026-04-05T01:12:12",
+    "date": "2026-04-05T01:16:57",
     "bookable_id": 17,
-    "bookable_type": "academy"
+    "bookable_type": "coach"
 };
 
 fetch(url, {
@@ -2475,10 +2475,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="date"                data-endpoint="GETapi-bookings-available-slots"
-               value="2026-04-05T01:12:12"
+               value="2026-04-05T01:16:57"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T01:12:12</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:16:57</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>bookable_id</code></b>&nbsp;&nbsp;
@@ -2499,10 +2499,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="bookable_type"                data-endpoint="GETapi-bookings-available-slots"
-               value="academy"
+               value="coach"
                data-component="body">
     <br>
-<p>Example: <code>academy</code></p>
+<p>Example: <code>coach</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>stadium</code></li> <li><code>academy</code></li> <li><code>coach</code></li> <li><code>facility</code></li> <li><code>studio</code></li> <li><code>gym</code></li></ul>
         </div>
@@ -4607,7 +4607,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"private_coach_id\": \"consequatur\",
-    \"start_time\": \"2026-04-05T01:12:13\",
+    \"start_time\": \"2026-04-05T01:16:58\",
     \"hours\": 17
 }"
 </code></pre></div>
@@ -4625,7 +4625,7 @@ const headers = {
 
 let body = {
     "private_coach_id": "consequatur",
-    "start_time": "2026-04-05T01:12:13",
+    "start_time": "2026-04-05T01:16:58",
     "hours": 17
 };
 
@@ -4730,10 +4730,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="start_time"                data-endpoint="POSTapi-coach-book"
-               value="2026-04-05T01:12:13"
+               value="2026-04-05T01:16:58"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T01:12:13</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:16:58</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>hours</code></b>&nbsp;&nbsp;
@@ -5993,7 +5993,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"payment_method\": \"visa\"
+    \"payment_method\": \"wallet\"
 }"
 </code></pre></div>
 
@@ -6009,7 +6009,7 @@ const headers = {
 };
 
 let body = {
-    "payment_method": "visa"
+    "payment_method": "wallet"
 };
 
 fetch(url, {
@@ -6114,10 +6114,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="payment_method"                data-endpoint="POSTapi-challenges--id--pay"
-               value="visa"
+               value="wallet"
                data-component="body">
     <br>
-<p>Example: <code>visa</code></p>
+<p>Example: <code>wallet</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>wallet</code></li> <li><code>visa</code></li></ul>
         </div>
@@ -7777,7 +7777,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"payment_method\": \"visa\"
+    \"payment_method\": \"wallet\"
 }"
 </code></pre></div>
 
@@ -7793,7 +7793,7 @@ const headers = {
 };
 
 let body = {
-    "payment_method": "visa"
+    "payment_method": "wallet"
 };
 
 fetch(url, {
@@ -7898,10 +7898,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="payment_method"                data-endpoint="POSTapi-orders--id--pay"
-               value="visa"
+               value="wallet"
                data-component="body">
     <br>
-<p>Example: <code>visa</code></p>
+<p>Example: <code>wallet</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>wallet</code></li> <li><code>visa</code></li></ul>
         </div>
@@ -8572,7 +8572,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"title\": \"vmqeopfuudtdsufvyvddq\",
     \"description\": \"Dolores dolorum amet iste laborum eius est dolor.\",
     \"url\": \"http:\\/\\/reynolds.com\\/\",
-    \"type\": \"coach\"
+    \"type\": \"academy\"
 }"
 </code></pre></div>
 
@@ -8591,7 +8591,7 @@ let body = {
     "title": "vmqeopfuudtdsufvyvddq",
     "description": "Dolores dolorum amet iste laborum eius est dolor.",
     "url": "http:\/\/reynolds.com\/",
-    "type": "coach"
+    "type": "academy"
 };
 
 fetch(url, {
@@ -8719,10 +8719,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-videos"
-               value="coach"
+               value="academy"
                data-component="body">
     <br>
-<p>Example: <code>coach</code></p>
+<p>Example: <code>academy</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>user</code></li> <li><code>academy</code></li> <li><code>coach</code></li></ul>
         </div>
@@ -9544,9 +9544,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "conversation_id=consequatur"\
     --form "message=consequatur"\
-    --form "type=image"\
+    --form "type=audio"\
     --form "receiver_id=consequatur"\
-    --form "file=@C:\Users\Feby Emad\AppData\Local\Temp\php3BDF.tmp" </code></pre></div>
+    --form "file=@C:\Users\Feby Emad\AppData\Local\Temp\php945B.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9562,7 +9562,7 @@ const headers = {
 const body = new FormData();
 body.append('conversation_id', 'consequatur');
 body.append('message', 'consequatur');
-body.append('type', 'image');
+body.append('type', 'audio');
 body.append('receiver_id', 'consequatur');
 body.append('file', document.querySelector('input[name="file"]').files[0]);
 
@@ -9682,7 +9682,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 10240 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php3BDF.tmp</code></p>
+<p>Must be a file. Must not be greater than 10240 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php945B.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
@@ -9691,10 +9691,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-chat-send"
-               value="image"
+               value="audio"
                data-component="body">
     <br>
-<p>Example: <code>image</code></p>
+<p>Example: <code>audio</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>text</code></li> <li><code>image</code></li> <li><code>audio</code></li></ul>
         </div>
@@ -10638,7 +10638,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-Topcoaches">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -10649,9 +10649,47 @@ content-type: application/json
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Unauthenticated.&quot;
-}</code>
+<code class="language-json" style="max-height: 300px;">[
+    {
+        &quot;id&quot;: 1,
+        &quot;academy_id&quot;: 1,
+        &quot;name&quot;: &quot;Coach Ahmed&quot;,
+        &quot;sport&quot;: &quot;Football&quot;,
+        &quot;price_per_hour&quot;: &quot;200.00&quot;,
+        &quot;bio&quot;: null,
+        &quot;reviews_avg_rating&quot;: null,
+        &quot;academy&quot;: {
+            &quot;id&quot;: 1,
+            &quot;vendor_id&quot;: 1,
+            &quot;academy_type_id&quot;: 1,
+            &quot;name&quot;: &quot;Academy A&quot;,
+            &quot;location&quot;: &quot;Cairo&quot;,
+            &quot;is_active&quot;: 1,
+            &quot;price_per_hour&quot;: &quot;200.00&quot;,
+            &quot;created_at&quot;: &quot;2026-03-29T15:15:27.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2026-03-29T15:15:27.000000Z&quot;
+        },
+        &quot;locations&quot;: [
+            {
+                &quot;id&quot;: 1,
+                &quot;private_coach_id&quot;: 1,
+                &quot;location&quot;: &quot;Cairo Stadium&quot;,
+                &quot;created_at&quot;: &quot;2026-03-29T20:59:46.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-03-29T20:59:46.000000Z&quot;
+            }
+        ],
+        &quot;services&quot;: [
+            {
+                &quot;id&quot;: 1,
+                &quot;private_coach_id&quot;: 1,
+                &quot;name&quot;: &quot;Personal Training&quot;,
+                &quot;price&quot;: &quot;300.00&quot;,
+                &quot;created_at&quot;: &quot;2026-03-29T21:15:10.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2026-03-29T21:15:10.000000Z&quot;
+            }
+        ]
+    }
+]</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-Topcoaches" hidden>
@@ -10765,7 +10803,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-Topacademies">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -10776,9 +10814,34 @@ content-type: application/json
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Unauthenticated.&quot;
-}</code>
+<code class="language-json" style="max-height: 300px;">[
+    {
+        &quot;id&quot;: 1,
+        &quot;vendor_id&quot;: 1,
+        &quot;academy_type_id&quot;: 1,
+        &quot;name&quot;: &quot;Academy A&quot;,
+        &quot;location&quot;: &quot;Cairo&quot;,
+        &quot;is_active&quot;: 1,
+        &quot;price_per_hour&quot;: &quot;200.00&quot;,
+        &quot;created_at&quot;: &quot;2026-03-29T15:15:27.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-03-29T15:15:27.000000Z&quot;,
+        &quot;reviews_avg_rating&quot;: &quot;5.0000&quot;,
+        &quot;subscriptions_count&quot;: 1
+    },
+    {
+        &quot;id&quot;: 2,
+        &quot;vendor_id&quot;: 1,
+        &quot;academy_type_id&quot;: 1,
+        &quot;name&quot;: &quot;Academy A&quot;,
+        &quot;location&quot;: &quot;Cairo&quot;,
+        &quot;is_active&quot;: 1,
+        &quot;price_per_hour&quot;: &quot;200.00&quot;,
+        &quot;created_at&quot;: &quot;2026-03-29T17:07:05.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-03-29T17:07:05.000000Z&quot;,
+        &quot;reviews_avg_rating&quot;: null,
+        &quot;subscriptions_count&quot;: 0
+    }
+]</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-Topacademies" hidden>
@@ -10892,7 +10955,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-Topstadiums">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -10903,9 +10966,44 @@ content-type: application/json
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Unauthenticated.&quot;
-}</code>
+<code class="language-json" style="max-height: 300px;">[
+    {
+        &quot;id&quot;: 1,
+        &quot;name&quot;: &quot;ملعب الزمالك&quot;,
+        &quot;city&quot;: &quot;القاهرة&quot;,
+        &quot;address&quot;: &quot;مدينة نصر&quot;,
+        &quot;price_per_hour&quot;: &quot;200.00&quot;,
+        &quot;description&quot;: null,
+        &quot;created_at&quot;: &quot;2026-03-29T14:13:17.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-03-30T06:00:49.000000Z&quot;,
+        &quot;reviews_avg_rating&quot;: null,
+        &quot;bookings_count&quot;: 1
+    },
+    {
+        &quot;id&quot;: 2,
+        &quot;name&quot;: &quot;ملعب الزمالك&quot;,
+        &quot;city&quot;: &quot;القاهرة&quot;,
+        &quot;address&quot;: &quot;مدينة نصر&quot;,
+        &quot;price_per_hour&quot;: &quot;200.00&quot;,
+        &quot;description&quot;: null,
+        &quot;created_at&quot;: &quot;2026-03-29T14:14:36.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-03-29T14:23:48.000000Z&quot;,
+        &quot;reviews_avg_rating&quot;: null,
+        &quot;bookings_count&quot;: 0
+    },
+    {
+        &quot;id&quot;: 4,
+        &quot;name&quot;: &quot;ملعب الزمالك&quot;,
+        &quot;city&quot;: &quot;القاهرة&quot;,
+        &quot;address&quot;: &quot;مدينة نصر&quot;,
+        &quot;price_per_hour&quot;: &quot;200.00&quot;,
+        &quot;description&quot;: &quot;ملعب ممتاز&quot;,
+        &quot;created_at&quot;: &quot;2026-03-29T14:16:43.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-03-29T14:16:43.000000Z&quot;,
+        &quot;reviews_avg_rating&quot;: null,
+        &quot;bookings_count&quot;: 0
+    }
+]</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-Topstadiums" hidden>
@@ -11019,7 +11117,7 @@ fetch(url, {
 
 <span id="example-responses-GETapi-Topgyms">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -11030,9 +11128,32 @@ content-type: application/json
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Unauthenticated.&quot;
-}</code>
+<code class="language-json" style="max-height: 300px;">[
+    {
+        &quot;id&quot;: 1,
+        &quot;vendor_id&quot;: 1,
+        &quot;name&quot;: &quot;Gym A&quot;,
+        &quot;type&quot;: &quot;gym&quot;,
+        &quot;location&quot;: &quot;Cairo&quot;,
+        &quot;description&quot;: &quot;Best gym in town&quot;,
+        &quot;created_at&quot;: &quot;2026-03-29T20:26:53.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-03-29T20:26:53.000000Z&quot;,
+        &quot;reviews_avg_rating&quot;: null,
+        &quot;subscriptions_count&quot;: 2
+    },
+    {
+        &quot;id&quot;: 2,
+        &quot;vendor_id&quot;: 1,
+        &quot;name&quot;: &quot;Gym A&quot;,
+        &quot;type&quot;: &quot;gym&quot;,
+        &quot;location&quot;: &quot;Cairo&quot;,
+        &quot;description&quot;: &quot;Best gym in town&quot;,
+        &quot;created_at&quot;: &quot;2026-03-29T20:26:58.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2026-03-29T20:26:58.000000Z&quot;,
+        &quot;reviews_avg_rating&quot;: null,
+        &quot;subscriptions_count&quot;: 0
+    }
+]</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-Topgyms" hidden>
@@ -11434,14 +11555,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/vendor/stadiums/consequatur" \
+    --get "http://localhost:8000/api/vendor/stadiums/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/stadiums/consequatur"
+    "http://localhost:8000/api/vendor/stadiums/1"
 );
 
 const headers = {
@@ -11549,15 +11670,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="GETapi-vendor-stadiums--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-vendor-stadiums--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the stadium. Example: <code>consequatur</code></p>
+<p>The ID of the stadium. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -11574,7 +11695,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/vendor/stadiums/consequatur" \
+    "http://localhost:8000/api/vendor/stadiums/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -11585,7 +11706,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/stadiums/consequatur"
+    "http://localhost:8000/api/vendor/stadiums/1"
 );
 
 const headers = {
@@ -11685,15 +11806,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="PUTapi-vendor-stadiums--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-vendor-stadiums--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the stadium. Example: <code>consequatur</code></p>
+<p>The ID of the stadium. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -11735,14 +11856,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/vendor/stadiums/consequatur" \
+    "http://localhost:8000/api/vendor/stadiums/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/stadiums/consequatur"
+    "http://localhost:8000/api/vendor/stadiums/1"
 );
 
 const headers = {
@@ -11834,15 +11955,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="DELETEapi-vendor-stadiums--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-vendor-stadiums--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the stadium. Example: <code>consequatur</code></p>
+<p>The ID of the stadium. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -11859,14 +11980,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/vendor/stadiums/consequatur/stats" \
+    --get "http://localhost:8000/api/vendor/stadiums/1/stats" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/stadiums/consequatur/stats"
+    "http://localhost:8000/api/vendor/stadiums/1/stats"
 );
 
 const headers = {
@@ -11974,15 +12095,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="GETapi-vendor-stadiums--id--stats"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-vendor-stadiums--id--stats"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the stadium. Example: <code>consequatur</code></p>
+<p>The ID of the stadium. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -12754,14 +12875,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/vendor/academy-plans/consequatur" \
+    "http://localhost:8000/api/vendor/academy-plans/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/academy-plans/consequatur"
+    "http://localhost:8000/api/vendor/academy-plans/1"
 );
 
 const headers = {
@@ -12853,15 +12974,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="PUTapi-vendor-academy-plans--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-vendor-academy-plans--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the academy plan. Example: <code>consequatur</code></p>
+<p>The ID of the academy plan. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -12878,14 +12999,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/vendor/academy-plans/consequatur" \
+    "http://localhost:8000/api/vendor/academy-plans/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/academy-plans/consequatur"
+    "http://localhost:8000/api/vendor/academy-plans/1"
 );
 
 const headers = {
@@ -12977,15 +13098,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="DELETEapi-vendor-academy-plans--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-vendor-academy-plans--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the academy plan. Example: <code>consequatur</code></p>
+<p>The ID of the academy plan. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -13303,14 +13424,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/vendor/academies/consequatur" \
+    --get "http://localhost:8000/api/vendor/academies/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/academies/consequatur"
+    "http://localhost:8000/api/vendor/academies/1"
 );
 
 const headers = {
@@ -13418,15 +13539,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="GETapi-vendor-academies--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-vendor-academies--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the academy. Example: <code>consequatur</code></p>
+<p>The ID of the academy. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -13443,14 +13564,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/vendor/academies/consequatur" \
+    "http://localhost:8000/api/vendor/academies/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/academies/consequatur"
+    "http://localhost:8000/api/vendor/academies/1"
 );
 
 const headers = {
@@ -13546,15 +13667,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="PUTapi-vendor-academies--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-vendor-academies--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the academy. Example: <code>consequatur</code></p>
+<p>The ID of the academy. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -13571,14 +13692,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/vendor/academies/consequatur" \
+    "http://localhost:8000/api/vendor/academies/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/academies/consequatur"
+    "http://localhost:8000/api/vendor/academies/1"
 );
 
 const headers = {
@@ -13670,15 +13791,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="DELETEapi-vendor-academies--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-vendor-academies--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the academy. Example: <code>consequatur</code></p>
+<p>The ID of the academy. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -15040,7 +15161,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "name=consequatur"\
     --form "description=Dolores dolorum amet iste laborum eius est dolor."\
-    --form "logo=@C:\Users\Feby Emad\AppData\Local\Temp\php449A.tmp" </code></pre></div>
+    --form "logo=@C:\Users\Feby Emad\AppData\Local\Temp\php9D55.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -15174,7 +15295,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php449A.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php9D55.tmp</code></p>
         </div>
         </form>
 
@@ -15337,7 +15458,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "name=consequatur"\
     --form "description=Dolores dolorum amet iste laborum eius est dolor."\
     --form "is_active=1"\
-    --form "logo=@C:\Users\Feby Emad\AppData\Local\Temp\php4508.tmp" </code></pre></div>
+    --form "logo=@C:\Users\Feby Emad\AppData\Local\Temp\php9DC4.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -15489,7 +15610,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php4508.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php9DC4.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>is_active</code></b>&nbsp;&nbsp;
@@ -16372,7 +16493,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
     --form "name=consequatur"\
-    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php4680.tmp" </code></pre></div>
+    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php9EFD.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16493,7 +16614,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php4680.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php9EFD.tmp</code></p>
         </div>
         </form>
 
@@ -16514,7 +16635,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
     --form "name=consequatur"\
-    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php46C0.tmp" </code></pre></div>
+    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php9F3D.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16648,7 +16769,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php46C0.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php9F3D.tmp</code></p>
         </div>
         </form>
 
@@ -16920,7 +17041,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"shipped\"
+    \"status\": \"pending\"
 }"
 </code></pre></div>
 
@@ -16936,7 +17057,7 @@ const headers = {
 };
 
 let body = {
-    "status": "shipped"
+    "status": "pending"
 };
 
 fetch(url, {
@@ -17041,10 +17162,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-vendor-orders--id--status"
-               value="shipped"
+               value="pending"
                data-component="body">
     <br>
-<p>Example: <code>shipped</code></p>
+<p>Example: <code>pending</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>pending</code></li> <li><code>confirmed</code></li> <li><code>shipped</code></li> <li><code>delivered</code></li> <li><code>cancelled</code></li></ul>
         </div>
@@ -17491,14 +17612,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/vendor/gyms/consequatur" \
+    --get "http://localhost:8000/api/vendor/gyms/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/gyms/consequatur"
+    "http://localhost:8000/api/vendor/gyms/1"
 );
 
 const headers = {
@@ -17606,15 +17727,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="GETapi-vendor-gyms--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-vendor-gyms--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the gym. Example: <code>consequatur</code></p>
+<p>The ID of the gym. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -17631,14 +17752,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/vendor/gyms/consequatur" \
+    "http://localhost:8000/api/vendor/gyms/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/gyms/consequatur"
+    "http://localhost:8000/api/vendor/gyms/1"
 );
 
 const headers = {
@@ -17734,15 +17855,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="PUTapi-vendor-gyms--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-vendor-gyms--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the gym. Example: <code>consequatur</code></p>
+<p>The ID of the gym. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -17759,14 +17880,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/vendor/gyms/consequatur" \
+    "http://localhost:8000/api/vendor/gyms/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/gyms/consequatur"
+    "http://localhost:8000/api/vendor/gyms/1"
 );
 
 const headers = {
@@ -17858,15 +17979,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="DELETEapi-vendor-gyms--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-vendor-gyms--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the gym. Example: <code>consequatur</code></p>
+<p>The ID of the gym. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -17883,13 +18004,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/vendor/gyms/consequatur/plans" \
+    "http://localhost:8000/api/vendor/gyms/1/plans" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"name\": \"consequatur\",
     \"price\": 11613.31890586,
-    \"type\": \"6month\",
+    \"type\": \"monthly\",
     \"hours_per_day\": 17
 }"
 </code></pre></div>
@@ -17897,7 +18018,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/gyms/consequatur/plans"
+    "http://localhost:8000/api/vendor/gyms/1/plans"
 );
 
 const headers = {
@@ -17908,7 +18029,7 @@ const headers = {
 let body = {
     "name": "consequatur",
     "price": 11613.31890586,
-    "type": "6month",
+    "type": "monthly",
     "hours_per_day": 17
 };
 
@@ -17996,15 +18117,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="POSTapi-vendor-gyms--id--plans"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="POSTapi-vendor-gyms--id--plans"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the gym. Example: <code>consequatur</code></p>
+<p>The ID of the gym. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -18038,10 +18159,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-vendor-gyms--id--plans"
-               value="6month"
+               value="monthly"
                data-component="body">
     <br>
-<p>Example: <code>6month</code></p>
+<p>Example: <code>monthly</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>weekly</code></li> <li><code>monthly</code></li> <li><code>3Month</code></li> <li><code>6month</code></li> <li><code>1year</code></li></ul>
         </div>
@@ -18072,13 +18193,13 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/vendor/gym-plans/consequatur" \
+    "http://localhost:8000/api/vendor/gym-plans/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"name\": \"consequatur\",
     \"price\": 11613.31890586,
-    \"type\": \"weekly\",
+    \"type\": \"1year\",
     \"hours\": 17
 }"
 </code></pre></div>
@@ -18086,7 +18207,7 @@ Must be one of:
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/gym-plans/consequatur"
+    "http://localhost:8000/api/vendor/gym-plans/1"
 );
 
 const headers = {
@@ -18097,7 +18218,7 @@ const headers = {
 let body = {
     "name": "consequatur",
     "price": 11613.31890586,
-    "type": "weekly",
+    "type": "1year",
     "hours": 17
 };
 
@@ -18185,15 +18306,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="PUTapi-vendor-gym-plans--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-vendor-gym-plans--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the gym plan. Example: <code>consequatur</code></p>
+<p>The ID of the gym plan. Example: <code>1</code></p>
             </div>
                             <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -18227,10 +18348,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="PUTapi-vendor-gym-plans--id-"
-               value="weekly"
+               value="1year"
                data-component="body">
     <br>
-<p>Example: <code>weekly</code></p>
+<p>Example: <code>1year</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>weekly</code></li> <li><code>monthly</code></li> <li><code>3Month</code></li> <li><code>6month</code></li> <li><code>1year</code></li></ul>
         </div>
@@ -18261,14 +18382,14 @@ Must be one of:
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/vendor/gym-plans/consequatur" \
+    "http://localhost:8000/api/vendor/gym-plans/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/gym-plans/consequatur"
+    "http://localhost:8000/api/vendor/gym-plans/1"
 );
 
 const headers = {
@@ -18360,15 +18481,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="DELETEapi-vendor-gym-plans--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-vendor-gym-plans--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the gym plan. Example: <code>consequatur</code></p>
+<p>The ID of the gym plan. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -18512,14 +18633,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/vendor/gym-subscriptions/consequatur" \
+    "http://localhost:8000/api/vendor/gym-subscriptions/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/gym-subscriptions/consequatur"
+    "http://localhost:8000/api/vendor/gym-subscriptions/1"
 );
 
 const headers = {
@@ -18611,15 +18732,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="DELETEapi-vendor-gym-subscriptions--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-vendor-gym-subscriptions--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the gym subscription. Example: <code>consequatur</code></p>
+<p>The ID of the gym subscription. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -18636,14 +18757,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/vendor/gyms/consequatur/subscribers" \
+    --get "http://localhost:8000/api/vendor/gyms/1/subscribers" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/gyms/consequatur/subscribers"
+    "http://localhost:8000/api/vendor/gyms/1/subscribers"
 );
 
 const headers = {
@@ -18751,15 +18872,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="GETapi-vendor-gyms--id--subscribers"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-vendor-gyms--id--subscribers"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the gym. Example: <code>consequatur</code></p>
+<p>The ID of the gym. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -19328,14 +19449,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/vendor/private-coaches/consequatur" \
+    --get "http://localhost:8000/api/vendor/private-coaches/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/private-coaches/consequatur"
+    "http://localhost:8000/api/vendor/private-coaches/1"
 );
 
 const headers = {
@@ -19443,15 +19564,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="GETapi-vendor-private-coaches--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-vendor-private-coaches--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the private coach. Example: <code>consequatur</code></p>
+<p>The ID of the private coach. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -19468,14 +19589,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://localhost:8000/api/vendor/private-coaches/consequatur" \
+    "http://localhost:8000/api/vendor/private-coaches/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/private-coaches/consequatur"
+    "http://localhost:8000/api/vendor/private-coaches/1"
 );
 
 const headers = {
@@ -19571,15 +19692,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="PUTapi-vendor-private-coaches--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-vendor-private-coaches--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the private coach. Example: <code>consequatur</code></p>
+<p>The ID of the private coach. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -19596,14 +19717,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost:8000/api/vendor/private-coaches/consequatur" \
+    "http://localhost:8000/api/vendor/private-coaches/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/vendor/private-coaches/consequatur"
+    "http://localhost:8000/api/vendor/private-coaches/1"
 );
 
 const headers = {
@@ -19695,15 +19816,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="DELETEapi-vendor-private-coaches--id-"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-vendor-private-coaches--id-"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the private coach. Example: <code>consequatur</code></p>
+<p>The ID of the private coach. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -20869,10 +20990,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"code\": \"consequatur\",
-    \"type\": \"percent\",
+    \"type\": \"specific\",
     \"value\": 11613.31890586,
     \"max_usage\": 17,
-    \"expires_at\": \"2026-04-05T01:12:20\"
+    \"expires_at\": \"2026-04-05T01:17:04\"
 }"
 </code></pre></div>
 
@@ -20889,10 +21010,10 @@ const headers = {
 
 let body = {
     "code": "consequatur",
-    "type": "percent",
+    "type": "specific",
     "value": 11613.31890586,
     "max_usage": 17,
-    "expires_at": "2026-04-05T01:12:20"
+    "expires_at": "2026-04-05T01:17:04"
 };
 
 fetch(url, {
@@ -20996,10 +21117,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-vendor-coupons"
-               value="percent"
+               value="specific"
                data-component="body">
     <br>
-<p>Example: <code>percent</code></p>
+<p>Example: <code>specific</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>fixed</code></li> <li><code>percent</code></li> <li><code>blogger</code></li> <li><code>specific</code></li> <li><code>general</code></li></ul>
         </div>
@@ -21034,10 +21155,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="expires_at"                data-endpoint="POSTapi-vendor-coupons"
-               value="2026-04-05T01:12:20"
+               value="2026-04-05T01:17:04"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T01:12:20</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:17:04</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>services</code></b>&nbsp;&nbsp;
@@ -21082,10 +21203,10 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"type\": \"specific\",
+    \"type\": \"percent\",
     \"value\": 11613.31890586,
     \"max_usage\": 17,
-    \"expires_at\": \"2026-04-05T01:12:20\"
+    \"expires_at\": \"2026-04-05T01:17:04\"
 }"
 </code></pre></div>
 
@@ -21101,10 +21222,10 @@ const headers = {
 };
 
 let body = {
-    "type": "specific",
+    "type": "percent",
     "value": 11613.31890586,
     "max_usage": 17,
-    "expires_at": "2026-04-05T01:12:20"
+    "expires_at": "2026-04-05T01:17:04"
 };
 
 fetch(url, {
@@ -21221,10 +21342,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="PUTapi-vendor-coupons--id-"
-               value="specific"
+               value="percent"
                data-component="body">
     <br>
-<p>Example: <code>specific</code></p>
+<p>Example: <code>percent</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>fixed</code></li> <li><code>percent</code></li> <li><code>blogger</code></li> <li><code>specific</code></li> <li><code>general</code></li></ul>
         </div>
@@ -21259,10 +21380,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="expires_at"                data-endpoint="PUTapi-vendor-coupons--id-"
-               value="2026-04-05T01:12:20"
+               value="2026-04-05T01:17:04"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T01:12:20</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:17:04</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>services</code></b>&nbsp;&nbsp;
@@ -22423,7 +22544,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"max_players\": 17,
     \"price\": 11613.31890586,
     \"duration\": 17,
-    \"status\": \"upcoming\"
+    \"status\": \"ongoing\"
 }"
 </code></pre></div>
 
@@ -22444,7 +22565,7 @@ let body = {
     "max_players": 17,
     "price": 11613.31890586,
     "duration": 17,
-    "status": "upcoming"
+    "status": "ongoing"
 };
 
 fetch(url, {
@@ -22596,10 +22717,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-vendor-challenges"
-               value="upcoming"
+               value="ongoing"
                data-component="body">
     <br>
-<p>Example: <code>upcoming</code></p>
+<p>Example: <code>ongoing</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>upcoming</code></li> <li><code>ongoing</code></li> <li><code>completed</code></li></ul>
         </div>
@@ -22626,7 +22747,7 @@ Must be one of:
     \"max_players\": 17,
     \"price\": 11613.31890586,
     \"duration\": 17,
-    \"status\": \"upcoming\"
+    \"status\": \"completed\"
 }"
 </code></pre></div>
 
@@ -22646,7 +22767,7 @@ let body = {
     "max_players": 17,
     "price": 11613.31890586,
     "duration": 17,
-    "status": "upcoming"
+    "status": "completed"
 };
 
 fetch(url, {
@@ -22811,10 +22932,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PUTapi-vendor-challenges--id-"
-               value="upcoming"
+               value="completed"
                data-component="body">
     <br>
-<p>Example: <code>upcoming</code></p>
+<p>Example: <code>completed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>upcoming</code></li> <li><code>ongoing</code></li> <li><code>completed</code></li></ul>
         </div>
@@ -22837,7 +22958,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"completed\"
+    \"status\": \"upcoming\"
 }"
 </code></pre></div>
 
@@ -22853,7 +22974,7 @@ const headers = {
 };
 
 let body = {
-    "status": "completed"
+    "status": "upcoming"
 };
 
 fetch(url, {
@@ -22958,10 +23079,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-vendor-challenges--id--status"
-               value="completed"
+               value="upcoming"
                data-component="body">
     <br>
-<p>Example: <code>completed</code></p>
+<p>Example: <code>upcoming</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>upcoming</code></li> <li><code>ongoing</code></li> <li><code>completed</code></li></ul>
         </div>
@@ -23395,7 +23516,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"ongoing\"
+    \"status\": \"upcoming\"
 }"
 </code></pre></div>
 
@@ -23411,7 +23532,7 @@ const headers = {
 };
 
 let body = {
-    "status": "ongoing"
+    "status": "upcoming"
 };
 
 fetch(url, {
@@ -23516,10 +23637,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PATCHapi-vendor-challenges--id--status"
-               value="ongoing"
+               value="upcoming"
                data-component="body">
     <br>
-<p>Example: <code>ongoing</code></p>
+<p>Example: <code>upcoming</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>upcoming</code></li> <li><code>ongoing</code></li> <li><code>completed</code></li></ul>
         </div>
@@ -23542,7 +23663,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"type\": \"daily\"
+    \"type\": \"weekly\"
 }"
 </code></pre></div>
 
@@ -23558,7 +23679,7 @@ const headers = {
 };
 
 let body = {
-    "type": "daily"
+    "type": "weekly"
 };
 
 fetch(url, {
@@ -23666,10 +23787,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="GETapi-vendor-vendor-report"
-               value="daily"
+               value="weekly"
                data-component="body">
     <br>
-<p>Example: <code>daily</code></p>
+<p>Example: <code>weekly</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>daily</code></li> <li><code>weekly</code></li> <li><code>monthly</code></li> <li><code>yearly</code></li></ul>
         </div>
@@ -24323,14 +24444,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/stadiums/consequatur/approve" \
+    "http://localhost:8000/api/stadiums/1/approve" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/stadiums/consequatur/approve"
+    "http://localhost:8000/api/stadiums/1/approve"
 );
 
 const headers = {
@@ -24422,15 +24543,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="POSTapi-stadiums--id--approve"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="POSTapi-stadiums--id--approve"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the stadium. Example: <code>consequatur</code></p>
+<p>The ID of the stadium. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -24447,14 +24568,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/stadiums/consequatur/reject" \
+    "http://localhost:8000/api/stadiums/1/reject" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/stadiums/consequatur/reject"
+    "http://localhost:8000/api/stadiums/1/reject"
 );
 
 const headers = {
@@ -24546,15 +24667,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
+<small>integer</small>&nbsp;
  &nbsp;
  &nbsp;
-                <input type="text" style="display: none"
-                              name="id"                data-endpoint="POSTapi-stadiums--id--reject"
-               value="consequatur"
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="POSTapi-stadiums--id--reject"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the stadium. Example: <code>consequatur</code></p>
+<p>The ID of the stadium. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -24835,13 +24956,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "commission_rate=21"\
     --form "cancellation_policy=consequatur"\
-    --form "is_store_enabled=true"\
-    --form "is_challenges_enabled=0"\
+    --form "is_store_enabled=1"\
+    --form "is_challenges_enabled=false"\
     --form "is_videos_enabled=true"\
     --form "terms=consequatur"\
     --form "privacy_policy=consequatur"\
     --form "about_us=consequatur"\
-    --form "banner=@C:\Users\Feby Emad\AppData\Local\Temp\php52D7.tmp" </code></pre></div>
+    --form "banner=@C:\Users\Feby Emad\AppData\Local\Temp\phpAA0B.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -24857,8 +24978,8 @@ const headers = {
 const body = new FormData();
 body.append('commission_rate', '21');
 body.append('cancellation_policy', 'consequatur');
-body.append('is_store_enabled', 'true');
-body.append('is_challenges_enabled', '0');
+body.append('is_store_enabled', '1');
+body.append('is_challenges_enabled', 'false');
 body.append('is_videos_enabled', 'true');
 body.append('terms', 'consequatur');
 body.append('privacy_policy', 'consequatur');
@@ -24978,10 +25099,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="is_store_enabled"                data-endpoint="POSTapi-settings"
-               value="true"
+               value="1"
                data-component="body">
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>1</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>0</code></li> <li><code>1</code></li> <li><code>true</code></li> <li><code>false</code></li></ul>
         </div>
@@ -24992,10 +25113,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="is_challenges_enabled"                data-endpoint="POSTapi-settings"
-               value="0"
+               value="false"
                data-component="body">
     <br>
-<p>تعديل بسيط لضمان القبول. Example: <code>0</code></p>
+<p>تعديل بسيط لضمان القبول. Example: <code>false</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>0</code></li> <li><code>1</code></li> <li><code>true</code></li> <li><code>false</code></li></ul>
         </div>
@@ -25059,7 +25180,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php52D7.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\phpAA0B.tmp</code></p>
         </div>
         </form>
 
@@ -25208,7 +25329,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "title=vmqeopfuudtdsufvyvddq"\
     --form "link=http://www.kunde.com/"\
-    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php5364.tmp" </code></pre></div>
+    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\phpAA89.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -25330,7 +25451,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php5364.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\phpAA89.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>link</code></b>&nbsp;&nbsp;
@@ -25364,7 +25485,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "title=vmqeopfuudtdsufvyvddq"\
     --form "link=http://www.kunde.com/"\
-    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php53B4.tmp" </code></pre></div>
+    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\phpAAD8.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -25503,7 +25624,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php53B4.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\phpAAD8.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>link</code></b>&nbsp;&nbsp;
@@ -27226,7 +27347,7 @@ Must be one of:
     --data "{
     \"title\": \"vmqeopfuudtdsufvyvddq\",
     \"content\": \"consequatur\",
-    \"type\": \"terms\"
+    \"type\": \"privacy\"
 }"
 </code></pre></div>
 
@@ -27244,7 +27365,7 @@ const headers = {
 let body = {
     "title": "vmqeopfuudtdsufvyvddq",
     "content": "consequatur",
-    "type": "terms"
+    "type": "privacy"
 };
 
 fetch(url, {
@@ -27373,10 +27494,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="PUTapi-pages--id-"
-               value="terms"
+               value="privacy"
                data-component="body">
     <br>
-<p>Example: <code>terms</code></p>
+<p>Example: <code>privacy</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>about</code></li> <li><code>terms</code></li> <li><code>privacy</code></li> <li><code>policy</code></li></ul>
         </div>
