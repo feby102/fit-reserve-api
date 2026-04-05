@@ -698,7 +698,7 @@ You can switch the language used with the tabs at the top right (or from the nav
     \"city\": \"consequatur\",
     \"role\": \"admin\",
     \"referral_code\": \"consequatur\",
-    \"birth_date\": \"2026-04-05T00:59:55\",
+    \"birth_date\": \"2026-04-05T01:12:12\",
     \"gender\": \"female\"
 }"
 </code></pre></div>
@@ -721,7 +721,7 @@ let body = {
     "city": "consequatur",
     "role": "admin",
     "referral_code": "consequatur",
-    "birth_date": "2026-04-05T00:59:55",
+    "birth_date": "2026-04-05T01:12:12",
     "gender": "female"
 };
 
@@ -888,10 +888,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="birth_date"                data-endpoint="POSTapi-register"
-               value="2026-04-05T00:59:55"
+               value="2026-04-05T01:12:12"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T00:59:55</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:12:12</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>gender</code></b>&nbsp;&nbsp;
@@ -1865,13 +1865,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
     "http://localhost:8000/api/bookings" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "bookable_type=coach_service"\
+    --form "bookable_type=stadium"\
     --form "bookable_id=17"\
-    --form "start_time=00:59"\
-    --form "date=2026-04-05T00:59:55"\
+    --form "start_time=01:12"\
+    --form "date=2026-04-05T01:12:12"\
     --form "hours=45"\
-    --form "payment_method=visa"\
-    --form "type=package"\
+    --form "payment_method=cash"\
+    --form "type=daily"\
     --form "package_id=17"\
     --form "use_points=45"\
     --form "full_name=qeopfuudtdsufvyvddqam"\
@@ -1879,8 +1879,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "coupon_code=consequatur"\
     --form "is_recurring="\
     --form "recurring_weeks=2"\
-    --form "parent_id_card=@C:\Users\Feby Emad\AppData\Local\Temp\phpF217.tmp" \
-    --form "personal_photo=@C:\Users\Feby Emad\AppData\Local\Temp\phpF218.tmp" </code></pre></div>
+    --form "parent_id_card=@C:\Users\Feby Emad\AppData\Local\Temp\php2F98.tmp" \
+    --form "personal_photo=@C:\Users\Feby Emad\AppData\Local\Temp\php2FA9.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -1894,13 +1894,13 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('bookable_type', 'coach_service');
+body.append('bookable_type', 'stadium');
 body.append('bookable_id', '17');
-body.append('start_time', '00:59');
-body.append('date', '2026-04-05T00:59:55');
+body.append('start_time', '01:12');
+body.append('date', '2026-04-05T01:12:12');
 body.append('hours', '45');
-body.append('payment_method', 'visa');
-body.append('type', 'package');
+body.append('payment_method', 'cash');
+body.append('type', 'daily');
 body.append('package_id', '17');
 body.append('use_points', '45');
 body.append('full_name', 'qeopfuudtdsufvyvddqam');
@@ -2000,10 +2000,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="bookable_type"                data-endpoint="POSTapi-bookings"
-               value="coach_service"
+               value="stadium"
                data-component="body">
     <br>
-<p>Example: <code>coach_service</code></p>
+<p>Example: <code>stadium</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>stadium</code></li> <li><code>academy</code></li> <li><code>coach</code></li> <li><code>gym</code></li> <li><code>coach_service</code></li> <li><code>academy_service</code></li></ul>
         </div>
@@ -2026,10 +2026,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="start_time"                data-endpoint="POSTapi-bookings"
-               value="00:59"
+               value="01:12"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>H:i</code>. Example: <code>00:59</code></p>
+<p>Must be a valid date in the format <code>H:i</code>. Example: <code>01:12</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date</code></b>&nbsp;&nbsp;
@@ -2038,10 +2038,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="date"                data-endpoint="POSTapi-bookings"
-               value="2026-04-05T00:59:55"
+               value="2026-04-05T01:12:12"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T00:59:55</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:12:12</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>hours</code></b>&nbsp;&nbsp;
@@ -2062,10 +2062,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="payment_method"                data-endpoint="POSTapi-bookings"
-               value="visa"
+               value="cash"
                data-component="body">
     <br>
-<p>Example: <code>visa</code></p>
+<p>Example: <code>cash</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>visa</code></li> <li><code>cash</code></li> <li><code>wallet</code></li></ul>
         </div>
@@ -2076,10 +2076,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-bookings"
-               value="package"
+               value="daily"
                data-component="body">
     <br>
-<p>Example: <code>package</code></p>
+<p>Example: <code>daily</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>daily</code></li> <li><code>package</code></li></ul>
         </div>
@@ -2141,7 +2141,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\phpF217.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php2F98.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>personal_photo</code></b>&nbsp;&nbsp;
@@ -2153,7 +2153,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\phpF218.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php2FA9.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>coupon_code</code></b>&nbsp;&nbsp;
@@ -2347,9 +2347,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"date\": \"2026-04-05T00:59:56\",
+    \"date\": \"2026-04-05T01:12:12\",
     \"bookable_id\": 17,
-    \"bookable_type\": \"coach\"
+    \"bookable_type\": \"academy\"
 }"
 </code></pre></div>
 
@@ -2365,9 +2365,9 @@ const headers = {
 };
 
 let body = {
-    "date": "2026-04-05T00:59:56",
+    "date": "2026-04-05T01:12:12",
     "bookable_id": 17,
-    "bookable_type": "coach"
+    "bookable_type": "academy"
 };
 
 fetch(url, {
@@ -2475,10 +2475,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="date"                data-endpoint="GETapi-bookings-available-slots"
-               value="2026-04-05T00:59:56"
+               value="2026-04-05T01:12:12"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T00:59:56</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:12:12</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>bookable_id</code></b>&nbsp;&nbsp;
@@ -2499,10 +2499,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="bookable_type"                data-endpoint="GETapi-bookings-available-slots"
-               value="coach"
+               value="academy"
                data-component="body">
     <br>
-<p>Example: <code>coach</code></p>
+<p>Example: <code>academy</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>stadium</code></li> <li><code>academy</code></li> <li><code>coach</code></li> <li><code>facility</code></li> <li><code>studio</code></li> <li><code>gym</code></li></ul>
         </div>
@@ -4607,7 +4607,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"private_coach_id\": \"consequatur\",
-    \"start_time\": \"2026-04-05T00:59:57\",
+    \"start_time\": \"2026-04-05T01:12:13\",
     \"hours\": 17
 }"
 </code></pre></div>
@@ -4625,7 +4625,7 @@ const headers = {
 
 let body = {
     "private_coach_id": "consequatur",
-    "start_time": "2026-04-05T00:59:57",
+    "start_time": "2026-04-05T01:12:13",
     "hours": 17
 };
 
@@ -4730,10 +4730,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="start_time"                data-endpoint="POSTapi-coach-book"
-               value="2026-04-05T00:59:57"
+               value="2026-04-05T01:12:13"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T00:59:57</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:12:13</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>hours</code></b>&nbsp;&nbsp;
@@ -8572,7 +8572,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"title\": \"vmqeopfuudtdsufvyvddq\",
     \"description\": \"Dolores dolorum amet iste laborum eius est dolor.\",
     \"url\": \"http:\\/\\/reynolds.com\\/\",
-    \"type\": \"academy\"
+    \"type\": \"coach\"
 }"
 </code></pre></div>
 
@@ -8591,7 +8591,7 @@ let body = {
     "title": "vmqeopfuudtdsufvyvddq",
     "description": "Dolores dolorum amet iste laborum eius est dolor.",
     "url": "http:\/\/reynolds.com\/",
-    "type": "academy"
+    "type": "coach"
 };
 
 fetch(url, {
@@ -8719,10 +8719,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-videos"
-               value="academy"
+               value="coach"
                data-component="body">
     <br>
-<p>Example: <code>academy</code></p>
+<p>Example: <code>coach</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>user</code></li> <li><code>academy</code></li> <li><code>coach</code></li></ul>
         </div>
@@ -9544,9 +9544,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "conversation_id=consequatur"\
     --form "message=consequatur"\
-    --form "type=text"\
+    --form "type=image"\
     --form "receiver_id=consequatur"\
-    --form "file=@C:\Users\Feby Emad\AppData\Local\Temp\phpFE1F.tmp" </code></pre></div>
+    --form "file=@C:\Users\Feby Emad\AppData\Local\Temp\php3BDF.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9562,7 +9562,7 @@ const headers = {
 const body = new FormData();
 body.append('conversation_id', 'consequatur');
 body.append('message', 'consequatur');
-body.append('type', 'text');
+body.append('type', 'image');
 body.append('receiver_id', 'consequatur');
 body.append('file', document.querySelector('input[name="file"]').files[0]);
 
@@ -9682,7 +9682,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must not be greater than 10240 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\phpFE1F.tmp</code></p>
+<p>Must be a file. Must not be greater than 10240 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php3BDF.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>type</code></b>&nbsp;&nbsp;
@@ -9691,10 +9691,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-chat-send"
-               value="text"
+               value="image"
                data-component="body">
     <br>
-<p>Example: <code>text</code></p>
+<p>Example: <code>image</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>text</code></li> <li><code>image</code></li> <li><code>audio</code></li></ul>
         </div>
@@ -15040,7 +15040,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "name=consequatur"\
     --form "description=Dolores dolorum amet iste laborum eius est dolor."\
-    --form "logo=@C:\Users\Feby Emad\AppData\Local\Temp\php68D.tmp" </code></pre></div>
+    --form "logo=@C:\Users\Feby Emad\AppData\Local\Temp\php449A.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -15174,7 +15174,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php68D.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php449A.tmp</code></p>
         </div>
         </form>
 
@@ -15337,7 +15337,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --form "name=consequatur"\
     --form "description=Dolores dolorum amet iste laborum eius est dolor."\
     --form "is_active=1"\
-    --form "logo=@C:\Users\Feby Emad\AppData\Local\Temp\php6FB.tmp" </code></pre></div>
+    --form "logo=@C:\Users\Feby Emad\AppData\Local\Temp\php4508.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -15489,7 +15489,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php6FB.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php4508.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>is_active</code></b>&nbsp;&nbsp;
@@ -16372,7 +16372,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
     --form "name=consequatur"\
-    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php863.tmp" </code></pre></div>
+    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php4680.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16493,7 +16493,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php863.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php4680.tmp</code></p>
         </div>
         </form>
 
@@ -16514,7 +16514,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
     --form "name=consequatur"\
-    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php893.tmp" </code></pre></div>
+    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php46C0.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -16648,7 +16648,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php893.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php46C0.tmp</code></p>
         </div>
         </form>
 
@@ -16920,7 +16920,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"confirmed\"
+    \"status\": \"shipped\"
 }"
 </code></pre></div>
 
@@ -16936,7 +16936,7 @@ const headers = {
 };
 
 let body = {
-    "status": "confirmed"
+    "status": "shipped"
 };
 
 fetch(url, {
@@ -17041,10 +17041,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-vendor-orders--id--status"
-               value="confirmed"
+               value="shipped"
                data-component="body">
     <br>
-<p>Example: <code>confirmed</code></p>
+<p>Example: <code>shipped</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>pending</code></li> <li><code>confirmed</code></li> <li><code>shipped</code></li> <li><code>delivered</code></li> <li><code>cancelled</code></li></ul>
         </div>
@@ -17889,7 +17889,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"name\": \"consequatur\",
     \"price\": 11613.31890586,
-    \"type\": \"monthly\",
+    \"type\": \"6month\",
     \"hours_per_day\": 17
 }"
 </code></pre></div>
@@ -17908,7 +17908,7 @@ const headers = {
 let body = {
     "name": "consequatur",
     "price": 11613.31890586,
-    "type": "monthly",
+    "type": "6month",
     "hours_per_day": 17
 };
 
@@ -18038,10 +18038,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-vendor-gyms--id--plans"
-               value="monthly"
+               value="6month"
                data-component="body">
     <br>
-<p>Example: <code>monthly</code></p>
+<p>Example: <code>6month</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>weekly</code></li> <li><code>monthly</code></li> <li><code>3Month</code></li> <li><code>6month</code></li> <li><code>1year</code></li></ul>
         </div>
@@ -18078,7 +18078,7 @@ Must be one of:
     --data "{
     \"name\": \"consequatur\",
     \"price\": 11613.31890586,
-    \"type\": \"6month\",
+    \"type\": \"weekly\",
     \"hours\": 17
 }"
 </code></pre></div>
@@ -18097,7 +18097,7 @@ const headers = {
 let body = {
     "name": "consequatur",
     "price": 11613.31890586,
-    "type": "6month",
+    "type": "weekly",
     "hours": 17
 };
 
@@ -18227,10 +18227,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="PUTapi-vendor-gym-plans--id-"
-               value="6month"
+               value="weekly"
                data-component="body">
     <br>
-<p>Example: <code>6month</code></p>
+<p>Example: <code>weekly</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>weekly</code></li> <li><code>monthly</code></li> <li><code>3Month</code></li> <li><code>6month</code></li> <li><code>1year</code></li></ul>
         </div>
@@ -20869,10 +20869,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"code\": \"consequatur\",
-    \"type\": \"specific\",
+    \"type\": \"percent\",
     \"value\": 11613.31890586,
     \"max_usage\": 17,
-    \"expires_at\": \"2026-04-05T01:00:03\"
+    \"expires_at\": \"2026-04-05T01:12:20\"
 }"
 </code></pre></div>
 
@@ -20889,10 +20889,10 @@ const headers = {
 
 let body = {
     "code": "consequatur",
-    "type": "specific",
+    "type": "percent",
     "value": 11613.31890586,
     "max_usage": 17,
-    "expires_at": "2026-04-05T01:00:03"
+    "expires_at": "2026-04-05T01:12:20"
 };
 
 fetch(url, {
@@ -20996,10 +20996,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-vendor-coupons"
-               value="specific"
+               value="percent"
                data-component="body">
     <br>
-<p>Example: <code>specific</code></p>
+<p>Example: <code>percent</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>fixed</code></li> <li><code>percent</code></li> <li><code>blogger</code></li> <li><code>specific</code></li> <li><code>general</code></li></ul>
         </div>
@@ -21034,10 +21034,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="expires_at"                data-endpoint="POSTapi-vendor-coupons"
-               value="2026-04-05T01:00:03"
+               value="2026-04-05T01:12:20"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T01:00:03</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:12:20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>services</code></b>&nbsp;&nbsp;
@@ -21082,10 +21082,10 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"type\": \"general\",
+    \"type\": \"specific\",
     \"value\": 11613.31890586,
     \"max_usage\": 17,
-    \"expires_at\": \"2026-04-05T01:00:03\"
+    \"expires_at\": \"2026-04-05T01:12:20\"
 }"
 </code></pre></div>
 
@@ -21101,10 +21101,10 @@ const headers = {
 };
 
 let body = {
-    "type": "general",
+    "type": "specific",
     "value": 11613.31890586,
     "max_usage": 17,
-    "expires_at": "2026-04-05T01:00:03"
+    "expires_at": "2026-04-05T01:12:20"
 };
 
 fetch(url, {
@@ -21221,10 +21221,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="PUTapi-vendor-coupons--id-"
-               value="general"
+               value="specific"
                data-component="body">
     <br>
-<p>Example: <code>general</code></p>
+<p>Example: <code>specific</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>fixed</code></li> <li><code>percent</code></li> <li><code>blogger</code></li> <li><code>specific</code></li> <li><code>general</code></li></ul>
         </div>
@@ -21259,10 +21259,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="expires_at"                data-endpoint="PUTapi-vendor-coupons--id-"
-               value="2026-04-05T01:00:03"
+               value="2026-04-05T01:12:20"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-04-05T01:00:03</code></p>
+<p>Must be a valid date. Example: <code>2026-04-05T01:12:20</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>services</code></b>&nbsp;&nbsp;
@@ -22423,7 +22423,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     \"max_players\": 17,
     \"price\": 11613.31890586,
     \"duration\": 17,
-    \"status\": \"ongoing\"
+    \"status\": \"upcoming\"
 }"
 </code></pre></div>
 
@@ -22444,7 +22444,7 @@ let body = {
     "max_players": 17,
     "price": 11613.31890586,
     "duration": 17,
-    "status": "ongoing"
+    "status": "upcoming"
 };
 
 fetch(url, {
@@ -22596,10 +22596,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-vendor-challenges"
-               value="ongoing"
+               value="upcoming"
                data-component="body">
     <br>
-<p>Example: <code>ongoing</code></p>
+<p>Example: <code>upcoming</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>upcoming</code></li> <li><code>ongoing</code></li> <li><code>completed</code></li></ul>
         </div>
@@ -22837,7 +22837,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"ongoing\"
+    \"status\": \"completed\"
 }"
 </code></pre></div>
 
@@ -22853,7 +22853,7 @@ const headers = {
 };
 
 let body = {
-    "status": "ongoing"
+    "status": "completed"
 };
 
 fetch(url, {
@@ -22958,10 +22958,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-vendor-challenges--id--status"
-               value="ongoing"
+               value="completed"
                data-component="body">
     <br>
-<p>Example: <code>ongoing</code></p>
+<p>Example: <code>completed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>upcoming</code></li> <li><code>ongoing</code></li> <li><code>completed</code></li></ul>
         </div>
@@ -22984,7 +22984,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"accepted\"
+    \"status\": \"rejected\"
 }"
 </code></pre></div>
 
@@ -23000,7 +23000,7 @@ const headers = {
 };
 
 let body = {
-    "status": "accepted"
+    "status": "rejected"
 };
 
 fetch(url, {
@@ -23105,10 +23105,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="POSTapi-vendor-participants--id-"
-               value="accepted"
+               value="rejected"
                data-component="body">
     <br>
-<p>Example: <code>accepted</code></p>
+<p>Example: <code>rejected</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>accepted</code></li> <li><code>rejected</code></li></ul>
         </div>
@@ -23395,7 +23395,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"upcoming\"
+    \"status\": \"ongoing\"
 }"
 </code></pre></div>
 
@@ -23411,7 +23411,7 @@ const headers = {
 };
 
 let body = {
-    "status": "upcoming"
+    "status": "ongoing"
 };
 
 fetch(url, {
@@ -23516,10 +23516,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="PATCHapi-vendor-challenges--id--status"
-               value="upcoming"
+               value="ongoing"
                data-component="body">
     <br>
-<p>Example: <code>upcoming</code></p>
+<p>Example: <code>ongoing</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>upcoming</code></li> <li><code>ongoing</code></li> <li><code>completed</code></li></ul>
         </div>
@@ -23542,7 +23542,7 @@ Must be one of:
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"type\": \"weekly\"
+    \"type\": \"daily\"
 }"
 </code></pre></div>
 
@@ -23558,7 +23558,7 @@ const headers = {
 };
 
 let body = {
-    "type": "weekly"
+    "type": "daily"
 };
 
 fetch(url, {
@@ -23666,10 +23666,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="GETapi-vendor-vendor-report"
-               value="weekly"
+               value="daily"
                data-component="body">
     <br>
-<p>Example: <code>weekly</code></p>
+<p>Example: <code>daily</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>daily</code></li> <li><code>weekly</code></li> <li><code>monthly</code></li> <li><code>yearly</code></li></ul>
         </div>
@@ -24835,13 +24835,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "commission_rate=21"\
     --form "cancellation_policy=consequatur"\
-    --form "is_store_enabled=false"\
-    --form "is_challenges_enabled=false"\
+    --form "is_store_enabled=true"\
+    --form "is_challenges_enabled=0"\
     --form "is_videos_enabled=true"\
     --form "terms=consequatur"\
     --form "privacy_policy=consequatur"\
     --form "about_us=consequatur"\
-    --form "banner=@C:\Users\Feby Emad\AppData\Local\Temp\php1362.tmp" </code></pre></div>
+    --form "banner=@C:\Users\Feby Emad\AppData\Local\Temp\php52D7.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -24857,8 +24857,8 @@ const headers = {
 const body = new FormData();
 body.append('commission_rate', '21');
 body.append('cancellation_policy', 'consequatur');
-body.append('is_store_enabled', 'false');
-body.append('is_challenges_enabled', 'false');
+body.append('is_store_enabled', 'true');
+body.append('is_challenges_enabled', '0');
 body.append('is_videos_enabled', 'true');
 body.append('terms', 'consequatur');
 body.append('privacy_policy', 'consequatur');
@@ -24978,10 +24978,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="is_store_enabled"                data-endpoint="POSTapi-settings"
-               value="false"
+               value="true"
                data-component="body">
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>0</code></li> <li><code>1</code></li> <li><code>true</code></li> <li><code>false</code></li></ul>
         </div>
@@ -24992,10 +24992,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="is_challenges_enabled"                data-endpoint="POSTapi-settings"
-               value="false"
+               value="0"
                data-component="body">
     <br>
-<p>تعديل بسيط لضمان القبول. Example: <code>false</code></p>
+<p>تعديل بسيط لضمان القبول. Example: <code>0</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>0</code></li> <li><code>1</code></li> <li><code>true</code></li> <li><code>false</code></li></ul>
         </div>
@@ -25059,7 +25059,7 @@ Must be one of:
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php1362.tmp</code></p>
+<p>Must be an image. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php52D7.tmp</code></p>
         </div>
         </form>
 
@@ -25208,7 +25208,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "title=vmqeopfuudtdsufvyvddq"\
     --form "link=http://www.kunde.com/"\
-    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php13E0.tmp" </code></pre></div>
+    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php5364.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -25330,7 +25330,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php13E0.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php5364.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>link</code></b>&nbsp;&nbsp;
@@ -25364,7 +25364,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --form "title=vmqeopfuudtdsufvyvddq"\
     --form "link=http://www.kunde.com/"\
-    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php1420.tmp" </code></pre></div>
+    --form "image=@C:\Users\Feby Emad\AppData\Local\Temp\php53B4.tmp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -25503,7 +25503,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php1420.tmp</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>C:\Users\Feby Emad\AppData\Local\Temp\php53B4.tmp</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>link</code></b>&nbsp;&nbsp;
@@ -27064,7 +27064,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --data "{
     \"title\": \"vmqeopfuudtdsufvyvddq\",
     \"content\": \"consequatur\",
-    \"type\": \"privacy\"
+    \"type\": \"about\"
 }"
 </code></pre></div>
 
@@ -27082,7 +27082,7 @@ const headers = {
 let body = {
     "title": "vmqeopfuudtdsufvyvddq",
     "content": "consequatur",
-    "type": "privacy"
+    "type": "about"
 };
 
 fetch(url, {
@@ -27198,10 +27198,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="type"                data-endpoint="POSTapi-pages"
-               value="privacy"
+               value="about"
                data-component="body">
     <br>
-<p>Example: <code>privacy</code></p>
+<p>Example: <code>about</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>about</code></li> <li><code>terms</code></li> <li><code>privacy</code></li> <li><code>policy</code></li></ul>
         </div>
