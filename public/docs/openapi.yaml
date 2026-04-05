@@ -1,0 +1,5363 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+tags:
+  -
+    name: Endpoints
+    description: ''
+paths:
+  /api/register:
+    post:
+      summary: ''
+      operationId: postApiRegister
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: kunde.eloisa@example.com
+                password:
+                  type: string
+                  description: 'Must be at least 6 characters.'
+                  example: '4[*UyPJ"}6'
+                city:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+                role:
+                  type: string
+                  description: ''
+                  example: player
+                  enum:
+                    - player
+                    - coach
+                    - vendor
+                    - merchant
+                    - admin
+                    - photographer
+                  nullable: true
+                referral_code:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+                birth_date:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-04-05T01:33:32'
+                gender:
+                  type: string
+                  description: ''
+                  example: male
+                  enum:
+                    - male
+                    - female
+              required:
+                - name
+                - email
+                - password
+                - birth_date
+                - gender
+      security: []
+  /api/login:
+    post:
+      summary: ''
+      operationId: postApiLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: qkunze@example.com
+                password:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - email
+                - password
+      security: []
+  /api/forgot-password:
+    post:
+      summary: ''
+      operationId: postApiForgotPassword
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: qkunze@example.com
+              required:
+                - email
+      security: []
+  /api/reset-password:
+    post:
+      summary: ''
+      operationId: postApiResetPassword
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: qkunze@example.com
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: 'Z5ij-e/dl4m{o,'
+                token:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - email
+                - password
+                - token
+      security: []
+  /api/logout:
+    post:
+      summary: ''
+      operationId: postApiLogout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/wallet:
+    get:
+      summary: ''
+      operationId: getApiWallet
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/wallet/deposit:
+    post:
+      summary: ''
+      operationId: postApiWalletDeposit
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 73
+              required:
+                - amount
+      security: []
+  /api/wallet/withdraw:
+    post:
+      summary: ''
+      operationId: postApiWalletWithdraw
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 73
+              required:
+                - amount
+      security: []
+  /api/bookings:
+    post:
+      summary: ''
+      operationId: postApiBookings
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                bookable_type:
+                  type: string
+                  description: ''
+                  example: gym
+                  enum:
+                    - stadium
+                    - academy
+                    - coach
+                    - gym
+                    - coach_service
+                    - academy_service
+                bookable_id:
+                  type: integer
+                  description: ''
+                  example: 17
+                start_time:
+                  type: string
+                  description: 'Must be a valid date in the format <code>H:i</code>.'
+                  example: '01:33'
+                date:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-04-05T01:33:33'
+                hours:
+                  type: integer
+                  description: 'This field is required when <code>type</code> is <code>daily</code>. Must be at least 1.'
+                  example: 45
+                  nullable: true
+                payment_method:
+                  type: string
+                  description: ''
+                  example: visa
+                  enum:
+                    - visa
+                    - cash
+                    - wallet
+                type:
+                  type: string
+                  description: ''
+                  example: daily
+                  enum:
+                    - daily
+                    - package
+                package_id:
+                  type: integer
+                  description: 'This field is required when <code>type</code> is <code>package</code>.'
+                  example: 17
+                  nullable: true
+                use_points:
+                  type: integer
+                  description: 'Must be at least 0.'
+                  example: 45
+                  nullable: true
+                full_name:
+                  type: string
+                  description: 'للاكاديميات. This field is required when <code>bookable_type</code> is <code>academy</code>. Must not be greater than 255 characters.'
+                  example: qeopfuudtdsufvyvddqam
+                age:
+                  type: integer
+                  description: 'This field is required when <code>bookable_type</code> is <code>academy</code>.'
+                  example: 17
+                parent_id_card:
+                  type: string
+                  format: binary
+                  description: 'Must be an image.'
+                  nullable: true
+                personal_photo:
+                  type: string
+                  format: binary
+                  description: 'Must be an image.'
+                  nullable: true
+                coupon_code:
+                  type: string
+                  description: 'The <code>code</code> of an existing record in the coupons table.'
+                  example: consequatur
+                  nullable: true
+                is_recurring:
+                  type: boolean
+                  description: للملعب.
+                  example: false
+                  nullable: true
+                recurring_weeks:
+                  type: integer
+                  description: 'This field is required when <code>is_recurring</code> is <code>true</code>. Must be at least 1. Must not be greater than 4.'
+                  example: 2
+              required:
+                - bookable_type
+                - bookable_id
+                - start_time
+                - date
+                - payment_method
+                - type
+      security: []
+  /api/my-bookings:
+    get:
+      summary: ''
+      operationId: getApiMyBookings
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/bookings/available-slots:
+    get:
+      summary: ''
+      operationId: getApiBookingsAvailableSlots
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-04-05T01:33:33'
+                bookable_id:
+                  type: integer
+                  description: ''
+                  example: 17
+                bookable_type:
+                  type: string
+                  description: ''
+                  example: academy
+                  enum:
+                    - stadium
+                    - academy
+                    - coach
+                    - facility
+                    - studio
+                    - gym
+              required:
+                - date
+                - bookable_id
+                - bookable_type
+      security: []
+  '/api/bookings/{id}/status':
+    post:
+      summary: ''
+      operationId: postApiBookingsIdStatus
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: rejected
+                  enum:
+                    - confirmed
+                    - rejected
+                rejection_reason:
+                  type: string
+                  description: 'This field is required when <code>status</code> is <code>rejected</code>. Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+              required:
+                - status
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the booking.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/stadiums:
+    get:
+      summary: ''
+      operationId: getApiStadiums
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/stadiums/{id}':
+    get:
+      summary: ''
+      operationId: getApiStadiumsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the stadium.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/stadium-schedules/{stadium_id}':
+    post:
+      summary: ''
+      operationId: postApiStadiumSchedulesStadium_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                day:
+                  type: string
+                  description: ''
+                  example: consequatur
+                start_time:
+                  type: string
+                  description: ''
+                  example: consequatur
+                end_time:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - day
+                - start_time
+                - end_time
+      security: []
+    get:
+      summary: ''
+      operationId: getApiStadiumSchedulesStadium_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: stadium_id
+        description: 'The ID of the stadium.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/stores:
+    get:
+      summary: ''
+      operationId: getApiStores
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/stores/{id}':
+    get:
+      summary: ''
+      operationId: getApiStoresId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the store.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/academies:
+    get:
+      summary: ''
+      operationId: getApiAcademies
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/academies/{id}':
+    get:
+      summary: ''
+      operationId: getApiAcademiesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the academy.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/academies/{academy}/plans':
+    get:
+      summary: ''
+      operationId: getApiAcademiesAcademyPlans
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: academy
+        description: 'The academy.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/my-academy-subscriptions:
+    get:
+      summary: ''
+      operationId: getApiMyAcademySubscriptions
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/academy-subscriptions:
+    post:
+      summary: ''
+      operationId: postApiAcademySubscriptions
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                academy_plan_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academy_plans table.'
+                  example: consequatur
+              required:
+                - academy_plan_id
+      security: []
+  '/api/academies/{academy}/services':
+    get:
+      summary: ''
+      operationId: getApiAcademiesAcademyServices
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: academy
+        description: 'The academy.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/coaches:
+    get:
+      summary: ''
+      operationId: getApiCoaches
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/coaches/{id}':
+    get:
+      summary: ''
+      operationId: getApiCoachesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the coach.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/coach-book:
+    post:
+      summary: ''
+      operationId: postApiCoachBook
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                private_coach_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the private_coaches table.'
+                  example: consequatur
+                start_time:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-04-05T01:33:34'
+                hours:
+                  type: integer
+                  description: ''
+                  example: 17
+              required:
+                - private_coach_id
+                - start_time
+                - hours
+      security: []
+  /api/reviews:
+    post:
+      summary: ''
+      operationId: postApiReviews
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reviewable_type:
+                  type: string
+                  description: ''
+                  example: consequatur
+                reviewable_id:
+                  type: integer
+                  description: ''
+                  example: 17
+                rating:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 5.'
+                  example: 3
+                comment:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+              required:
+                - reviewable_type
+                - reviewable_id
+                - rating
+      security: []
+  '/api/reviews/{id}/hide':
+    post:
+      summary: ''
+      operationId: postApiReviewsIdHide
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the review.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/reviews/{type}/{id}/average':
+    get:
+      summary: ''
+      operationId: getApiReviewsTypeIdAverage
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: type
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the {type}.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/PublicIndex:
+    get:
+      summary: 'Display a listing of the resource.'
+      operationId: displayAListingOfTheResource
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/gym-plans:
+    get:
+      summary: ''
+      operationId: getApiGymPlans
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/gym-subscribe:
+    post:
+      summary: ''
+      operationId: postApiGymSubscribe
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plan_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the gym_plans table.'
+                  example: consequatur
+              required:
+                - plan_id
+      security: []
+  /api/challenges:
+    get:
+      summary: ''
+      operationId: getApiChallenges
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/challenges/{id}':
+    get:
+      summary: ''
+      operationId: getApiChallengesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the challenge.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/challenges/{id}/join':
+    post:
+      summary: ''
+      operationId: postApiChallengesIdJoin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the challenge.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/challenges/{id}/pay':
+    post:
+      summary: ''
+      operationId: postApiChallengesIdPay
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_method:
+                  type: string
+                  description: ''
+                  example: visa
+                  enum:
+                    - wallet
+                    - visa
+              required:
+                - payment_method
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the challenge.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/challenges/{challenge_id}/rate-player':
+    post:
+      summary: ''
+      operationId: postApiChallengesChallenge_idRatePlayer
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rated_player_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: consequatur
+                rating:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 5.'
+                  example: 3
+                comment:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+              required:
+                - rated_player_id
+                - rating
+      security: []
+    parameters:
+      -
+        in: path
+        name: challenge_id
+        description: 'The ID of the challenge.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/player/{user_id}/ratings':
+    get:
+      summary: ''
+      operationId: getApiPlayerUser_idRatings
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/categories:
+    get:
+      summary: ''
+      operationId: getApiCategories
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/categories/{id}':
+    get:
+      summary: ''
+      operationId: getApiCategoriesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the category.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/products:
+    get:
+      summary: ''
+      operationId: getApiProducts
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/orders:
+    post:
+      summary: ''
+      operationId: postApiOrders
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  description: ''
+                  example:
+                    - []
+                  items:
+                    type: object
+                    properties:
+                      product_id:
+                        type: string
+                        description: 'The <code>id</code> of an existing record in the products table.'
+                        example: consequatur
+                      quantity:
+                        type: integer
+                        description: 'Must be at least 1.'
+                        example: 45
+                    required:
+                      - product_id
+                      - quantity
+              required:
+                - items
+      security: []
+  /api/cart:
+    get:
+      summary: ''
+      operationId: getApiCart
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiCart
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the products table.'
+                  example: consequatur
+                quantity:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 45
+              required:
+                - product_id
+                - quantity
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiCart
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/cart/{id}':
+    put:
+      summary: ''
+      operationId: putApiCartId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 73
+              required:
+                - quantity
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiCartId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the cart.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/checkout:
+    post:
+      summary: ''
+      operationId: postApiCheckout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/orders/{id}/pay':
+    post:
+      summary: ''
+      operationId: postApiOrdersIdPay
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_method:
+                  type: string
+                  description: ''
+                  example: visa
+                  enum:
+                    - wallet
+                    - visa
+              required:
+                - payment_method
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the order.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/coupons:
+    get:
+      summary: ''
+      operationId: getApiCoupons
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/videos:
+    get:
+      summary: ''
+      operationId: getApiVideos
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiVideos
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                description:
+                  type: string
+                  description: ''
+                  example: 'Dolores dolorum amet iste laborum eius est dolor.'
+                  nullable: true
+                url:
+                  type: string
+                  description: 'Must be a valid URL.'
+                  example: 'http://reynolds.com/'
+                type:
+                  type: string
+                  description: ''
+                  example: academy
+                  enum:
+                    - user
+                    - academy
+                    - coach
+                academy_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academies table.'
+                  example: null
+                  nullable: true
+                coach_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the private_coaches table.'
+                  example: null
+                  nullable: true
+              required:
+                - title
+                - url
+                - type
+      security: []
+  '/api/videos/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiVideosId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the video.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/videos/{id}/stats':
+    get:
+      summary: ''
+      operationId: getApiVideosIdStats
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the video.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/latestVideos:
+    get:
+      summary: ''
+      operationId: getApiLatestVideos
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/videos/{id}/report':
+    post:
+      summary: ''
+      operationId: postApiVideosIdReport
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: 'Must be at least 5 characters. Must not be greater than 500 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+              required:
+                - reason
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the video.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/chats:
+    get:
+      summary: ''
+      operationId: getApiChats
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/chats/{id}/close':
+    post:
+      summary: ''
+      operationId: postApiChatsIdClose
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the chat.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/users/{id}/block':
+    post:
+      summary: ''
+      operationId: postApiUsersIdBlock
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/chats/reports:
+    get:
+      summary: ''
+      operationId: getApiChatsReports
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/chats/flagged:
+    get:
+      summary: ''
+      operationId: getApiChatsFlagged
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/chat/send:
+    post:
+      summary: ''
+      operationId: postApiChatSend
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                conversation_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the conversations table.'
+                  example: consequatur
+                message:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+                file:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must not be greater than 10240 kilobytes.'
+                  nullable: true
+                type:
+                  type: string
+                  description: ''
+                  example: audio
+                  enum:
+                    - text
+                    - image
+                    - audio
+                receiver_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: consequatur
+              required:
+                - conversation_id
+                - type
+                - receiver_id
+      security: []
+  /api/conversations:
+    get:
+      summary: 'Display a listing of the resource.'
+      operationId: displayAListingOfTheResource
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'Store a newly created resource in storage.'
+      operationId: storeANewlyCreatedResourceInStorage
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - title
+      security: []
+  '/api/conversations/{conversation_id}/assign':
+    post:
+      summary: ''
+      operationId: postApiConversationsConversation_idAssign
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: conversation_id
+        description: 'The ID of the conversation.'
+        example: 17
+        required: true
+        schema:
+          type: integer
+  /api/my-notifications:
+    get:
+      summary: ''
+      operationId: getApiMyNotifications
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/pages:
+    get:
+      summary: ''
+      operationId: getApiPages
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiPages
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                content:
+                  type: string
+                  description: ''
+                  example: consequatur
+                type:
+                  type: string
+                  description: ''
+                  example: privacy
+                  enum:
+                    - about
+                    - terms
+                    - privacy
+                    - policy
+              required:
+                - title
+                - content
+                - type
+      security: []
+  '/api/pages/{id}':
+    get:
+      summary: ''
+      operationId: getApiPagesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiPagesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                content:
+                  type: string
+                  description: ''
+                  example: consequatur
+                type:
+                  type: string
+                  description: ''
+                  example: about
+                  enum:
+                    - about
+                    - terms
+                    - privacy
+                    - policy
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiPagesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the page.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/wallet/transfer:
+    post:
+      summary: ''
+      operationId: postApiWalletTransfer
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/Topcoaches:
+    get:
+      summary: ''
+      operationId: getApiTopcoaches
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    academy_id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: 'Coach Ahmed'
+                    sport:
+                      type: string
+                      example: Football
+                    price_per_hour:
+                      type: string
+                      example: '200.00'
+                    bio:
+                      type: string
+                      example: null
+                      nullable: true
+                    reviews_avg_rating:
+                      type: string
+                      example: null
+                      nullable: true
+                    academy:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        vendor_id:
+                          type: integer
+                          example: 1
+                        academy_type_id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: 'Academy A'
+                        location:
+                          type: string
+                          example: Cairo
+                        is_active:
+                          type: integer
+                          example: 1
+                        price_per_hour:
+                          type: string
+                          example: '200.00'
+                        created_at:
+                          type: string
+                          example: '2026-03-29T15:15:27.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2026-03-29T15:15:27.000000Z'
+                    locations:
+                      type: array
+                      example:
+                        -
+                          id: 1
+                          private_coach_id: 1
+                          location: 'Cairo Stadium'
+                          created_at: '2026-03-29T20:59:46.000000Z'
+                          updated_at: '2026-03-29T20:59:46.000000Z'
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          private_coach_id:
+                            type: integer
+                            example: 1
+                          location:
+                            type: string
+                            example: 'Cairo Stadium'
+                          created_at:
+                            type: string
+                            example: '2026-03-29T20:59:46.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2026-03-29T20:59:46.000000Z'
+                    services:
+                      type: array
+                      example:
+                        -
+                          id: 1
+                          private_coach_id: 1
+                          name: 'Personal Training'
+                          price: '300.00'
+                          created_at: '2026-03-29T21:15:10.000000Z'
+                          updated_at: '2026-03-29T21:15:10.000000Z'
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          private_coach_id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: 'Personal Training'
+                          price:
+                            type: string
+                            example: '300.00'
+                          created_at:
+                            type: string
+                            example: '2026-03-29T21:15:10.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2026-03-29T21:15:10.000000Z'
+                example:
+                  -
+                    id: 1
+                    academy_id: 1
+                    name: 'Coach Ahmed'
+                    sport: Football
+                    price_per_hour: '200.00'
+                    bio: null
+                    reviews_avg_rating: null
+                    academy:
+                      id: 1
+                      vendor_id: 1
+                      academy_type_id: 1
+                      name: 'Academy A'
+                      location: Cairo
+                      is_active: 1
+                      price_per_hour: '200.00'
+                      created_at: '2026-03-29T15:15:27.000000Z'
+                      updated_at: '2026-03-29T15:15:27.000000Z'
+                    locations:
+                      -
+                        id: 1
+                        private_coach_id: 1
+                        location: 'Cairo Stadium'
+                        created_at: '2026-03-29T20:59:46.000000Z'
+                        updated_at: '2026-03-29T20:59:46.000000Z'
+                    services:
+                      -
+                        id: 1
+                        private_coach_id: 1
+                        name: 'Personal Training'
+                        price: '300.00'
+                        created_at: '2026-03-29T21:15:10.000000Z'
+                        updated_at: '2026-03-29T21:15:10.000000Z'
+      tags:
+        - Endpoints
+      security: []
+  /api/Topacademies:
+    get:
+      summary: ''
+      operationId: getApiTopacademies
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    vendor_id:
+                      type: integer
+                      example: 1
+                    academy_type_id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: 'Academy A'
+                    location:
+                      type: string
+                      example: Cairo
+                    is_active:
+                      type: integer
+                      example: 1
+                    price_per_hour:
+                      type: string
+                      example: '200.00'
+                    created_at:
+                      type: string
+                      example: '2026-03-29T15:15:27.000000Z'
+                    updated_at:
+                      type: string
+                      example: '2026-03-29T15:15:27.000000Z'
+                    reviews_avg_rating:
+                      type: string
+                      example: '5.0000'
+                    subscriptions_count:
+                      type: integer
+                      example: 1
+                example:
+                  -
+                    id: 1
+                    vendor_id: 1
+                    academy_type_id: 1
+                    name: 'Academy A'
+                    location: Cairo
+                    is_active: 1
+                    price_per_hour: '200.00'
+                    created_at: '2026-03-29T15:15:27.000000Z'
+                    updated_at: '2026-03-29T15:15:27.000000Z'
+                    reviews_avg_rating: '5.0000'
+                    subscriptions_count: 1
+                  -
+                    id: 2
+                    vendor_id: 1
+                    academy_type_id: 1
+                    name: 'Academy A'
+                    location: Cairo
+                    is_active: 1
+                    price_per_hour: '200.00'
+                    created_at: '2026-03-29T17:07:05.000000Z'
+                    updated_at: '2026-03-29T17:07:05.000000Z'
+                    reviews_avg_rating: null
+                    subscriptions_count: 0
+      tags:
+        - Endpoints
+      security: []
+  /api/Topstadiums:
+    get:
+      summary: ''
+      operationId: getApiTopstadiums
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: 'ملعب الزمالك'
+                    city:
+                      type: string
+                      example: القاهرة
+                    address:
+                      type: string
+                      example: 'مدينة نصر'
+                    price_per_hour:
+                      type: string
+                      example: '200.00'
+                    description:
+                      type: string
+                      example: null
+                      nullable: true
+                    created_at:
+                      type: string
+                      example: '2026-03-29T14:13:17.000000Z'
+                    updated_at:
+                      type: string
+                      example: '2026-03-30T06:00:49.000000Z'
+                    reviews_avg_rating:
+                      type: string
+                      example: null
+                      nullable: true
+                    bookings_count:
+                      type: integer
+                      example: 1
+                example:
+                  -
+                    id: 1
+                    name: 'ملعب الزمالك'
+                    city: القاهرة
+                    address: 'مدينة نصر'
+                    price_per_hour: '200.00'
+                    description: null
+                    created_at: '2026-03-29T14:13:17.000000Z'
+                    updated_at: '2026-03-30T06:00:49.000000Z'
+                    reviews_avg_rating: null
+                    bookings_count: 1
+                  -
+                    id: 2
+                    name: 'ملعب الزمالك'
+                    city: القاهرة
+                    address: 'مدينة نصر'
+                    price_per_hour: '200.00'
+                    description: null
+                    created_at: '2026-03-29T14:14:36.000000Z'
+                    updated_at: '2026-03-29T14:23:48.000000Z'
+                    reviews_avg_rating: null
+                    bookings_count: 0
+                  -
+                    id: 4
+                    name: 'ملعب الزمالك'
+                    city: القاهرة
+                    address: 'مدينة نصر'
+                    price_per_hour: '200.00'
+                    description: 'ملعب ممتاز'
+                    created_at: '2026-03-29T14:16:43.000000Z'
+                    updated_at: '2026-03-29T14:16:43.000000Z'
+                    reviews_avg_rating: null
+                    bookings_count: 0
+      tags:
+        - Endpoints
+      security: []
+  /api/Topgyms:
+    get:
+      summary: ''
+      operationId: getApiTopgyms
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    vendor_id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: 'Gym A'
+                    type:
+                      type: string
+                      example: gym
+                    location:
+                      type: string
+                      example: Cairo
+                    description:
+                      type: string
+                      example: 'Best gym in town'
+                    created_at:
+                      type: string
+                      example: '2026-03-29T20:26:53.000000Z'
+                    updated_at:
+                      type: string
+                      example: '2026-03-29T20:26:53.000000Z'
+                    reviews_avg_rating:
+                      type: string
+                      example: null
+                      nullable: true
+                    subscriptions_count:
+                      type: integer
+                      example: 2
+                example:
+                  -
+                    id: 1
+                    vendor_id: 1
+                    name: 'Gym A'
+                    type: gym
+                    location: Cairo
+                    description: 'Best gym in town'
+                    created_at: '2026-03-29T20:26:53.000000Z'
+                    updated_at: '2026-03-29T20:26:53.000000Z'
+                    reviews_avg_rating: null
+                    subscriptions_count: 2
+                  -
+                    id: 2
+                    vendor_id: 1
+                    name: 'Gym A'
+                    type: gym
+                    location: Cairo
+                    description: 'Best gym in town'
+                    created_at: '2026-03-29T20:26:58.000000Z'
+                    updated_at: '2026-03-29T20:26:58.000000Z'
+                    reviews_avg_rating: null
+                    subscriptions_count: 0
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/stadiums:
+    get:
+      summary: ''
+      operationId: getApiVendorStadiums
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiVendorStadiums
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                description:
+                  type: string
+                  description: ''
+                  example: null
+                  nullable: true
+                city:
+                  type: string
+                  description: ''
+                  example: consequatur
+                address:
+                  type: string
+                  description: ''
+                  example: consequatur
+                price_per_hour:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+              required:
+                - name
+                - city
+                - address
+                - price_per_hour
+      security: []
+  '/api/vendor/stadiums/{id}':
+    get:
+      summary: ''
+      operationId: getApiVendorStadiumsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiVendorStadiumsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: null
+                price_per_hour:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorStadiumsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the stadium.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/vendor/stadiums/{id}/stats':
+    get:
+      summary: ''
+      operationId: getApiVendorStadiumsIdStats
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the stadium.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/vendor/stadium/heatmap:
+    get:
+      summary: ''
+      operationId: getApiVendorStadiumHeatmap
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/stadium-schedules/{stadium_id}':
+    post:
+      summary: ''
+      operationId: postApiVendorStadiumSchedulesStadium_id
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                day:
+                  type: string
+                  description: ''
+                  example: consequatur
+                start_time:
+                  type: string
+                  description: ''
+                  example: consequatur
+                end_time:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - day
+                - start_time
+                - end_time
+      security: []
+    get:
+      summary: ''
+      operationId: getApiVendorStadiumSchedulesStadium_id
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: stadium_id
+        description: 'The ID of the stadium.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/academy-plans:
+    get:
+      summary: ''
+      operationId: getApiVendorAcademyPlans
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiVendorAcademyPlans
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                academy_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academies table.'
+                  example: consequatur
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                type:
+                  type: string
+                  description: ''
+                  example: consequatur
+                price:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                max_students:
+                  type: integer
+                  description: ''
+                  example: 17
+              required:
+                - academy_id
+                - name
+                - type
+                - price
+                - max_students
+      security: []
+  '/api/vendor/academy-plans/{id}':
+    put:
+      summary: ''
+      operationId: putApiVendorAcademyPlansId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorAcademyPlansId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the academy plan.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/vendor/academies:
+    get:
+      summary: ''
+      operationId: getApiVendorAcademies
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiVendorAcademies
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                academy_type_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academy_types table.'
+                  example: consequatur
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                location:
+                  type: string
+                  description: ''
+                  example: consequatur
+                price_per_hour:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - academy_type_id
+                - name
+                - location
+                - price_per_hour
+      security: []
+  '/api/vendor/academies/{id}':
+    get:
+      summary: ''
+      operationId: getApiVendorAcademiesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiVendorAcademiesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorAcademiesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the academy.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/vendor/academy-services:
+    post:
+      summary: ''
+      operationId: postApiVendorAcademyServices
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                academy_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academies table.'
+                  example: consequatur
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                price:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                duration:
+                  type: integer
+                  description: ''
+                  example: 17
+                max_number:
+                  type: integer
+                  description: ''
+                  example: 17
+              required:
+                - academy_id
+                - name
+                - price
+                - duration
+                - max_number
+      security: []
+    get:
+      summary: ''
+      operationId: getApiVendorAcademyServices
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/academy-services/{id}':
+    put:
+      summary: ''
+      operationId: putApiVendorAcademyServicesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorAcademyServicesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the academy service.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/vendor/academy-services/{id}/toggle':
+    post:
+      summary: ''
+      operationId: postApiVendorAcademyServicesIdToggle
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the academy service.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/vendor/academy-services/{id}/stats':
+    get:
+      summary: ''
+      operationId: getApiVendorAcademyServicesIdStats
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the academy service.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/mostRequestedServices:
+    get:
+      summary: ''
+      operationId: getApiVendorMostRequestedServices
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/academy-subscriptions:
+    get:
+      summary: ''
+      operationId: getApiVendorAcademySubscriptions
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/academy-subscribe:
+    post:
+      summary: ''
+      operationId: postApiVendorAcademySubscribe
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                academy_plan_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academy_plans table.'
+                  example: consequatur
+              required:
+                - academy_plan_id
+      security: []
+  /api/vendor/stores:
+    get:
+      summary: ''
+      operationId: getApiVendorStores
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiVendorStores
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                description:
+                  type: string
+                  description: ''
+                  example: 'Dolores dolorum amet iste laborum eius est dolor.'
+                  nullable: true
+                logo:
+                  type: string
+                  format: binary
+                  description: 'Must be an image.'
+                  nullable: true
+              required:
+                - name
+      security: []
+  '/api/vendor/stores/{id}':
+    get:
+      summary: ''
+      operationId: getApiVendorStoresId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiVendorStoresId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                description:
+                  type: string
+                  description: ''
+                  example: 'Dolores dolorum amet iste laborum eius est dolor.'
+                  nullable: true
+                logo:
+                  type: string
+                  format: binary
+                  description: 'Must be an image.'
+                  nullable: true
+                is_active:
+                  type: boolean
+                  description: ''
+                  example: true
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorStoresId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the store.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/vendorProducts:
+    get:
+      summary: ''
+      operationId: getApiVendorVendorProducts
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/products/{product}':
+    put:
+      summary: ''
+      operationId: putApiVendorProductsProduct
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: product
+        description: 'The product.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/products:
+    post:
+      summary: ''
+      operationId: postApiVendorProducts
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                description:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'Dolorum amet iste laborum eius est dolor.'
+                price:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                discount:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                image:
+                  type: string
+                  description: ''
+                  example: null
+                  nullable: true
+                store_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the stores table.'
+                  example: consequatur
+                category_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the categories table.'
+                  example: consequatur
+              required:
+                - name
+                - description
+                - price
+                - discount
+                - store_id
+                - category_id
+      security: []
+  '/api/vendor/products/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiVendorProductsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the product.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/categories:
+    get:
+      summary: ''
+      operationId: getApiVendorCategories
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiVendorCategories
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
+              required:
+                - name
+      security: []
+  '/api/vendor/categories/{id}':
+    put:
+      summary: ''
+      operationId: putApiVendorCategoriesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
+              required:
+                - name
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorCategoriesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the category.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/orders:
+    get:
+      summary: ''
+      operationId: getApiVendorOrders
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/orders/{id}/status':
+    post:
+      summary: ''
+      operationId: postApiVendorOrdersIdStatus
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: confirmed
+                  enum:
+                    - pending
+                    - confirmed
+                    - shipped
+                    - delivered
+                    - cancelled
+              required:
+                - status
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the order.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/statistics:
+    get:
+      summary: ''
+      operationId: getApiVendorStatistics
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/gyms:
+    get:
+      summary: ''
+      operationId: getApiVendorGyms
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'Store a newly created resource in storage.'
+      operationId: storeANewlyCreatedResourceInStorage
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                type:
+                  type: string
+                  description: ''
+                  example: consequatur
+                location:
+                  type: string
+                  description: ''
+                  example: consequatur
+                description:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - name
+                - type
+                - location
+                - description
+      security: []
+  '/api/vendor/gyms/{id}':
+    get:
+      summary: 'Display the specified resource.'
+      operationId: displayTheSpecifiedResource
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: 'Update the specified resource in storage.'
+      operationId: updateTheSpecifiedResourceInStorage
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'Remove the specified resource from storage.'
+      operationId: removeTheSpecifiedResourceFromStorage
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the gym.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/vendor/gyms/{id}/plans':
+    post:
+      summary: ''
+      operationId: postApiVendorGymsIdPlans
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                price:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                type:
+                  type: string
+                  description: ''
+                  example: 1year
+                  enum:
+                    - weekly
+                    - monthly
+                    - 3Month
+                    - 6month
+                    - 1year
+                hours_per_day:
+                  type: integer
+                  description: ''
+                  example: 17
+              required:
+                - name
+                - price
+                - type
+                - hours_per_day
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the gym.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/vendor/gym-plans/{id}':
+    put:
+      summary: ''
+      operationId: putApiVendorGymPlansId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                price:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                type:
+                  type: string
+                  description: ''
+                  example: 3Month
+                  enum:
+                    - weekly
+                    - monthly
+                    - 3Month
+                    - 6month
+                    - 1year
+                hours:
+                  type: integer
+                  description: ''
+                  example: 17
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorGymPlansId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the gym plan.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/vendor/gym-subscriptions:
+    get:
+      summary: ''
+      operationId: getApiVendorGymSubscriptions
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/gym-subscriptions/{id}':
+    delete:
+      summary: ''
+      operationId: deleteApiVendorGymSubscriptionsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the gym subscription.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/vendor/gyms/{id}/subscribers':
+    get:
+      summary: ''
+      operationId: getApiVendorGymsIdSubscribers
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the gym.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/vendor/gym-auto-renew:
+    post:
+      summary: ''
+      operationId: postApiVendorGymAutoRenew
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/gym-schedule/{id}':
+    get:
+      summary: ''
+      operationId: getApiVendorGymScheduleId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the gym schedule.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/private-coaches:
+    get:
+      summary: ''
+      operationId: getApiVendorPrivateCoaches
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiVendorPrivateCoaches
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                academy_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academies table.'
+                  example: consequatur
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+                sport:
+                  type: string
+                  description: ''
+                  example: consequatur
+                price_per_hour:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - academy_id
+                - name
+                - sport
+                - price_per_hour
+      security: []
+  '/api/vendor/private-coaches/{id}':
+    get:
+      summary: ''
+      operationId: getApiVendorPrivateCoachesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiVendorPrivateCoachesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorPrivateCoachesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the private coach.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/vendor/coaches/location:
+    post:
+      summary: ''
+      operationId: postApiVendorCoachesLocation
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/coaches/service:
+    post:
+      summary: ''
+      operationId: postApiVendorCoachesService
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/my-coach-bookings:
+    get:
+      summary: ''
+      operationId: getApiVendorMyCoachBookings
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/coach/{id}/stats':
+    get:
+      summary: ''
+      operationId: getApiVendorCoachIdStats
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the coach.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/vendorBookings:
+    get:
+      summary: ''
+      operationId: getApiVendorVendorBookings
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/payments/{id}/status':
+    post:
+      summary: ''
+      operationId: postApiVendorPaymentsIdStatus
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: confirmed
+                  enum:
+                    - confirmed
+                    - refunded
+              required:
+                - status
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the payment.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/payments/stats:
+    get:
+      summary: ''
+      operationId: getApiVendorPaymentsStats
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/payments/export/excel:
+    get:
+      summary: ''
+      operationId: getApiVendorPaymentsExportExcel
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/payments/export/pdf:
+    get:
+      summary: ''
+      operationId: getApiVendorPaymentsExportPdf
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/coupons:
+    post:
+      summary: ''
+      operationId: postApiVendorCoupons
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: ''
+                  example: consequatur
+                type:
+                  type: string
+                  description: ''
+                  example: specific
+                  enum:
+                    - fixed
+                    - percent
+                    - blogger
+                    - specific
+                    - general
+                value:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                  nullable: true
+                max_usage:
+                  type: integer
+                  description: ''
+                  example: 17
+                  nullable: true
+                expires_at:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-04-05T01:33:42'
+                  nullable: true
+                services:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                products:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+              required:
+                - code
+                - type
+      security: []
+    get:
+      summary: ''
+      operationId: getApiVendorCoupons
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/vendor/coupons/{id}':
+    put:
+      summary: ''
+      operationId: putApiVendorCouponsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: ''
+                  example: null
+                type:
+                  type: string
+                  description: ''
+                  example: specific
+                  enum:
+                    - fixed
+                    - percent
+                    - blogger
+                    - specific
+                    - general
+                value:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                  nullable: true
+                max_usage:
+                  type: integer
+                  description: ''
+                  example: 17
+                  nullable: true
+                expires_at:
+                  type: string
+                  description: 'Must be a valid date.'
+                  example: '2026-04-05T01:33:43'
+                  nullable: true
+                services:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+                products:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+                  nullable: true
+              required:
+                - type
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiVendorCouponsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the coupon.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/notifications/user:
+    post:
+      summary: ''
+      operationId: postApiVendorNotificationsUser
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ''
+                  example: consequatur
+                title:
+                  type: string
+                  description: ''
+                  example: consequatur
+                message:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - user_id
+                - title
+                - message
+      security: []
+  /api/vendor/notifications/all:
+    post:
+      summary: ''
+      operationId: postApiVendorNotificationsAll
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: ''
+                  example: consequatur
+                message:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - title
+                - message
+      security: []
+  /api/vendor/notifications/role:
+    post:
+      summary: ''
+      operationId: postApiVendorNotificationsRole
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: ''
+                  example: consequatur
+                message:
+                  type: string
+                  description: ''
+                  example: consequatur
+                role:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - title
+                - message
+                - role
+      security: []
+  /api/vendor/ongoing:
+    get:
+      summary: ''
+      operationId: getApiVendorOngoing
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/challenges:
+    get:
+      summary: ''
+      operationId: getApiVendorChallenges
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiVendorChallenges
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: ''
+                  example: consequatur
+                academy_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academies table.'
+                  example: consequatur
+                max_players:
+                  type: integer
+                  description: ''
+                  example: 17
+                price:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                duration:
+                  type: integer
+                  description: ''
+                  example: 17
+                status:
+                  type: string
+                  description: ''
+                  example: completed
+                  enum:
+                    - upcoming
+                    - ongoing
+                    - completed
+              required:
+                - title
+                - academy_id
+                - max_players
+                - price
+                - duration
+                - status
+      security: []
+  '/api/vendor/challenges/{id}':
+    get:
+      summary: ''
+      operationId: getApiVendorChallengesId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: ''
+      operationId: putApiVendorChallengesId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: ''
+                  example: consequatur
+                academy_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the academies table.'
+                  example: null
+                max_players:
+                  type: integer
+                  description: ''
+                  example: 17
+                price:
+                  type: number
+                  description: ''
+                  example: 11613.31890586
+                duration:
+                  type: integer
+                  description: ''
+                  example: 17
+                status:
+                  type: string
+                  description: ''
+                  example: upcoming
+                  enum:
+                    - upcoming
+                    - ongoing
+                    - completed
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the challenge.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/vendor/challenges/{id}/status':
+    post:
+      summary: ''
+      operationId: postApiVendorChallengesIdStatus
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: ongoing
+                  enum:
+                    - upcoming
+                    - ongoing
+                    - completed
+              required:
+                - status
+      security: []
+    patch:
+      summary: ''
+      operationId: patchApiVendorChallengesIdStatus
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: ongoing
+                  enum:
+                    - upcoming
+                    - ongoing
+                    - completed
+              required:
+                - status
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the challenge.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/vendor/participants/{id}':
+    post:
+      summary: ''
+      operationId: postApiVendorParticipantsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: accepted
+                  enum:
+                    - accepted
+                    - rejected
+              required:
+                - status
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the participant.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/vendor/participants/{id}/ban':
+    post:
+      summary: ''
+      operationId: postApiVendorParticipantsIdBan
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the participant.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/vendor/challenges/{id}/stats':
+    get:
+      summary: ''
+      operationId: getApiVendorChallengesIdStats
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the challenge.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/vendor/vendor/report:
+    get:
+      summary: ''
+      operationId: getApiVendorVendorReport
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: ''
+                  example: daily
+                  enum:
+                    - daily
+                    - weekly
+                    - monthly
+                    - yearly
+              required:
+                - type
+      security: []
+  /api/vendor/reports/vendorCoachReviews:
+    get:
+      summary: ''
+      operationId: getApiVendorReportsVendorCoachReviews
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/reports/best-stadiums:
+    get:
+      summary: ''
+      operationId: getApiVendorReportsBestStadiums
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/reports/best-services:
+    get:
+      summary: ''
+      operationId: getApiVendorReportsBestServices
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/usersGrowth:
+    get:
+      summary: ''
+      operationId: getApiVendorUsersGrowth
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/vendor/latestVideos:
+    get:
+      summary: ''
+      operationId: getApiVendorLatestVideos
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/stadiums/{id}/approve':
+    post:
+      summary: ''
+      operationId: postApiStadiumsIdApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the stadium.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/stadiums/{id}/reject':
+    post:
+      summary: ''
+      operationId: postApiStadiumsIdReject
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the stadium.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/academy-type:
+    post:
+      summary: ''
+      operationId: postApiAcademyType
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ''
+                  example: consequatur
+              required:
+                - name
+      security: []
+  /api/settings:
+    get:
+      summary: ''
+      operationId: getApiSettings
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiSettings
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                commission_rate:
+                  type: number
+                  description: 'Must be at least 0. Must not be greater than 100.'
+                  example: 21
+                  nullable: true
+                cancellation_policy:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+                is_store_enabled:
+                  type: string
+                  description: ''
+                  example: 'false'
+                  enum:
+                    - '0'
+                    - '1'
+                    - 'true'
+                    - 'false'
+                  nullable: true
+                is_challenges_enabled:
+                  type: string
+                  description: 'تعديل بسيط لضمان القبول.'
+                  example: '0'
+                  enum:
+                    - '0'
+                    - '1'
+                    - 'true'
+                    - 'false'
+                  nullable: true
+                is_videos_enabled:
+                  type: string
+                  description: ''
+                  example: '0'
+                  enum:
+                    - '0'
+                    - '1'
+                    - 'true'
+                    - 'false'
+                  nullable: true
+                terms:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+                privacy_policy:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+                about_us:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: true
+                banner:
+                  type: string
+                  format: binary
+                  description: 'Must be an image.'
+                  nullable: true
+      security: []
+  /api/banners:
+    get:
+      summary: ''
+      operationId: getApiBanners
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiBanners
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                link:
+                  type: string
+                  description: 'Must be a valid URL.'
+                  example: 'http://www.kunde.com/'
+                  nullable: true
+              required:
+                - title
+                - image
+      security: []
+  '/api/banners/{id}':
+    put:
+      summary: ''
+      operationId: putApiBannersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                link:
+                  type: string
+                  description: 'Must be a valid URL.'
+                  example: 'http://www.kunde.com/'
+                  nullable: true
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiBannersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the banner.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/stores/{id}/toggle':
+    post:
+      summary: ''
+      operationId: postApiStoresIdToggle
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the store.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/videos/{id}/approve':
+    post:
+      summary: ''
+      operationId: postApiVideosIdApprove
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the video.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/videos/{id}/reject':
+    post:
+      summary: ''
+      operationId: postApiVideosIdReject
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the video.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/videos/{id}/reports':
+    get:
+      summary: ''
+      operationId: getApiVideosIdReports
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the video.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/{id}/toggle-active':
+    patch:
+      summary: ''
+      operationId: patchApiIdToggleActive
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the api.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/{id}/verify':
+    patch:
+      summary: ''
+      operationId: patchApiIdVerify
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the api.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/users/{id}':
+    get:
+      summary: ''
+      operationId: getApiUsersId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: ''
+      operationId: postApiUsersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiUsersId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/ranking:
+    get:
+      summary: ''
+      operationId: getApiRanking
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  /api/totaluser:
+    get:
+      summary: ''
+      operationId: getApiTotaluser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
