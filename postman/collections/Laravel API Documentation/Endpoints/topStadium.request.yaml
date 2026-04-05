@@ -1,5 +1,0 @@
-$kind: http-request
-name: topStadium
-url: ""
-method: GET
-order: 2714652917177331

@@ -10,6 +10,9 @@ localResources:
     - ..\storage\app\private\scribe\openapi.yaml
     - ..\vendor\google\grpc-gcp\src\grpc_gcp.proto
     - ..\vendor\google\gax\src\Testing\mocks.proto
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
 cloudResources:
   collections:
-    ..\postman\collections\Laravel API Documentation: cd023de1-78ef-4a63-a1fa-70c703fbe82f
+    ..\postman\collections\Laravel API Documentation: 3b15b6bc-adab-4182-8340-ba1d9345a209

@@ -7,5 +7,5 @@ headers:
   Accept: application/json
 auth:
   type: noauth
-examples: ./.resources/Display a listing of the resource- 1.resources/examples
+examples: ./.resources/Display a listing of the resource--1.resources/examples
 order: 63000
