@@ -75,7 +75,7 @@ endpoints:
         name: role
         description: ''
         required: false
-        example: vendor
+        example: admin
         type: string
         enumValues:
           - player
@@ -103,7 +103,7 @@ endpoints:
         name: birth_date
         description: 'Must be a valid date.'
         required: true
-        example: '2026-04-05T00:43:51'
+        example: '2026-04-05T00:59:55'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -114,7 +114,7 @@ endpoints:
         name: gender
         description: ''
         required: true
-        example: male
+        example: female
         type: string
         enumValues:
           - male
@@ -127,10 +127,10 @@ endpoints:
       email: kunde.eloisa@example.com
       password: '4[*UyPJ"}6'
       city: consequatur
-      role: vendor
+      role: admin
       referral_code: consequatur
-      birth_date: '2026-04-05T00:43:51'
-      gender: male
+      birth_date: '2026-04-05T00:59:55'
+      gender: female
     fileParameters: []
     responses: []
     responseFields: []
@@ -488,7 +488,7 @@ endpoints:
         name: bookable_type
         description: ''
         required: true
-        example: gym
+        example: coach_service
         type: string
         enumValues:
           - stadium
@@ -516,7 +516,7 @@ endpoints:
         name: start_time
         description: 'Must be a valid date in the format <code>H:i</code>.'
         required: true
-        example: '00:43'
+        example: '00:59'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -527,7 +527,7 @@ endpoints:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2026-04-05T00:43:52'
+        example: '2026-04-05T00:59:55'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -549,7 +549,7 @@ endpoints:
         name: payment_method
         description: ''
         required: true
-        example: wallet
+        example: visa
         type: string
         enumValues:
           - visa
@@ -563,7 +563,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: daily
+        example: package
         type: string
         enumValues:
           - daily
@@ -653,7 +653,7 @@ endpoints:
         name: is_recurring
         description: للملعب.
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -671,19 +671,19 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      bookable_type: gym
+      bookable_type: coach_service
       bookable_id: 17
-      start_time: '00:43'
-      date: '2026-04-05T00:43:52'
+      start_time: '00:59'
+      date: '2026-04-05T00:59:55'
       hours: 45
-      payment_method: wallet
-      type: daily
+      payment_method: visa
+      type: package
       package_id: 17
       use_points: 45
       full_name: qeopfuudtdsufvyvddqam
       age: 17
       coupon_code: consequatur
-      is_recurring: true
+      is_recurring: false
       recurring_weeks: 2
     fileParameters:
       parent_id_card: null
@@ -762,7 +762,7 @@ endpoints:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2026-04-05T00:43:53'
+        example: '2026-04-05T00:59:56'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -784,7 +784,7 @@ endpoints:
         name: bookable_type
         description: ''
         required: true
-        example: studio
+        example: coach
         type: string
         enumValues:
           - stadium
@@ -797,9 +797,9 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      date: '2026-04-05T00:43:53'
+      date: '2026-04-05T00:59:56'
       bookable_id: 17
-      bookable_type: studio
+      bookable_type: coach
     fileParameters: []
     responses:
       -
@@ -1610,7 +1610,7 @@ endpoints:
         name: start_time
         description: 'Must be a valid date.'
         required: true
-        example: '2026-04-05T00:43:54'
+        example: '2026-04-05T00:59:57'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -1629,7 +1629,7 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       private_coach_id: consequatur
-      start_time: '2026-04-05T00:43:54'
+      start_time: '2026-04-05T00:59:57'
       hours: 17
     fileParameters: []
     responses: []
@@ -2766,7 +2766,7 @@ endpoints:
         name: payment_method
         description: ''
         required: true
-        example: wallet
+        example: visa
         type: string
         enumValues:
           - wallet
@@ -2775,7 +2775,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      payment_method: wallet
+      payment_method: visa
     fileParameters: []
     responses: []
     responseFields: []
@@ -3059,7 +3059,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: coach
+        example: academy
         type: string
         enumValues:
           - user
@@ -3094,7 +3094,7 @@ endpoints:
       title: vmqeopfuudtdsufvyvddq
       description: 'Dolores dolorum amet iste laborum eius est dolor.'
       url: 'http://reynolds.com/'
-      type: coach
+      type: academy
     fileParameters: []
     responses: []
     responseFields: []
@@ -3424,7 +3424,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: audio
+        example: text
         type: string
         enumValues:
           - text
@@ -3447,7 +3447,7 @@ endpoints:
     cleanBodyParameters:
       conversation_id: consequatur
       message: consequatur
-      type: audio
+      type: text
       receiver_id: consequatur
     fileParameters:
       file: null
@@ -5564,7 +5564,7 @@ endpoints:
         name: is_active
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -5573,7 +5573,7 @@ endpoints:
     cleanBodyParameters:
       name: consequatur
       description: 'Dolores dolorum amet iste laborum eius est dolor.'
-      is_active: false
+      is_active: true
     fileParameters:
       logo: null
     responses: []
@@ -6530,7 +6530,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: weekly
+        example: monthly
         type: string
         enumValues:
           - weekly
@@ -6555,7 +6555,7 @@ endpoints:
     cleanBodyParameters:
       name: consequatur
       price: 11613.31890586
-      type: weekly
+      type: monthly
       hours_per_day: 17
     fileParameters: []
     responses: []
@@ -6626,7 +6626,7 @@ endpoints:
         name: type
         description: ''
         required: false
-        example: 1year
+        example: 6month
         type: string
         enumValues:
           - weekly
@@ -6651,7 +6651,7 @@ endpoints:
     cleanBodyParameters:
       name: consequatur
       price: 11613.31890586
-      type: 1year
+      type: 6month
       hours: 17
     fileParameters: []
     responses: []
@@ -7589,7 +7589,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: fixed
+        example: specific
         type: string
         enumValues:
           - fixed
@@ -7627,7 +7627,7 @@ endpoints:
         name: expires_at
         description: 'Must be a valid date.'
         required: false
-        example: '2026-04-05T00:44:03'
+        example: '2026-04-05T01:00:03'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -7657,10 +7657,10 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       code: consequatur
-      type: fixed
+      type: specific
       value: 11613.31890586
       max_usage: 17
-      expires_at: '2026-04-05T00:44:03'
+      expires_at: '2026-04-05T01:00:03'
     fileParameters: []
     responses: []
     responseFields: []
@@ -7719,7 +7719,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: specific
+        example: general
         type: string
         enumValues:
           - fixed
@@ -7757,7 +7757,7 @@ endpoints:
         name: expires_at
         description: 'Must be a valid date.'
         required: false
-        example: '2026-04-05T00:44:03'
+        example: '2026-04-05T01:00:03'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -7786,10 +7786,10 @@ endpoints:
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      type: specific
+      type: general
       value: 11613.31890586
       max_usage: 17
-      expires_at: '2026-04-05T00:44:03'
+      expires_at: '2026-04-05T01:00:03'
     fileParameters: []
     responses: []
     responseFields: []
@@ -7835,6 +7835,46 @@ endpoints:
     cleanBodyParameters: []
     fileParameters: []
     responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/vendor/coupons
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
     responseFields: []
     auth: []
     controller: null
@@ -8112,6 +8152,58 @@ endpoints:
   -
     custom: []
     httpMethods:
+      - GET
+    uri: 'api/vendor/challenges/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the challenge.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
       - POST
     uri: api/vendor/challenges
     metadata:
@@ -8192,7 +8284,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: upcoming
+        example: ongoing
         type: string
         enumValues:
           - upcoming
@@ -8207,7 +8299,7 @@ endpoints:
       max_players: 17
       price: 11613.31890586
       duration: 17
-      status: upcoming
+      status: ongoing
     fileParameters: []
     responses: []
     responseFields: []
@@ -8310,7 +8402,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: completed
+        example: upcoming
         type: string
         enumValues:
           - upcoming
@@ -8324,7 +8416,7 @@ endpoints:
       max_players: 17
       price: 11613.31890586
       duration: 17
-      status: completed
+      status: upcoming
     fileParameters: []
     responses: []
     responseFields: []
@@ -8372,7 +8464,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: completed
+        example: ongoing
         type: string
         enumValues:
           - upcoming
@@ -8382,7 +8474,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      status: completed
+      status: ongoing
     fileParameters: []
     responses: []
     responseFields: []
@@ -8582,7 +8674,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: completed
+        example: upcoming
         type: string
         enumValues:
           - upcoming
@@ -8592,7 +8684,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      status: completed
+      status: upcoming
     fileParameters: []
     responses: []
     responseFields: []
@@ -8628,7 +8720,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: yearly
+        example: weekly
         type: string
         enumValues:
           - daily
@@ -8639,7 +8731,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      type: yearly
+      type: weekly
     fileParameters: []
     responses:
       -
@@ -9105,7 +9197,7 @@ endpoints:
         name: is_videos_enabled
         description: ''
         required: false
-        example: 'false'
+        example: 'true'
         type: string
         enumValues:
           - '0'
@@ -9164,7 +9256,7 @@ endpoints:
       cancellation_policy: consequatur
       is_store_enabled: 'false'
       is_challenges_enabled: 'false'
-      is_videos_enabled: 'false'
+      is_videos_enabled: 'true'
       terms: consequatur
       privacy_policy: consequatur
       about_us: consequatur
@@ -9941,7 +10033,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: policy
+        example: privacy
         type: string
         enumValues:
           - about
@@ -9954,7 +10046,7 @@ endpoints:
     cleanBodyParameters:
       title: vmqeopfuudtdsufvyvddq
       content: consequatur
-      type: policy
+      type: privacy
     fileParameters: []
     responses: []
     responseFields: []

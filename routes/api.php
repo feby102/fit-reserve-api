@@ -281,7 +281,7 @@ Route::get('payments/export/pdf',[PaymentController::class,'exportPDF']);
 Route::post('coupons',[CouponController::class,'store']);
 Route::put('coupons/{id}',[CouponController::class,'update']);
 Route::delete('coupons/{id}',[CouponController::class,'destroy']);
-Route::get('coupons',[CouponController::class,'vendorcoupon']);
+Route::get('coupons',[CouponController::class,'vendorCoupons']);
 
 
 
@@ -295,7 +295,7 @@ Route::post('notifications/role',[NotificationController::class,'sendToRole']);
 
 Route::get('/ongoing',[ChallengeController::class, 'ongoingCallenge']);
  Route::get('/challenges', [ChallengeController::class, 'index']);
-    Route::get('/challenges/{id}', [ChallengeController::class, 'vendorShow']);
+    Route::get('/challenges/{id}', [ChallengeController::class, 'show']);
     Route::post('/challenges', [ChallengeController::class, 'store']);
     Route::put('/challenges/{id}', [ChallengeController::class, 'update']);
     Route::post('/challenges/{id}/status', [ChallengeController::class, 'status']);
