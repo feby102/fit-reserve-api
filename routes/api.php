@@ -92,7 +92,6 @@ Route::get('/academies/{academy}/services',[AcademyServiceController::class,'ind
 
  Route::get('/coaches', [PrivateCoachController::class, 'publicIndex']);
  Route::get('/coaches/{id}', [PrivateCoachController::class, 'publicShow']);
-Route::get('coaches/top', [PrivateCoachController::class, 'topCoaches']);
 
 
 Route::post('/coach-book',[CoachBookingController::class,'store']);
@@ -181,7 +180,7 @@ Route::get('/pages/{id}', [PageController::class, 'show']);
 // transfer
 Route::post('wallet/transfer',[UserController::class,'transfer']);
 
-
+    Route::get('/Topcoaches', [PrivateCoachController::class, 'topCoaches']);
     Route::get('/Topacademies', [AcademyController::class, 'topAcademies']);
     Route::get('/Topstadiums', [StadiumController::class, 'topStadiums']);
     Route::get('/Topgyms', [GymController::class, 'topGyms']);
