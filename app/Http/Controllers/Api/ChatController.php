@@ -95,7 +95,7 @@ class ChatController extends Controller
 
         $receiver = User::find($validated['receiver_id']);
 
-        // ✅ real-time broadcasting
+        //   real-time broadcasting
         broadcast(new \App\Events\MessageSent($message, $receiver))->toOthers();
 
         return response()->json([
@@ -104,13 +104,11 @@ class ChatController extends Controller
         ]);
     }
 
-    // إغلاق المحادثة
-    public function closeConversation($id)
+     public function closeConversation($id)
     {
         $conversation = Conversation::findOrFail($id);
 
-        // ممكن تضيفي check إن المستخدم طرف فيها
-        if (!in_array(auth()->id(), [$conversation->user_one_id, $conversation->user_two_id])) {
+         if (!in_array(auth()->id(), [$conversation->user_one_id, $conversation->user_two_id])) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -120,8 +118,7 @@ class ChatController extends Controller
         return response()->json(['message' => 'Conversation closed']);
     }
 
-    // حظر مستخدم (بسيطة)
-    public function blockUser($user_id)
+     public function blockUser($user_id)
     {
         $user = User::findOrFail($user_id);
 
@@ -131,8 +128,7 @@ class ChatController extends Controller
         return response()->json(['message' => 'User blocked']);
     }
 
-    // عرض الرسائل المبلغ عنها
-    public function reports()
+     public function reports()
     {
         $reports = Message::with(['reports', 'sender'])
             ->whereHas('reports')
@@ -141,8 +137,7 @@ class ChatController extends Controller
         return response()->json($reports);
     }
 
-    // الرسائل المخالفة
-    public function flaggedMessages()
+     public function flaggedMessages()
     {
         $messages = Message::with(['sender', 'conversation'])
             ->where('is_flagged', true)
