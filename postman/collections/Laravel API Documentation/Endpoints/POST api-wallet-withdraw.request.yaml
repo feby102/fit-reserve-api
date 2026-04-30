@@ -10,4 +10,4 @@ body:
   content: '{"amount":73}'
 auth:
   type: noauth
-order: 7000
+order: 8000

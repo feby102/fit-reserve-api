@@ -10,4 +10,4 @@ body:
   content: '{"reviewable_type":"consequatur","reviewable_id":17,"rating":3,"comment":"consequatur"}'
 auth:
   type: noauth
-order: 27000
+order: 28000

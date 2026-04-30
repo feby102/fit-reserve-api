@@ -10,4 +10,4 @@ body:
   content: '{"academy_id":"consequatur","name":"consequatur","type":"consequatur","price":11613.31890586,"max_students":17}'
 auth:
   type: noauth
-order: 80000
+order: 85000

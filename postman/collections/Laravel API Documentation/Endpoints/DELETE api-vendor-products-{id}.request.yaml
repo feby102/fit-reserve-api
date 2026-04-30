@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the product.
 auth:
   type: noauth
-order: 105000
+order: 110000

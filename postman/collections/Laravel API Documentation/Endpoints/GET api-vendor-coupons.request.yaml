@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/vendor/coupons
+url: "{{baseUrl}}/api/vendor/coupons"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-vendor-coupons.resources/examples
+order: 148000

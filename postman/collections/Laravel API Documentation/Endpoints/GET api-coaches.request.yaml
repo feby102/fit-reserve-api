@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-coaches.resources/examples
-order: 24000
+order: 25000

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('challenges', function (Blueprint $table) {
             $table->id();
              $table->string('title');
-
+$table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
     $table->foreignId('academy_id')->constrained()->cascadeOnDelete();
     $table->integer('max_players');
     $table->decimal('price',10,2);

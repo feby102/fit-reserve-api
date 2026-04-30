@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-vendor-gyms.resources/examples
-order: 113000
+order: 118000

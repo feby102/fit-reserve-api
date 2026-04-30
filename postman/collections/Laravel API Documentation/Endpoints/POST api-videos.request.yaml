@@ -9,7 +9,7 @@ body:
   type: text
   content: '{"title":"vmqeopfuudtdsufvyvddq","description":"Dolores dolorum amet
     iste laborum eius est
-    dolor.","url":"http:\/\/reynolds.com\/","type":"coach"}'
+    dolor.","url":"http:\/\/reynolds.com\/","type":"academy"}'
 auth:
   type: noauth
-order: 55000
+order: 56000

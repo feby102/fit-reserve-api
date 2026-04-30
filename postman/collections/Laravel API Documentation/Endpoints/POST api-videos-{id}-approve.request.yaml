@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the video.
 auth:
   type: noauth
-order: 171000
+order: 178000

@@ -12,4 +12,4 @@ pathVariables:
 auth:
   type: noauth
 examples: ./.resources/GET api-academies-{academy}-plans.resources/examples
-order: 20000
+order: 21000

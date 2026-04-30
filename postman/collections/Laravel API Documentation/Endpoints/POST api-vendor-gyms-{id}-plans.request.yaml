@@ -7,11 +7,11 @@ headers:
   Accept: application/json
 pathVariables:
   - key: id
-    value: consequatur
+    value: "1"
     description: The ID of the gym.
 body:
   type: text
   content: '{"name":"consequatur","price":11613.31890586,"type":"1year","hours_per_day":17}'
 auth:
   type: noauth
-order: 118000
+order: 123000

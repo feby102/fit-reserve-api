@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the conversation.
 auth:
   type: noauth
-order: 65000
+order: 66000

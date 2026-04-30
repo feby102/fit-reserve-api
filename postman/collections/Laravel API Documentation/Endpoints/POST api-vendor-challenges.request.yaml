@@ -10,4 +10,4 @@ body:
   content: '{"title":"consequatur","academy_id":"consequatur","max_players":17,"price":11613.31890586,"duration":17,"status":"completed"}'
 auth:
   type: noauth
-order: 148000
+order: 155000

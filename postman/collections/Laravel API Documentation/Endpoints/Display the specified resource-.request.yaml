@@ -7,9 +7,9 @@ headers:
   Accept: application/json
 pathVariables:
   - key: id
-    value: consequatur
+    value: "1"
     description: The ID of the gym.
 auth:
   type: noauth
 examples: ./.resources/Display the specified resource-.resources/examples
-order: 115000
+order: 120000

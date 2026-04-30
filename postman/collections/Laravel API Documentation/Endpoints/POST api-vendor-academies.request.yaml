@@ -10,4 +10,4 @@ body:
   content: '{"academy_type_id":"consequatur","name":"consequatur","location":"consequatur","price_per_hour":"consequatur"}'
 auth:
   type: noauth
-order: 84000
+order: 89000

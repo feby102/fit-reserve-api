@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-banners.resources/examples
-order: 166000
+order: 173000

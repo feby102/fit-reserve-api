@@ -10,4 +10,4 @@ body:
   content: '{"name":"consequatur","type":"consequatur","location":"consequatur","description":"consequatur"}'
 auth:
   type: noauth
-order: 114000
+order: 119000

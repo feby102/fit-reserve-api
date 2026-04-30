@@ -10,4 +10,4 @@ body:
   content: '{"academy_id":"consequatur","name":"consequatur","sport":"consequatur","price_per_hour":"consequatur"}'
 auth:
   type: noauth
-order: 127000
+order: 132000

@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/Topacademies
+url: "{{baseUrl}}/api/Topacademies"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-Topacademies.resources/examples
+order: 72000

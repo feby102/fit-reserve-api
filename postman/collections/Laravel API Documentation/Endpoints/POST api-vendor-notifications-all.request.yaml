@@ -10,4 +10,4 @@ body:
   content: '{"title":"consequatur","message":"consequatur"}'
 auth:
   type: noauth
-order: 144000
+order: 150000

@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the banner.
 auth:
   type: noauth
-order: 169000
+order: 176000

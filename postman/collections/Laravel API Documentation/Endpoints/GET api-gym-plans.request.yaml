@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-gym-plans.resources/examples
-order: 31000
+order: 32000

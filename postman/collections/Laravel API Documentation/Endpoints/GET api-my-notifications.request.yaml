@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-my-notifications.resources/examples
-order: 66000
+order: 67000

@@ -12,4 +12,4 @@ pathVariables:
 auth:
   type: noauth
 examples: ./.resources/GET api-vendor-challenges-{id}-stats.resources/examples
-order: 153000
+order: 160000

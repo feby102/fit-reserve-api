@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-vendor-usersGrowth.resources/examples
-order: 159000
+order: 166000

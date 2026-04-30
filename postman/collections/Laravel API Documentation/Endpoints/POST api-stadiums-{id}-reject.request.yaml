@@ -7,8 +7,8 @@ headers:
   Accept: application/json
 pathVariables:
   - key: id
-    value: consequatur
+    value: "1"
     description: The ID of the stadium.
 auth:
   type: noauth
-order: 162000
+order: 169000

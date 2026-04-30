@@ -11,7 +11,7 @@ pathVariables:
     description: The ID of the booking.
 body:
   type: text
-  content: '{"status":"confirmed","rejection_reason":"vmqeopfuudtdsufvyvddq"}'
+  content: '{"status":"rejected","rejection_reason":"vmqeopfuudtdsufvyvddq"}'
 auth:
   type: noauth
-order: 11000
+order: 12000

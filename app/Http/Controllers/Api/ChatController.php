@@ -10,96 +10,144 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-    public function index(){
+    // عرض اليوزرز + المحادثات
+    public function index()
+    {
+        $userId = auth()->id();
 
-    $conversations = Conversation::with(['messages' => function($q){
-        $q->latest()->limit(1);
-    }])->get();
-    return response()->json($conversations);
+        $users = User::where('id', '!=', $userId)->get();
+
+        $myConversations = Conversation::where('user_one_id', $userId)
+            ->orWhere('user_two_id', $userId)
+            ->with(['userOne', 'userTwo']) // لو عندك relations
+            ->get();
+
+        return response()->json([
+            'conversations' => $myConversations,
+            'users' => $users
+        ]);
     }
 
-//send a message
+    // إرسال رسالة
+    public function sendMessage(Request $request)
+    {
+        $validated = $request->validate([
+            'conversation_id' => 'required|exists:conversations,id',
+            'message'         => 'nullable|string',
+            'file'            => 'nullable|file|max:10240',
+            'type'            => 'required|in:text,image,audio',
+            'receiver_id'     => 'required|exists:users,id'
+        ]);
 
+        $userId = auth()->id();
 
+        // ✅ تأمين: التأكد إن المستخدم جزء من المحادثة
+        $conversation = Conversation::where('id', $validated['conversation_id'])
+            ->where(function ($q) use ($userId) {
+                $q->where('user_one_id', $userId)
+                  ->orWhere('user_two_id', $userId);
+            })->first();
 
-public function sendMessage(Request $request)
-{
-    $validated = $request->validate([
-        'conversation_id' => 'required|exists:conversations,id',
-        'message'         => 'nullable|string',
-        'file'            => 'nullable|file|mimes:jpg,jpeg,png,mp3,wav,ogg,m4a|max:10240',
-        'type'            => 'required|in:text,image,audio',
-        'receiver_id'     =>'required|exists:users,id'
-    ]);
+        if (!$conversation) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
 
-if (!$request->message && !$request->hasFile('file')) {
-    return response()->json(['error' => 'Message or file required'], 422);
-}
- 
+        // ✅ تحقق منطقي حسب النوع
+        if ($validated['type'] === 'text' && !$validated['message']) {
+            return response()->json(['error' => 'Text message required'], 422);
+        }
 
-    $file_path = null;
-    if ($request->hasFile('file')) {
-        // تنظيم الفولدرات حسب النوع
-        $folder = $request->type === 'image' ? 'chat/images' : 'chat/audio';
-        $file_path = $request->file('file')->store($folder, 'public');
+        if (in_array($validated['type'], ['image', 'audio']) && !$request->hasFile('file')) {
+            return response()->json(['error' => 'File required'], 422);
+        }
+
+        $file_path = null;
+
+        // ✅ رفع الملف حسب النوع
+        if ($request->hasFile('file')) {
+
+            if ($validated['type'] === 'image') {
+                $request->validate([
+                    'file' => 'image|mimes:jpg,jpeg,png|max:10240'
+                ]);
+                $folder = 'chat/images';
+            } else {
+                $request->validate([
+                    'file' => 'mimes:mp3,wav,ogg,m4a|max:10240'
+                ]);
+                $folder = 'chat/audio';
+            }
+
+            $file_path = $request->file('file')->store($folder, 'public');
+        }
+
+        // ✅ إنشاء الرسالة
+        $message = Message::create([
+            'conversation_id' => $conversation->id,
+            'sender_id'       => $userId,
+            'receiver_id'     => $validated['receiver_id'],
+            'message'         => $validated['message'],
+            'file_path'       => $file_path,
+            'type'            => $validated['type'],
+        ]);
+
+        $message->load('sender');
+
+        $receiver = User::find($validated['receiver_id']);
+
+        // ✅ real-time broadcasting
+        broadcast(new \App\Events\MessageSent($message, $receiver))->toOthers();
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $message
+        ]);
     }
 
-    $message = Message::create([
-        'conversation_id' => $validated['conversation_id'],
-        'sender_id'       => auth()->id(),
-        'message'         => $validated['message'],
-        'file_path'       => $file_path,
-        'type'            => $validated['type'],
-        'receiver_id'     => $validated['receiver_id']
-    ]);
-
-    $message->load('sender');
-$receiver = User::find($validated['receiver_id']);
-    broadcast(new \App\Events\MessageSent($message,$receiver))->toOthers();
-
-    return response()->json([
-        'status' => 'success',
-        'data'   => $message
-    ]);
-}
-
-
-
-
-  // إغلاق المحادثة
+    // إغلاق المحادثة
     public function closeConversation($id)
     {
         $conversation = Conversation::findOrFail($id);
+
+        // ممكن تضيفي check إن المستخدم طرف فيها
+        if (!in_array(auth()->id(), [$conversation->user_one_id, $conversation->user_two_id])) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $conversation->status = 'closed';
         $conversation->save();
 
-        return response()->json(['message'=>'Conversation closed']);
+        return response()->json(['message' => 'Conversation closed']);
     }
 
-
-    //  ban
+    // حظر مستخدم (بسيطة)
     public function blockUser($user_id)
     {
         $user = User::findOrFail($user_id);
+
         $user->is_active = false;
         $user->save();
 
-        return response()->json(['message'=>'User blocked']);
+        return response()->json(['message' => 'User blocked']);
     }
 
-//show reported message
-
-public function reports()
+    // عرض الرسائل المبلغ عنها
+    public function reports()
     {
-$reports=Message::with(' reports','sender')->whereHas('reports')->get();
-  return response()->json($reports);
-    
+        $reports = Message::with(['reports', 'sender'])
+            ->whereHas('reports')
+            ->get();
+
+        return response()->json($reports);
     }
 
-     public function flaggedMessages()
+    // الرسائل المخالفة
+    public function flaggedMessages()
     {
-        $messages = Message::with('sender','conversation')->where('is_flagged',true)->get();
+        $messages = Message::with(['sender', 'conversation'])
+            ->where('is_flagged', true)
+            ->get();
+
         return response()->json($messages);
     }
-
 }

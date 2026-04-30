@@ -20,7 +20,7 @@ body:
       value: Dolores dolorum amet iste laborum eius est dolor.
     - type: text
       key: is_active
-      value: ""
+      value: "1"
     - type: file
       key: logo
       src: []
@@ -29,4 +29,4 @@ body:
       value: PUT
 auth:
   type: noauth
-order: 100000
+order: 105000

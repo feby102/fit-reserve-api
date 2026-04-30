@@ -10,17 +10,17 @@ body:
   content:
     - type: text
       key: bookable_type
-      value: coach_service
+      value: gym
     - type: text
       key: bookable_id
       value: "17"
     - type: text
       key: start_time
-      value: 15:52
+      value: 01:33
       description: Must be a valid date in the format <code>H:i</code>.
     - type: text
       key: date
-      value: 2026-03-30T15:52:57
+      value: 2026-04-05T01:33:33
       description: Must be a valid date.
     - type: text
       key: hours
@@ -32,7 +32,7 @@ body:
       value: visa
     - type: text
       key: type
-      value: package
+      value: daily
     - type: text
       key: package_id
       value: "17"
@@ -57,7 +57,7 @@ body:
       description: The <code>code</code> of an existing record in the coupons table.
     - type: text
       key: is_recurring
-      value: "1"
+      value: ""
       description: للملعب.
     - type: text
       key: recurring_weeks
@@ -72,4 +72,4 @@ body:
       src: []
 auth:
   type: noauth
-order: 8000
+order: 9000

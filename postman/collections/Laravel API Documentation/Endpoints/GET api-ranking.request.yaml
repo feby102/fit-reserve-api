@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-ranking.resources/examples
-order: 179000
+order: 186000

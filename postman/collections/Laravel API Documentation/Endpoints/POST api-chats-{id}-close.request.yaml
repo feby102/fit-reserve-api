@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the chat.
 auth:
   type: noauth
-order: 58000
+order: 59000

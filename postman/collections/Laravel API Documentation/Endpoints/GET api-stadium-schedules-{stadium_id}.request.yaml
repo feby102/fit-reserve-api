@@ -12,4 +12,4 @@ pathVariables:
 auth:
   type: noauth
 examples: ./.resources/GET api-stadium-schedules-{stadium_id}.resources/examples
-order: 15000
+order: 16000

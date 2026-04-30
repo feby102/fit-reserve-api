@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-bookings-available-slots.resources/examples
-order: 10000
+order: 11000

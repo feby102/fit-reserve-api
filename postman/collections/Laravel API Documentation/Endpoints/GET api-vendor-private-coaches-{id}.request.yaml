@@ -7,9 +7,9 @@ headers:
   Accept: application/json
 pathVariables:
   - key: id
-    value: consequatur
+    value: "1"
     description: The ID of the private coach.
 auth:
   type: noauth
 examples: ./.resources/GET api-vendor-private-coaches-{id}.resources/examples
-order: 128000
+order: 133000

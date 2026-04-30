@@ -11,7 +11,7 @@ pathVariables:
     description: The ID of the challenge.
 body:
   type: text
-  content: '{"title":"consequatur","max_players":17,"price":11613.31890586,"duration":17,"status":"ongoing"}'
+  content: '{"title":"consequatur","max_players":17,"price":11613.31890586,"duration":17,"status":"upcoming"}'
 auth:
   type: noauth
-order: 149000
+order: 156000

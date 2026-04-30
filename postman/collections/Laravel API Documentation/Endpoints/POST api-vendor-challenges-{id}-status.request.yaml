@@ -11,7 +11,7 @@ pathVariables:
     description: The ID of the challenge.
 body:
   type: text
-  content: '{"status":"upcoming"}'
+  content: '{"status":"ongoing"}'
 auth:
   type: noauth
-order: 150000
+order: 157000

@@ -7,7 +7,7 @@ headers:
   Accept: application/json
 body:
   type: text
-  content: '{"title":"vmqeopfuudtdsufvyvddq","content":"consequatur","type":"terms"}'
+  content: '{"title":"vmqeopfuudtdsufvyvddq","content":"consequatur","type":"privacy"}'
 auth:
   type: noauth
-order: 181000
+order: 188000

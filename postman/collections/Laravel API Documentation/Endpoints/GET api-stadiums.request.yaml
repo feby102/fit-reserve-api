@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-stadiums.resources/examples
-order: 12000
+order: 13000

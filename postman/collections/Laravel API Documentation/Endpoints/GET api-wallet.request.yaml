@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-wallet.resources/examples
-order: 5000
+order: 6000

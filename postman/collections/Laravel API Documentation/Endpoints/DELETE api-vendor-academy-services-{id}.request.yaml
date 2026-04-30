@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the academy service.
 auth:
   type: noauth
-order: 90000
+order: 95000

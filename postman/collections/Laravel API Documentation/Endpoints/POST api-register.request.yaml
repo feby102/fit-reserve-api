@@ -7,7 +7,7 @@ headers:
   Accept: application/json
 body:
   type: text
-  content: '{"name":"vmqeopfuudtdsufvyvddq","email":"kunde.eloisa@example.com","password":"4[*UyPJ\"}6","city":"consequatur","role":"player","referral_code":"consequatur","birth_date":"2026-03-30T15:52:56","gender":"male"}'
+  content: '{"name":"vmqeopfuudtdsufvyvddq","email":"kunde.eloisa@example.com","password":"4[*UyPJ\"}6","city":"consequatur","role":"player","referral_code":"consequatur","birth_date":"2026-04-05T01:33:32","gender":"male"}'
 auth:
   type: noauth
 order: 1000

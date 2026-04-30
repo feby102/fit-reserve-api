@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the challenge.
 auth:
   type: noauth
-order: 35000
+order: 36000

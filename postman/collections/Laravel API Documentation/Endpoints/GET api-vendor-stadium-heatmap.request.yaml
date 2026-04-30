@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-vendor-stadium-heatmap.resources/examples
-order: 76000
+order: 81000

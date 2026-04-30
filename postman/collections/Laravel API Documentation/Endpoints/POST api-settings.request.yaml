@@ -17,14 +17,14 @@ body:
       value: consequatur
     - type: text
       key: is_store_enabled
-      value: "0"
+      value: "false"
     - type: text
       key: is_challenges_enabled
       value: "0"
       description: تعديل بسيط لضمان القبول.
     - type: text
       key: is_videos_enabled
-      value: "false"
+      value: "0"
     - type: text
       key: terms
       value: consequatur
@@ -39,4 +39,4 @@ body:
       src: []
 auth:
   type: noauth
-order: 165000
+order: 172000

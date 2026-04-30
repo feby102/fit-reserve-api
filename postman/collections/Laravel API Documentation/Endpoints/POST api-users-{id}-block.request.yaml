@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the user.
 auth:
   type: noauth
-order: 59000
+order: 60000

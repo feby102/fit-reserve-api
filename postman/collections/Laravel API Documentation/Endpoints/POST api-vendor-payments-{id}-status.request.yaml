@@ -11,7 +11,7 @@ pathVariables:
     description: The ID of the payment.
 body:
   type: text
-  content: '{"status":"refunded"}'
+  content: '{"status":"confirmed"}'
 auth:
   type: noauth
-order: 136000
+order: 141000

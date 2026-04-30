@@ -1,0 +1,11 @@
+$kind: http-request
+name: GET api/Topgyms
+url: "{{baseUrl}}/api/Topgyms"
+method: GET
+headers:
+  Content-Type: application/json
+  Accept: application/json
+auth:
+  type: noauth
+examples: ./.resources/GET api-Topgyms.resources/examples
+order: 74000

@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-academies.resources/examples
-order: 18000
+order: 19000

@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the store.
 auth:
   type: noauth
-order: 101000
+order: 106000

@@ -7,8 +7,8 @@ headers:
   Accept: application/json
 pathVariables:
   - key: id
-    value: consequatur
+    value: "1"
     description: The ID of the academy plan.
 auth:
   type: noauth
-order: 81000
+order: 86000

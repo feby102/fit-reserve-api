@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-chats-reports.resources/examples
-order: 60000
+order: 61000

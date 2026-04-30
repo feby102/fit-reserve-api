@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-videos.resources/examples
-order: 51000
+order: 52000

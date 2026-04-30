@@ -14,4 +14,4 @@ body:
   content: '{"payment_method":"visa"}'
 auth:
   type: noauth
-order: 36000
+order: 37000

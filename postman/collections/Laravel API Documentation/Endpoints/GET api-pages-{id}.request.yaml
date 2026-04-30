@@ -12,4 +12,4 @@ pathVariables:
 auth:
   type: noauth
 examples: ./.resources/GET api-pages-{id}.resources/examples
-order: 68000
+order: 69000

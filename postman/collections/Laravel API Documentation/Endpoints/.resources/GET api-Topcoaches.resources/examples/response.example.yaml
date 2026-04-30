@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/Topcoaches"
+  method: GET
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    cache-control: no-cache, private
+    content-type: application/json
+    access-control-allow-origin: "*"
+  body:
+    type: text
+    content: '[{"id":1,"academy_id":1,"name":"Coach
+      Ahmed","sport":"Football","price_per_hour":"200.00","bio":null,"reviews_avg_rating":null,"academy":{"id":1,"vendor_id":1,"academy_type_id":1,"name":"Academy
+      A","location":"Cairo","is_active":1,"price_per_hour":"200.00","created_at":"2026-03-29T15:15:27.000000Z","updated_at":"2026-03-29T15:15:27.000000Z"},"locations":[{"id":1,"private_coach_id":1,"location":"Cairo
+      Stadium","created_at":"2026-03-29T20:59:46.000000Z","updated_at":"2026-03-29T20:59:46.000000Z"}],"services":[{"id":1,"private_coach_id":1,"name":"Personal
+      Training","price":"300.00","created_at":"2026-03-29T21:15:10.000000Z","updated_at":"2026-03-29T21:15:10.000000Z"}]}]'
+order: 1000

@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the coupon.
 auth:
   type: noauth
-order: 142000
+order: 147000

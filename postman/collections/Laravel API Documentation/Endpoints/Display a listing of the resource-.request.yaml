@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/Display a listing of the resource-.resources/examples
-order: 30000
+order: 31000

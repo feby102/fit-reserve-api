@@ -7,9 +7,9 @@ headers:
   Accept: application/json
 pathVariables:
   - key: id
-    value: consequatur
+    value: "1"
     description: The ID of the academy.
 auth:
   type: noauth
 examples: ./.resources/GET api-vendor-academies-{id}.resources/examples
-order: 85000
+order: 90000

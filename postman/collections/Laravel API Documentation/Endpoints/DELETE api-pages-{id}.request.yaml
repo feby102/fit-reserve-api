@@ -11,4 +11,4 @@ pathVariables:
     description: The ID of the page.
 auth:
   type: noauth
-order: 183000
+order: 190000

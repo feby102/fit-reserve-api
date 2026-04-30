@@ -10,4 +10,4 @@ body:
   content: '{"academy_plan_id":"consequatur"}'
 auth:
   type: noauth
-order: 22000
+order: 23000

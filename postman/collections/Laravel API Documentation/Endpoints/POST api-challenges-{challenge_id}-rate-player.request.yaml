@@ -14,4 +14,4 @@ body:
   content: '{"rated_player_id":"consequatur","rating":3,"comment":"consequatur"}'
 auth:
   type: noauth
-order: 37000
+order: 38000

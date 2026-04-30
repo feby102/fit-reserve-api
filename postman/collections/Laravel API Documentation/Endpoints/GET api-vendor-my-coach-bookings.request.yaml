@@ -8,4 +8,4 @@ headers:
 auth:
   type: noauth
 examples: ./.resources/GET api-vendor-my-coach-bookings.resources/examples
-order: 133000
+order: 138000
