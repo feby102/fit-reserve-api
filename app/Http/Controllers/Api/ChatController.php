@@ -19,7 +19,7 @@ class ChatController extends Controller
 
         $myConversations = Conversation::where('user_one_id', $userId)
             ->orWhere('user_two_id', $userId)
-            ->with(['userOne', 'userTwo']) // لو عندك relations
+            ->with(['userOne', 'userTwo']) 
             ->get();
 
         return response()->json([
@@ -41,7 +41,7 @@ class ChatController extends Controller
 
         $userId = auth()->id();
 
-        // ✅ تأمين: التأكد إن المستخدم جزء من المحادثة
+        //   تأمين: التأكد إن المستخدم جزء من المحادثة
         $conversation = Conversation::where('id', $validated['conversation_id'])
             ->where(function ($q) use ($userId) {
                 $q->where('user_one_id', $userId)
@@ -52,7 +52,7 @@ class ChatController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        // ✅ تحقق منطقي حسب النوع
+        //   تحقق منطقي حسب النوع
         if ($validated['type'] === 'text' && !$validated['message']) {
             return response()->json(['error' => 'Text message required'], 422);
         }
@@ -63,7 +63,7 @@ class ChatController extends Controller
 
         $file_path = null;
 
-        // ✅ رفع الملف حسب النوع
+        //   رفع الملف حسب النوع
         if ($request->hasFile('file')) {
 
             if ($validated['type'] === 'image') {
@@ -81,7 +81,7 @@ class ChatController extends Controller
             $file_path = $request->file('file')->store($folder, 'public');
         }
 
-        // ✅ إنشاء الرسالة
+        //   إنشاء الرسالة
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'sender_id'       => $userId,
