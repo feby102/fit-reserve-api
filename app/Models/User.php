@@ -20,23 +20,15 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'birth_date',
-        'city' ,
-        'role', 
-        'activity', 
-        'is_active', 
-        'is_verified', 
-        'wallet_balance', 
-        'profile_image',
-        'gender'
-    ];
+protected $fillable = [
+    'name', 'phone', 'role', 'city', 'area', 'email', 'password', 
+    'my_referral_code', 'referred_by', 'wallet_balance', 'profile_image', 'is_active'
+];
  
 
-
+public function referrer() {
+    return $this->belongsTo(User::class, 'referred_by');
+}
 
 public function vendor(){
     return $this->hasOne(Vendor::class);

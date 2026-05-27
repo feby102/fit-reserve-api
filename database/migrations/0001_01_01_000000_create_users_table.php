@@ -11,29 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-             $table->enum('role',['player', 'coach', 'vendor', 'academy', 'merchant', 'admin'])->default('player');
+            $table->string('phone')->unique();
+            $table->string('role')->default('player');  
             $table->string('city')->nullable();
-            $table->string('activity')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->boolean('is_verified')->default(false);
-            $table->decimal('wallet_balance', 10, 2)->default('0');
-            $table->string('profile_image')->nullable();  
-               $table->string('referral_code')->nullable()->unique();
-
+            $table->string('area')->nullable();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('my_referral_code')->nullable()->unique();
+            $table->unsignedBigInteger('referred_by')->nullable();
+            $table->decimal('wallet_balance', 10, 2)->default(0);
+            $table->string('profile_image')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
-           
-
-
-            
             $table->timestamps();
         });
-
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

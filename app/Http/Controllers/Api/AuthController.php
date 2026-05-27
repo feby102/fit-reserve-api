@@ -2,88 +2,101 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\RegisterRequest;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Models\Referral;
 use App\Models\User;
 use App\Models\Vendor;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Notifications\ResetPasswordNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function register(RegisterRequest $request)
+    public function register(Request $request)
     {
-        $data = $request->validated();
-
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'city' => $data['city'] ?? null,
-            'role' => $data['role'] ?? 'player',
-            'is_active' => true,
-            'is_verified' => false,
-            'wallet_balance' => 0,
-            'referral_code' => Str::upper(Str::random(6))
+        $validatedData = $request->validate([
+            'name'          => 'required|string|max:255',
+            'phone'         => 'required|string|unique:users,phone|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'city'          => 'required|string|max:255',
+            'area'          => 'nullable|string|max:255',
+            'password'      => 'required|string|min:8',
+            'role'          => 'required|in:player,coach,vendor,academy,merchant',
+            'referral_code' => 'nullable|exists:users,my_referral_code',
+            'email'         => 'required|email|unique:users,email',
         ]);
 
-        if (!empty($data['referral_code'])) {
-            $referrer = User::where('referral_code', $data['referral_code'])->first();
+        return DB::transaction(function () use ($validatedData) {
+            $referrer = null;
+            if (!empty($validatedData['referral_code'])) {
+                $referrer = User::where('my_referral_code', $validatedData['referral_code'])->first();
+            }
+
+            $user = User::create([
+                'name'             => $validatedData['name'],
+                'phone'            => $validatedData['phone'],
+                'city'             => $validatedData['city'],
+                'area'             => $validatedData['area'],
+                'password'         => Hash::make($validatedData['password']),
+                'role'             => $validatedData['role'],
+                'email'            => $validatedData['email'],
+                'referred_by'      => $referrer ? $referrer->id : null,
+                'my_referral_code' => Str::upper(Str::random(8)),
+            ]);
+
             if ($referrer) {
                 Referral::create([
                     'referrer_id' => $referrer->id,
                     'referred_id' => $user->id,
-                    'reward' => 50 
+                    'reward'      => 50
                 ]);
-
-                $referrer->wallet->increment('balance', 50);
+                $referrer->increment('wallet_balance', 50);
             }
-        }
 
-        $token = $user->createToken('api-token')->plainTextToken;
+            if ($validatedData['role'] === 'vendor') {
+                Vendor::create([
+                    'name'    => $validatedData['name'],
+                    'user_id' => $user->id
+                ]);
+            }
 
-        if ($data['role'] === 'vendor') {
-            Vendor::create([
-                'name' => $data['name'],
-                'user_id' => $user->id
-            ]);
-        }
+            $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json([
-            'message' => 'Registered successfully',
-            'user' => $user,
-            'token' => $token
-        ]);
+            return response()->json([
+                'message' => 'Registered successfully',
+                'user'    => $user,
+                'token'   => $token
+            ], 201);
+        });
     }
 
     public function login(Request $request)
     {
-        $data = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+        $request->validate([
+            'phone'    => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($data)) {
+        $user = User::where('phone', $request->phone)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Wrong credentials'
+                'message' => 'بيانات الدخول غير صحيحة'
             ], 401);
         }
 
-        $user = Auth::user();
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
-            'token' => $token
+            'message' => 'تم تسجيل الدخول بنجاح',
+            'user'    => $user,
+            'token'   => $token
         ]);
     }
 
-     public function sendResetCode(Request $request)
+    public function sendResetCode(Request $request)
     {
         $request->validate(['email' => 'required|email|exists:users,email']);
 
@@ -93,49 +106,48 @@ class AuthController extends Controller
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $email],
             [
-                'token' => $code,  
+                'token' => $code,
                 'created_at' => now()
             ]
         );
 
         $user = User::where('email', $email)->first();
-        $user->notify(new ResetPasswordNotification($code));
-
+$user->notify(new \App\Notifications\ResetPasswordNotification($code));
         return response()->json([
-            'status' => true,
+            'status'  => true,
             'message' => 'تم إرسال كود التحقق إلى بريدك الإلكتروني.'
         ], 200);
     }
 
-     public function reset(Request $request)
+    public function reset(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users,email',
+            'email'    => 'required|email|exists:users,email',
             'password' => 'required|min:8|confirmed',
-            'code' => 'required'   
+            'code'     => 'required'
         ]);
 
-         $passwordReset = DB::table('password_reset_tokens')
+        $passwordReset = DB::table('password_reset_tokens')
             ->where('email', $request->email)
-            ->where('token', $request->code) 
+            ->where('token', $request->code)
             ->first();
 
         if (!$passwordReset || now()->subMinutes(15)->gt($passwordReset->created_at)) {
             return response()->json([
-                'status' => false,
+                'status'  => false,
                 'message' => 'الكود غير صحيح أو انتهت صلاحيته.'
             ], 422);
         }
 
-         $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
         $user->update([
             'password' => Hash::make($request->password)
         ]);
 
-         DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         return response()->json([
-            'status' => true,
+            'status'  => true,
             'message' => 'تم إعادة تعيين كلمة المرور بنجاح.'
         ], 200);
     }
