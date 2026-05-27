@@ -42,9 +42,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/forgot-password', [AuthController::class, 'forgot']);
-Route::post('/reset-password', [AuthController::class, 'reset']);
-
+Route::post('/password/send-code', [AuthController::class, 'sendResetCode']);
+Route::post('/password/reset', [AuthController::class, 'reset']);
 
   Route::middleware('auth:sanctum')->group(function(){
 
