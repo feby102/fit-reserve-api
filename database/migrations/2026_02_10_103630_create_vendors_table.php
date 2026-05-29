@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-
             $table->string('name');
-$table->decimal('balance',10,2)->default(0);
-
-            $table->timestamps();
+            $table->string('email')->unique();
+            $table->string('phone')->unique();
+            $table->string('city');
+            $table->string('area')->nullable();
+            $table->string('password');
+            $table->decimal('balance',10,2)->default(0);
+            $table->rememberToken();
+             $table->timestamps();
         });
     }
 

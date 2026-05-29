@@ -39,13 +39,22 @@ use Illuminate\Support\Facades\Route;
   
 
 
+Route::get('/test-token', function (Request $request) {
+    return response()->json([
+        'user' => $request->user(), // هيجيب بيانات صاحب التوكن لو سانكتوم قراه
+        'bearer_token' => $request->bearerToken(), // هيعرض التوكن اللي مبعوث
+    ]);
+});
+
+
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'sendResetCode']);
 Route::post('/reset-password', [AuthController::class, 'reset']);
 
 
-  Route::middleware('auth:sanctum')->group(function(){
+  Route::middleware('auth:user-api,vendor-api')->group(function(){
 
 Route::post('/logout', [AuthController::class, 'logout']);
 

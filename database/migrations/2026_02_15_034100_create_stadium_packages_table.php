@@ -17,9 +17,7 @@ return new class extends Migration
             $table->integer('hours');
             $table->decimal('price', 10, 2);
             $table->enum('type', ['weekly','monthly','3 month','6 month','1 year']);
- 
-            $table->timestamps();
-
+              
         });
     }
 

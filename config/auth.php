@@ -34,23 +34,21 @@ return [
     | Supported: "session"
     |
     */
-
-    'guards' => [
-
+'guards' => [
     'web' => [
         'driver' => 'session',
         'provider' => 'users',
     ],
 
-    'sanctum' => [
+    'vendor-api' => [
         'driver' => 'sanctum',
-        'provider' => 'users',
+        'provider' => 'vendors',
     ],
 
-],
-
-   
-
+    'user-api' => [
+        'driver' => 'sanctum',
+        'provider' => 'users',
+    ],],
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -73,6 +71,11 @@ return [
     'users' => [
         'driver' => 'eloquent',
         'model' => App\Models\User::class,
+    ],
+
+    'vendors' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Vendor::class,
     ],
 
 ],

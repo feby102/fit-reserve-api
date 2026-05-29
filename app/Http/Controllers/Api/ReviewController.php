@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Academy;
 use App\Models\Review;
+use App\Models\Stadium;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -21,16 +22,31 @@ public function store(Request $request)
 
     $user = $request->user();
 
-    $model = $request->reviewable_type::findOrFail($request->reviewable_id);
+    $class = match ($request->reviewable_type) {
+        'stadium' => \App\Models\Stadium::class,
+        'academy' => \App\Models\Academy::class,
+        default => abort(400, 'Invalid type')
+    };
+
+    $model = $class::findOrFail($request->reviewable_id);
 
     $review = $model->reviews()->create([
         'user_id' => $user->id,
         'rating' => $request->rating,
-        'comment' => $request->comment
+        'comment' => $request->comment,
+        'is_hidden' => false
     ]);
 
     return response()->json($review);
 }
+
+ 
+
+
+ 
+
+
+
 
  
 public function hide($id)

@@ -18,6 +18,8 @@ return new class extends Migration
          $table->string('sport');
          $table->decimal('price_per_hour',10,2);
          $table->text('bio')->nullable();
+        $table->string('image')->nullable();
+ 
          $table->timestamps();
 
         });

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('location');
             $table->boolean('is_active')->default(true);
             $table->decimal('price_per_hour',10,2);
-
+            $table->string('image')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });
     }

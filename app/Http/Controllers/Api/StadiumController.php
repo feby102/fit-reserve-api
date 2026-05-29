@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Booking;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Review;
 
 class StadiumController extends Controller
 {   use AuthorizesRequests;
@@ -18,7 +18,7 @@ class StadiumController extends Controller
 
 public function publicIndex()
 {
-    $stadiums = Stadium::latest()->get()->makeHidden(['id','vendor_id','status','created_at','updated_at']);
+    $stadiums = Stadium::latest()->get()->makeHidden(['id','vendor_id','status','created_at','updated_at' ,'price_per_hour']);
 
     return response()->json($stadiums);
 }
@@ -42,13 +42,31 @@ public function index()
     return response()->json($stadiums);
 }
 
-public function publicShow($id)
-{
-    $Stadium = Stadium::findOrFail($id)->makeHidden(['id','vendor_id','status','created_at','updated_at']);
 
-    return response()->json($Stadium);
+
+public function publicShow(int $id)
+{
+    $stadium = Stadium::with([
+        'reviews' => function ($q) {
+            $q->where('is_hidden', false)
+              ->with('user:id,name');
+        }
+    ])->findOrFail($id);
+
+    $stadium->makeHidden([
+        'id','vendor_id','status','created_at','updated_at'
+    ]);
+
+    $average = $stadium->reviews->avg('rating');
+
+    return response()->json([
+        'stadium' => $stadium,
+        'average_rating' => round($average ?? 0, 1),
+    ]);
 }
 
+
+    
 
 
 

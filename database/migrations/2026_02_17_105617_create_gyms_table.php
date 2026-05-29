@@ -18,7 +18,8 @@ return new class extends Migration
              $table->enum('type',['gym','karate']);
              $table->string('location');
              $table->text('description')->nullable();
-
+             $table->string('image')->nullable();
+             $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });
     }

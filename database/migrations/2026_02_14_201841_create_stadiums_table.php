@@ -20,7 +20,9 @@ return new class extends Migration
             $table->decimal('price_per_hour',10,2);
             $table->string('description')->nullable();
             $table->enum('status', ['pending','approved','rejected'])->default('pending');
-
+            $table->string('image')->nullable();
+             $table->boolean('is_verified')->default(false);
+   
             $table->timestamps();
         });
     }
