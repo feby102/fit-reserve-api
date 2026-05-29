@@ -44,11 +44,47 @@ public function index()
 
 
 
+public function publicShow(int $id)
+{
+    $gym = Gym::with([
+        'plans',
+        'schedules',
+        'services',
+        'reviews' => function ($q) {
+            $q->where('is_hidden', false)->with('user:id,name');
+        }
+    ])->findOrFail($id);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+     $average = $gym->reviews->avg('rating');
+
+    return response()->json([
+        'gym' => $gym,
+        'average_rating' => round($average ?? 0, 1),
+    ]);
+}
+
+ 
+
+public function show(string $id)
+{
+     $vendor = auth()->user()->vendor;
+
+    if (!$vendor) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+     $gym = Gym::with(['plans', 'schedules', 'services', 'reviews.user'])
+        ->where('vendor_id', $vendor->id)
+        ->findOrFail($id);
+
+    return response()->json($gym);
+}
+
+
+
+
+
+     public function store(Request $request)
     {
         $data=$request->validate([
 'name'=>'required',
@@ -74,17 +110,10 @@ return \response()->json([ 'message'=>'Gym created',
       
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    
 
-    /**
-     * Update the specified resource in storage.
-     */
+
+
     public function update(Request $request, string $id)
     {    $vendor = auth()->user()->vendor;
 

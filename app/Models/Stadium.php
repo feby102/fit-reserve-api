@@ -14,7 +14,8 @@ class Stadium extends Model
         'city',
         'address',
         'price_per_hour',
-        'status'
+        'status',
+        'image','is_verified'
 
     ];
 

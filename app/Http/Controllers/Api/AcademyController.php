@@ -33,20 +33,45 @@ if (!$vendor) {
     return response()->json($academies);
  
     }
-
-
-public function publicShow($id)
+public function publicShow(int $id)
 {
     $academy = Academy::with([
         'type',
         'plans',
         'services',
-        'reviews.user'
+        'reviews' => function ($q) {
+             $q->where('is_hidden', false)->with('user:id,name');
+        }
     ])->findOrFail($id);
 
-    return response()->json($academy);
-}
+    // الحل هنا: بنحسب متوسط الـ rating من الـ reviews اللي مش مخفية وراجعين فعلاً
+    $average = $academy->reviews->avg('rating');
 
+    return response()->json([
+        'academy' => $academy,
+        'average_rating' => round($average ?? 0, 1), // لو مفيش ريفيو هيرجع 0، لو فيه هيتحسب صح
+    ]); 
+}
+// public function publicShow(int $id)
+// {
+//     $stadium = Stadium::with([
+//         'reviews' => function ($q) {
+//             $q->where('is_hidden', false)
+//               ->with('user:id,name');
+//         }
+//     ])->findOrFail($id);
+
+//     $stadium->makeHidden([
+//         'id','vendor_id','status','created_at','updated_at'
+//     ]);
+
+//     $average = $stadium->reviews->avg('rating');
+
+//     return response()->json([
+//         'stadium' => $stadium,
+//         'average_rating' => round($average ?? 0, 1),
+//     ]);
+// }
 
 
 

@@ -112,6 +112,7 @@ Route::get('/reviews/{type}/{id}/average',[ReviewController::class,'average']);
 
 
  Route::get('/PublicIndex',[GymController::class,'PublicIndex']);
+ Route::get('/gyms/{id}', [GymController::class, 'publicShow']);
 Route::get('/gym-plans',[GymController::class,'showplans']);
 Route::post('/gym-subscribe',[GymController::class,'subscribe']) ;
 
@@ -263,7 +264,7 @@ Route::delete('/gym-subscriptions/{id}',[GymController::class,'deletesubscriptio
 Route::get('/gyms/{id}/subscribers',[GymController::class,'subscribers']);
 Route::post('/gym-auto-renew',[GymController::class,'handleAutoRenewal']);
 Route::get('/gym-schedule/{id}',[GymController::class,'setSchedule']);
-
+Route::get('/gyms/{id}', [GymController::class, 'show']);
 
 Route::apiResource('private-coaches',PrivateCoachController::class);
 Route::post('/coaches/location', [PrivateCoachController::class, 'addLocation']);
