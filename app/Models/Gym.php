@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Gym extends Model
 {
-    protected $fillable = ['name','type','vendor_id','location','description'];
+    protected $fillable = ['name','type','vendor_id','location','description',
+        'image','is_verified'
+];
 
 
 

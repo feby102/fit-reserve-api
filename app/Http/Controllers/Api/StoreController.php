@@ -11,62 +11,83 @@ class StoreController extends Controller
 
 
  
-
-  public function index()
+public function publicIndex()
 {
+     $stores = Store::where('is_active', true)
+        ->with(['vendor', 'products'])
+        ->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->get();
 
+     $stores->transform(function ($store) {
+        $store->reviews_avg_rating = round($store->reviews_avg_rating ?? 0, 1);
+        return $store;
+    });
 
+    return response()->json($stores);
+}
+
+public function index()
+{
     $vendor = auth()->user()->vendor;
-if (!$vendor) {
-    return response()->json(['message' => 'Unauthorized'], 403);
-}
-    $academies = Store:: where('vendor_id', $vendor->id)->latest()->get();
-
-    return response()->json($academies);
- 
-}
-
-
-
-
-    public function show($id)
-    {
-$vendor = auth()->user()->vendor;
-if (!$vendor) {
-    return response()->json(['message' => 'Unauthorized'], 403);
-}
-$Store = Store::where('vendor_id', $vendor->id)->findOrFail($id);
-
-   
- return response()->json([
-
-            'Store'=>$Store,
-
-             ]);
-}
-
-
-
-    public function publicIndex()
-    {
-        $stores = Store::where('is_active', true)->with('vendor', 'products')->get();
-        return response()->json($stores);
+    if (!$vendor) {
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
 
+     $stores = Store::where('vendor_id', $vendor->id)
+        ->withAvg('reviews', 'rating')
+        ->latest()
+        ->get();
+
+    $stores->transform(function ($store) {
+        $store->reviews_avg_rating = round($store->reviews_avg_rating ?? 0, 1);
+        return $store;
+    });
+
+    return response()->json($stores);
+}
 
 
-
-     public function publicShow($id)
-    {
-        $store = Store::with('products.category')->findOrFail($id);
-
-        if(!$store->is_active){
-            return response()->json(['message' => 'Store is inactive'], 403);
+ public function publicShow($id)
+{
+     $store = Store::with([
+        'products.category',
+        'reviews' => function ($q) {
+            $q->where('is_hidden', false)->with('user:id,name');
         }
+    ])->findOrFail($id);
 
-        return response()->json($store);
+    if (!$store->is_active) {
+        return response()->json(['message' => 'Store is inactive'], 403);
     }
 
+    $average = $store->reviews->avg('rating');
+
+    return response()->json([
+        'store' => $store,
+        'average_rating' => round($average ?? 0, 1),
+    ]);
+}
+
+// في ميثود show الخاصة بالفيندور
+public function show($id)
+{
+    $vendor = auth()->user()->vendor;
+    if (!$vendor) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    // عرض الستور مع الريفيوز عشان الفيندور يتابعها
+    $store = Store::with(['products', 'reviews.user'])
+        ->where('vendor_id', $vendor->id)
+        ->findOrFail($id);
+
+    $average = $store->reviews->avg('rating');
+
+    return response()->json([
+        'store' => $store,
+        'average_rating' => round($average ?? 0, 1),
+    ]);
+}
  
  
 public function store(Request $request)

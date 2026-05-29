@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model
 {
-    protected $fillable = ['vendor_id','name','description','logo','is_active'];
+    protected $fillable = ['vendor_id','name','description','logo','is_active',
+        'image','is_verified'
+];
 
     public function vendor()
     {

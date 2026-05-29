@@ -11,29 +11,42 @@ class AcademyController extends Controller
 {
 public function publicIndex()
 {
-    $academies = Academy::with('type')->latest()->get();
+     $academies = Academy::with('type')
+        ->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->latest()
+        ->get();
+
+     $academies->transform(function ($academy) {
+        $academy->reviews_avg_rating = round($academy->reviews_avg_rating ?? 0, 1);
+        return $academy;
+    });
 
     return response()->json($academies);
 }
 
-
-  public function index()
+public function index()
 {
-
-
     $vendor = auth()->user()->vendor;
-if (!$vendor) {
-    return response()->json(['message' => 'Unauthorized'], 403);
-}
+    if (!$vendor) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
     $academies = Academy::with('type')
+        ->withAvg('reviews', 'rating')   
         ->where('vendor_id', $vendor->id)
         ->latest()
         ->get();
 
+    $academies->transform(function ($academy) {
+        $academy->reviews_avg_rating = round($academy->reviews_avg_rating ?? 0, 1);
+        return $academy;
+    });
+
     return response()->json($academies);
- 
-    }
-public function publicShow(int $id)
+}
+
+
+    public function publicShow(int $id)
 {
     $academy = Academy::with([
         'type',
@@ -44,36 +57,13 @@ public function publicShow(int $id)
         }
     ])->findOrFail($id);
 
-    // الحل هنا: بنحسب متوسط الـ rating من الـ reviews اللي مش مخفية وراجعين فعلاً
-    $average = $academy->reviews->avg('rating');
+     $average = $academy->reviews->avg('rating');
 
     return response()->json([
         'academy' => $academy,
-        'average_rating' => round($average ?? 0, 1), // لو مفيش ريفيو هيرجع 0، لو فيه هيتحسب صح
+        'average_rating' => round($average ?? 0, 1),   
     ]); 
-}
-// public function publicShow(int $id)
-// {
-//     $stadium = Stadium::with([
-//         'reviews' => function ($q) {
-//             $q->where('is_hidden', false)
-//               ->with('user:id,name');
-//         }
-//     ])->findOrFail($id);
-
-//     $stadium->makeHidden([
-//         'id','vendor_id','status','created_at','updated_at'
-//     ]);
-
-//     $average = $stadium->reviews->avg('rating');
-
-//     return response()->json([
-//         'stadium' => $stadium,
-//         'average_rating' => round($average ?? 0, 1),
-//     ]);
-// }
-
-
+} 
 
     public function show($id)
     {

@@ -10,22 +10,26 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    
 public function store(Request $request)
 {
     $request->validate([
-        'reviewable_type' => 'required',
-        'reviewable_id' => 'required|integer',
-        'rating' => 'required|integer|min:1|max:5',
-        'comment' => 'nullable|string'
+        'reviewable_type' => ['required', 'string', 'in:stadium,academy,Privatecoach,gym,challenge,store'],
+        'reviewable_id'   => ['required', 'integer'],
+        'rating'          => ['required', 'integer', 'min:1', 'max:5'],
+        'comment'         => ['nullable', 'string']
     ]);
 
     $user = $request->user();
 
+    // يجب إضافة باقي الأنواع هنا لتجنب الـ abort
     $class = match ($request->reviewable_type) {
-        'stadium' => \App\Models\Stadium::class,
-        'academy' => \App\Models\Academy::class,
-        default => abort(400, 'Invalid type')
+        'stadium'      => \App\Models\Stadium::class,
+        'academy'      => \App\Models\Academy::class,
+        'gym'          => \App\Models\Gym::class,
+        'challenge'    => \App\Models\Challenge::class,
+        'Privatecoach' => \App\Models\PrivateCoach::class,
+        'store'        =>\App\Models\Store::class,  
+                default        => abort(400, 'Invalid type')
     };
 
     $model = $class::findOrFail($request->reviewable_id);
@@ -39,7 +43,6 @@ public function store(Request $request)
 
     return response()->json($review);
 }
-
  
 
 

@@ -23,6 +23,15 @@ class AppServiceProvider extends ServiceProvider
      */
 public function boot(): void
 {
+    
+    \Illuminate\Database\Eloquent\Relations\Relation::morphMap([
+        'stadium'   => \App\Models\Stadium::class,
+        'academy'   => \App\Models\Academy::class,
+        'coach'     => \App\Models\PrivateCoach::class,
+        'gym'       => \App\Models\Gym::class,
+        'challenge' => \App\Models\Challenge::class,
+    ]);
+    
     \Illuminate\Support\Facades\Broadcast::routes(['middleware' => ['auth:api']]);
     require base_path('routes/channels.php');
 

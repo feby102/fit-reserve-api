@@ -15,15 +15,21 @@ class StadiumController extends Controller
 {   use AuthorizesRequests;
 
 
-
 public function publicIndex()
 {
-    $stadiums = Stadium::latest()->get()->makeHidden(['id','vendor_id','status','created_at','updated_at' ,'price_per_hour']);
+    $stadiums = Stadium::withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->latest()
+        ->get()
+        ->makeHidden(['vendor_id', 'status', 'created_at', 'updated_at']);
+
+    // تحويل القيمة لـ float أو تقريبها
+    $stadiums->transform(function ($item) {
+        $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
+        return $item;
+    });
 
     return response()->json($stadiums);
 }
- 
-
 
 public function index()
 {
@@ -34,14 +40,19 @@ public function index()
     }
 
     $stadiums = Stadium::where('vendor_id', $vendor->id)
-        ->where('status','approved')
+        ->where('status', 'approved')
+        ->withAvg('reviews', 'rating') // حساب متوسط التقييم للفيندور
         ->latest()
         ->get()
-        ->makeHidden(['id','vendor_id','status','created_at','updated_at']);  
+        ->makeHidden(['vendor_id', 'status', 'created_at', 'updated_at']);
+
+    $stadiums->transform(function ($item) {
+        $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
+        return $item;
+    });
 
     return response()->json($stadiums);
 }
-
 
 
 public function publicShow(int $id)

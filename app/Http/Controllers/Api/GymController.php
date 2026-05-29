@@ -18,13 +18,22 @@ class GymController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function PublicIndex()
-    {
-        return Gym::with('plans','schedules','services')->get()->makeHidden(['vendor_id','id']);;
+ public function PublicIndex()
+{
+    // إضافة حساب متوسط التقييم للعامة
+    $gyms = Gym::with(['plans', 'schedules', 'services'])
+        ->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->get()
+        ->makeHidden(['vendor_id', 'id']);
 
-    }
+    // تحويل التقييم لـ float وعرضه
+    $gyms->transform(function ($gym) {
+        $gym->reviews_avg_rating = round($gym->reviews_avg_rating ?? 0, 1);
+        return $gym;
+    });
 
-
+    return response()->json($gyms);
+}
 
 public function index()
 {
@@ -34,16 +43,19 @@ public function index()
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 
-    $gyms = Gym::with('plans','schedules','services')
+     $gyms = Gym::with(['plans', 'schedules', 'services'])
+        ->withAvg('reviews', 'rating')
         ->where('vendor_id', $vendor->id)
         ->latest()
         ->get();
 
+    $gyms->transform(function ($gym) {
+        $gym->reviews_avg_rating = round($gym->reviews_avg_rating ?? 0, 1);
+        return $gym;
+    });
+
     return response()->json($gyms);
 }
-
-
-
 public function publicShow(int $id)
 {
     $gym = Gym::with([
@@ -63,25 +75,28 @@ public function publicShow(int $id)
     ]);
 }
 
- 
-
+/**
+ * عرض الجيم الخاص بالـ Vendor مع متوسط التقييم
+ */
 public function show(string $id)
 {
-     $vendor = auth()->user()->vendor;
+    $vendor = auth()->user()->vendor;
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 
-     $gym = Gym::with(['plans', 'schedules', 'services', 'reviews.user'])
+    $gym = Gym::with(['plans', 'schedules', 'services', 'reviews.user'])
         ->where('vendor_id', $vendor->id)
         ->findOrFail($id);
 
-    return response()->json($gym);
+     $average = $gym->reviews->avg('rating');
+
+    return response()->json([
+        'gym' => $gym,
+        'average_rating' => round($average ?? 0, 1),
+    ]);
 }
-
-
-
 
 
      public function store(Request $request)
