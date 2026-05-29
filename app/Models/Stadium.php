@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 class Stadium extends Model
 {
@@ -20,6 +22,15 @@ class Stadium extends Model
     ];
 
     //owner
+
+
+protected function image(): Attribute
+{
+    return Attribute::make(
+        get: fn ($value) => $value ? url(Storage::url($value)) : null,
+    );
+}
+
 
    public function vendor(){
     return $this->belongsTo(Vendor::class);

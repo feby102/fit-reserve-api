@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use Illuminate\Support\Facades\DB;
 use App\Models\Review;
+use Storage;
 
 class StadiumController extends Controller
 {   use AuthorizesRequests;
@@ -103,36 +104,37 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 
 //create 
 
-    public function store(Request $request){
-$vendor = auth()->user()->vendor;
-if (!$vendor) {
-    return response()->json(['message' => 'Unauthorized'], 403);
-}
+    public function store(Request $request)
+    {
+        $vendor = auth()->user()->vendor;
+        if (!$vendor) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
- $data=$request->validate([ 
-     
-        'name'=>'required',
-        'description'=>'nullable',
-        'city'=>'required',
-        'address'=>'required',
-        'price_per_hour'=>'required|numeric',
-       
-]);
+         $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'city' => 'required|string',
+            'address' => 'required|string',
+            'price_per_hour' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',   
+        ]);
 
-$stadium=Stadium::create([
-    'vendor_id' => $vendor->id,
-     'name' => $request->name, 
-      'city' => $request->city,
-       'address' => $request->address,  
-       'price_per_hour' => $request->price_per_hour,  
-       'description' => $request->description,  
-       
-    'status'=>'pending'
-    ,$data
-]);
+         if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('stadiums', 'public');
+            $data['image'] = $path;   
+        }
 
- return response()->json($stadium);
-}
+         $stadium = Stadium::create(array_merge($data, [
+            'vendor_id' => $vendor->id,
+            'status' => 'pending'
+        ]));
+
+        return response()->json([
+            'message' => 'Stadium created successfully',
+            'stadium' => $stadium
+        ], 201);
+    }
 
 
 
@@ -140,30 +142,32 @@ $stadium=Stadium::create([
 
 //update
 
+public function update(Request $request, $id)
+    {
+        $vendor = auth()->user()->vendor;
+        if (!$vendor) return response()->json(['message' => 'Unauthorized'], 403);
 
-   public function update(Request $request,$id){
-    $vendor = auth()->user()->vendor;
-if (!$vendor) {
-    return response()->json(['message' => 'Unauthorized'], 403);
-}
-    $stadium=Stadium::where('vendor_id', $vendor->id)->findOrFail($id);
- 
-   $data = $request->validate([
-    'name'=>'sometimes',
-    'price_per_hour'=>'sometimes|numeric'
-]);
+        $stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id);
 
-$stadium->update($data);
+        $data = $request->validate([
+            'name' => 'sometimes|string',
+            'price_per_hour' => 'sometimes|numeric',
+            'city' => 'sometimes|string',
+            'address' => 'sometimes|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-    return response()->json([
+         if ($request->hasFile('image')) {
+             if ($stadium->image) {
+                Storage::disk('public')->delete($stadium->image);
+            }
+            $data['image'] = $request->file('image')->store('stadiums', 'public');
+        }
 
-        'message' => 'Updated'
+        $stadium->update($data);
 
-    ]);
-
-
-   }
-
+        return response()->json(['message' => 'Updated successfully']);
+    }
 
 
 
