@@ -68,7 +68,7 @@ return CoachBooking::with('coach')->where('user_id',$request->user()->id)->get()
 
 public function coachStats($coach_id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
      $coach = PrivateCoach::whereHas('academy', function ($q) use ($vendor) {
         $q->where('vendor_id', $vendor->id);

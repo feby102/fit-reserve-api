@@ -20,7 +20,7 @@ return AcademyPlan::where('academy_id',$academy_id)->get();
 
 public function vendorPlans()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $plans = AcademyPlan::whereHas('academy', function($q) use ($vendor){
         $q->where('vendor_id', $vendor->id);
@@ -39,7 +39,7 @@ public function vendorPlans()
         'max_students' => 'required|integer'
     ]);
 
-     $vendor = auth()->user()->vendor;
+     $vendor = auth()->user();
 
      $academy = Academy::findOrFail($data['academy_id']);
 
@@ -59,7 +59,7 @@ public function vendorPlans()
 
 public function update(Request $request, $id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $plan = AcademyPlan::findOrFail($id);
 
@@ -79,7 +79,7 @@ public function update(Request $request, $id)
 
 public function destroy($id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $plan = AcademyPlan::findOrFail($id);
 

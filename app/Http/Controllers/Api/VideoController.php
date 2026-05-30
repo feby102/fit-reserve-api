@@ -36,6 +36,9 @@ public function store(Request $request)
             'type'         => 'required|in:user,academy,coach',
             'academy_id'   => 'nullable|exists:academies,id',
             'coach_id'     => 'nullable|exists:private_coaches,id',
+             'stadium_id'   => 'nullable|exists:stadiums,id',
+            'gym_id'     => 'nullable|exists:gyms,id',
+       
         ]);
 
          
@@ -47,10 +50,12 @@ $video = Video::create([
     'user_id'     => auth()->id(),  
     'academy_id'  => $request->academy_id,
     'coach_id'    => $request->coach_id,
+    'stadium_id'  => $request->stadium_id,  
+    'gym_id'      => $request->gym_id,
     'views'       => 0,
     'likes'       => 0,
     'dislikes'    => 0,
-    'status'      => 'approved', // غيرتها من active إلى approved لتناسب المايجريشن
+    'status'      => 'approved',   
 ]);
         return response()->json([
             'message' => 'Video uploaded successfully',
@@ -76,6 +81,9 @@ $video = Video::create([
 
         return response()->json(['message'=>'Video rejected']);
     }
+
+
+
 
       public function destroy($id)
     {
@@ -134,7 +142,7 @@ public function report(Request $request, $id)
         ], 422);
     }
 
-    // 4. إنشاء البلاغ
+      
     $report = VideoReport::create([
         'video_id' => $video->id,
         'user_id'  => auth()->id(),

@@ -28,7 +28,7 @@ public function publicIndex()
 
 public function index()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
@@ -53,7 +53,7 @@ public function index()
         'products.category',
         'reviews' => function ($q) {
             $q->where('is_hidden', false)->with('user:id,name');
-        }
+        },'videos'
     ])->findOrFail($id);
 
     if (!$store->is_active) {
@@ -71,7 +71,7 @@ public function index()
 // في ميثود show الخاصة بالفيندور
 public function show($id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
@@ -92,7 +92,7 @@ public function show($id)
  
 public function store(Request $request)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
@@ -102,18 +102,28 @@ public function store(Request $request)
         'name' => 'required|string',
         'description' => 'nullable|string',
         'logo' => 'nullable|image',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',   
+
     ]);
 
      if ($request->hasFile('logo')) {
         $data['logo'] = $request->file('logo')->store('stores', 'public');
     }
 
+      if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('stores', 'public');
+            $data['image'] = $path;   
+        }
+
     $store = Store::create([
         'vendor_id' => $vendor->id,
         'name' => $data['name'],
         'description' => $data['description'] ?? null,
         'logo' => $data['logo'] ?? null,
-        'is_active' => true
+        'is_active' => true,
+            'image'=>$request->image
+
+        
     ]);
 
     return response()->json($store);
@@ -125,7 +135,7 @@ public function store(Request $request)
  
  public function update(Request $request, $id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user()
 
     $store = Store::findOrFail($id);
 
@@ -151,7 +161,7 @@ public function store(Request $request)
 }
  public function destroy($id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $store = Store::findOrFail($id);
 

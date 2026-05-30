@@ -15,7 +15,7 @@ class OrderController extends Controller
 
 public function vendorOrders()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $orders = Order::whereHas('items.product', function ($q) use ($vendor) {
         $q->where('vendor_id', $vendor->id);
@@ -81,7 +81,7 @@ public function store(Request $request)
 
  public function updateStatus(Request $request, $id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $request->validate([
         'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled'
@@ -105,7 +105,7 @@ public function store(Request $request)
 
 public function statistics()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $totalSales = Order::where('vendor_id', $vendor->id)->sum('total_price');
     $totalOrders = Order::where('vendor_id', $vendor->id)->count();

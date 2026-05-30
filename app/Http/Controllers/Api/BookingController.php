@@ -39,7 +39,7 @@ class BookingController extends Controller
 
 public function vendorBookings()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $bookings = Booking::whereHasMorph(
         'bookable',

@@ -37,7 +37,7 @@ class GymController extends Controller
 
 public function index()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
@@ -64,7 +64,7 @@ public function publicShow(int $id)
         'services',
         'reviews' => function ($q) {
             $q->where('is_hidden', false)->with('user:id,name');
-        }
+        },'videos'
     ])->findOrFail($id);
 
      $average = $gym->reviews->avg('rating');
@@ -80,7 +80,7 @@ public function publicShow(int $id)
  */
 public function show(string $id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
@@ -102,23 +102,30 @@ public function show(string $id)
      public function store(Request $request)
     {
         $data=$request->validate([
-'name'=>'required',
-'type'=>'required',
-'location'=>'required',
-'description'=>'required']  );
+'name'=>'required|string',
+'type'=>'required|string',
+'location'=>'required|string',
+'description'=>'required',
+'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',   
+]  );
 
-$vendor = auth()->user()->vendor;
+$vendor = auth()->user();
      if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 
-
+  if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('gyms', 'public');
+            $data['image'] = $path;   
+        }
 $gym=Gym::create([
     'name'=>$data['name'],
 'type'=>$data['type'],
 'location'=>$data['location'],
 'description'=>$data['description'],
-'vendor_id' => $vendor->id]);
+'vendor_id' => $vendor->id,
+    'image'=>$request->image
+]);
 
 return \response()->json([ 'message'=>'Gym created',
             'Gym'=>$gym]);
@@ -130,7 +137,7 @@ return \response()->json([ 'message'=>'Gym created',
 
 
     public function update(Request $request, string $id)
-    {    $vendor = auth()->user()->vendor;
+    {    $vendor = auth()->user();
 
     $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
 
@@ -144,7 +151,7 @@ return $gym;
      */
     public function destroy(string $id)
     {
- $vendor = auth()->user()->vendor;
+ $vendor = auth()->user();
 
     $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
 
@@ -209,7 +216,7 @@ return SubscriptionsResource::collection($scribes);
 
 public function storePlans(Request $request, $gym_id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($gym_id);
 
@@ -231,7 +238,7 @@ public function storePlans(Request $request, $gym_id)
  
  public function updatePlan(Request $request, $id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $plan = GymPlan::findOrFail($id);
 
@@ -255,7 +262,7 @@ public function storePlans(Request $request, $gym_id)
 }
  public function deletePlan($id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $plan = GymPlan::findOrFail($id);
 

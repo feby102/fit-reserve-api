@@ -26,7 +26,7 @@ public function publicIndex()
 
 public function index()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
@@ -54,7 +54,7 @@ public function index()
         'services',
         'reviews' => function ($q) {
              $q->where('is_hidden', false)->with('user:id,name');
-        }
+        },'videos'
     ])->findOrFail($id);
 
      $average = $academy->reviews->avg('rating');
@@ -67,7 +67,7 @@ public function index()
 
     public function show($id)
     {
-$vendor = auth()->user()->vendor;
+$vendor = auth()->user();
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
@@ -112,20 +112,28 @@ public function store(Request $request)
             'academy_type_id'=>'required|exists:academy_types,id',
             'name'=>'required',
             'location'=>'required',
-            'price_per_hour'=>'required'
+            'price_per_hour'=>'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',   
+
             
 
 ]);
-$vendor = auth()->user()->vendor;
+$vendor = auth()->user();
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
+
+  if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('academies', 'public');
+            $data['image'] = $path;   
+        }
 $academy = Academy::create([
     'vendor_id' => $vendor->id,
     'academy_type_id'=>$request->academy_type_id,
     'name'=>$request->name,
     'location'=>$request->location,
-    'price_per_hour'=>$request->price_per_hour
+    'price_per_hour'=>$request->price_per_hour,
+    'image'=>$request->image
 ]);
   return response()->json([
             'message'=>'Academy created',
@@ -139,7 +147,7 @@ $academy = Academy::create([
 
     public function update(Request $request,$id){
 
-$vendor = auth()->user()->vendor;
+$vendor = auth()->user();
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
@@ -166,7 +174,7 @@ return response()->json([
 
 
 
-$vendor = auth()->user()->vendor;
+$vendor = auth()->user();
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }

@@ -13,7 +13,7 @@ class StadiumScheduleController extends Controller
     
 public function store(Request $request, $stadium_id)
 {
-    $vendor = auth()->user()->vendor;
+$vendor = auth()->user();
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
@@ -37,7 +37,7 @@ public function store(Request $request, $stadium_id)
 
 public function index($stadium_id)
 {
-    $vendor = auth()->user()->vendor;
+   $vendor = auth()->user();
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);

@@ -17,7 +17,7 @@ class Stadium extends Model
         'address',
         'price_per_hour',
         'status',
-        'image','is_verified'
+        'image','is_verified','video_id'
 
     ];
 
@@ -30,6 +30,13 @@ protected function image(): Attribute
         get: fn ($value) => $value ? url(Storage::url($value)) : null,
     );
 }
+
+
+public function videos()
+{
+    return $this->hasMany(Video::class);
+}
+
 
 
    public function vendor(){

@@ -203,7 +203,7 @@ Route::post('wallet/transfer',[UserController::class,'transfer']);
 
 
 
-Route::middleware('auth:sanctum')->prefix('/vendor')->group(function(){
+Route::middleware('auth:user-api,vendor-api')->prefix('/vendor')->group(function(){
 
 Route::apiResource('/stadiums',StadiumController::class);
     Route::get('/stadiums/{id}/stats',[StadiumController::class, 'stats']);

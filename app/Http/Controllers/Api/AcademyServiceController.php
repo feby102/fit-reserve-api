@@ -18,7 +18,7 @@ return AcademyService::where('academy_id',$academy_id)->get();
 
 public function vendorservice()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $plans = AcademyService::whereHas('academy', function($q) use ($vendor){
         $q->where('vendor_id', $vendor->id);
@@ -70,7 +70,7 @@ public function store(Request $request)
         'max_number' => 'required|integer'
     ]);
 
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
     $academy = Academy::findOrFail($data['academy_id']);
 
     if ($academy->vendor_id != $vendor->id) {
@@ -97,7 +97,7 @@ public function store(Request $request)
 public function update(Request $request,$id)
 {
 
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
 $service = AcademyService::findOrFail($id);
 
@@ -120,7 +120,7 @@ public function destroy($id)
 {
 
 
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
 $service = AcademyService::findOrFail($id);
 
@@ -139,7 +139,7 @@ return response()->json(['message'=>'deleted']);
 
 public function toggle($id)
 {
-        $vendor = auth()->user()->vendor;
+        $vendor = auth()->user();
 
 $service = AcademyService::whereHas('academy',function($q) use( $vendor){
     $q->where('vendor_id',$vendor->id);
@@ -151,7 +151,7 @@ return response()->json($service);
 }
 public function statistics($service_id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
@@ -177,7 +177,7 @@ public function statistics($service_id)
 
 public function mostRequestedServices()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);

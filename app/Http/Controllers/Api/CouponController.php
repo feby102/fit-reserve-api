@@ -19,7 +19,7 @@ class CouponController extends Controller
     // عرض كوبونات الـ Vendor فقط
     public function vendorCoupons()
     {
-        $vendor = auth()->user()->vendor;
+        $vendor = auth()->user();
         if (!$vendor) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -32,7 +32,7 @@ class CouponController extends Controller
     // إنشاء كوبون
     public function store(Request $request)
     {
-        $vendor = auth()->user()->vendor;
+        $vendor = auth()->user();
         if (!$vendor) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -70,7 +70,7 @@ class CouponController extends Controller
     // تحديث الكوبون
     public function update(Request $request, $id)
     {
-        $vendor = auth()->user()->vendor;
+        $vendor = auth()->user();
         if (!$vendor) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -105,7 +105,7 @@ class CouponController extends Controller
     // حذف الكوبون
     public function destroy($id)
     {
-        $vendor = auth()->user()->vendor;
+        $vendor = auth()->user();
         if (!$vendor) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }

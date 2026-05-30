@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['pending','approved','rejected'])->default('pending');
             $table->string('image')->nullable();
              $table->boolean('is_verified')->default(false);
-   
+    
             $table->timestamps();
         });
     }

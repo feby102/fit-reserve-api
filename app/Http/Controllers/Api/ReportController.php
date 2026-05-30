@@ -27,7 +27,7 @@ class ReportController extends Controller
 
 // public function dailyReport()
 // {
-//     $vendor = auth()->user()->vendor;
+//     $vendor = auth()->user();
 //     $date = Carbon::today();
 
 //     // جلب كل البوكينجز لليوم الحالي المتعلقة بالـ vendor
@@ -60,7 +60,7 @@ class ReportController extends Controller
 
 // public function weekly()
 // {
-//     $vendor = auth()->user()->vendor;
+//     $vendor = auth()->user();
 //     $start = Carbon::now()->startOfWeek();
 //     $end = Carbon::now()->endOfWeek();
 
@@ -218,7 +218,7 @@ class ReportController extends Controller
  
 
 public function bestStadiums()
-{        $vendor = auth()->user()->vendor;
+{        $vendor = auth()->user();
 
   $stadiums = Stadium::where('vendor_id', $vendor->id)
         ->withCount('bookings')
@@ -232,7 +232,7 @@ return response()->json($stadiums);
 
 public function bestServices()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $data = Booking::where('bookable_type', AcademyService::class)
         ->whereHasMorph('bookable', [AcademyService::class], function ($q) use ($vendor) {
@@ -258,7 +258,7 @@ public function bestServices()
 
 public function vendorCoachReviews()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $reviews = Review::with(['user','reviewable.academy'])
         ->where('reviewable_type',  PrivateCoach::class)

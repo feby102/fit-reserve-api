@@ -18,14 +18,38 @@ return new class extends Migration
             $table->string('url'); 
             $table->enum('type',['user','academy','coach']);
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('academy_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('coach_id')->nullable()->constrained('private_coaches')->cascadeOnDelete();
-            $table->integer('views')->default(0);
+             $table->integer('views')->default(0);
             $table->integer('likes')->default(0);
             $table->integer('dislikes')->default(0);
             $table->enum('status',['pending','approved','rejected'])->default('pending');
+ $table->foreignId('academy_id')
+          ->nullable()
+          ->constrained('academies')
+          ->nullOnDelete();
 
-            $table->timestamps();
+    $table->foreignId('coach_id')
+          ->nullable()
+          ->constrained('private_coaches')
+          ->nullOnDelete();
+
+    $table->foreignId('stadium_id')
+          ->nullable()
+          ->constrained('stadiums')
+          ->nullOnDelete();
+    
+           $table->foreignId('gym_id')
+          ->nullable()
+          ->constrained()
+          ->nullOnDelete();
+    
+ $table->foreignId('store_id')
+          ->nullable()
+          ->constrained()
+          ->nullOnDelete();
+    
+
+          $table->timestamps();
+            
         });
     }
 

@@ -23,7 +23,7 @@ return response()->json($products);
  
 public function vendorProducts()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
     $products = Product::where('vendor_id', $vendor->id)->with('category')->get();
     return response()->json($products);
 }
@@ -43,7 +43,7 @@ $data=$request->validate([
           'category_id'=>'required|exists:categories,id'
 ]);
 
-        $vendor = auth()->user()->vendor;  
+        $vendor = auth()->user();  
 
 
     $image_path = null;  
@@ -82,7 +82,7 @@ return response()->json([
 public function update(Request $request,$id)
 {
 
- $vendor = auth()->user()->vendor;
+ $vendor = auth()->user();
 
     $product = Product::where('vendor_id', $vendor->id)->findOrFail($id);
 
@@ -101,7 +101,7 @@ return response()->json($product);
  public function destroy($id)
 {
 
-   $vendor = auth()->user()->vendor;
+   $vendor = auth()->user();
 
     $product = Product::where('vendor_id', $vendor->id)->findOrFail($id);
 

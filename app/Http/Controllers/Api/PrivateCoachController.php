@@ -25,7 +25,7 @@ return PrivateCoach::with('academy','locations','services')->get()->makeHidden([
 
  public function  index()
     {
-        $vendor = auth()->user()->vendor;
+        $vendor = auth()->user();
 
          $academiesIds = $vendor->academies()->pluck('id');
 
@@ -50,7 +50,7 @@ $data=$request->validate([
 
 ]);
 
- $vendor = auth()->user()->vendor;
+ $vendor = auth()->user();
  if(!$vendor->academies()->where('id', $data['academy_id'])->exists()){
             return response()->json(['message'=>'This academy does not belong to you'], 403);
         }
@@ -119,7 +119,7 @@ return response()->json($coach);
 public function destroy($id)
 {
 
-  $vendor = auth()->user()->vendor;
+  $vendor = auth()->user();
         $academiesIds = $vendor->academies()->pluck('id');
         $coach = PrivateCoach::whereIn('academy_id', $academiesIds)->findOrFail($id);
 

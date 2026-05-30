@@ -2,14 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
+use Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Storage;
 class Academy extends Model
 {
   protected $fillable = [ 'academy_type_id','vendor_id','name','location','is_active','price_per_hour',
         'image','is_verified'
 ];
 
+
+protected function image(): Attribute
+{
+    return Attribute::make(
+        get: fn ($value) => $value ? url(Storage::url($value)) : null,
+    );
+}
+
+
+public function videos()
+{
+    return $this->hasMany(Video::class);
+}
 
 public function vendor(){
     return $this->belongsTo(Vendor::class);

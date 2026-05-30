@@ -23,8 +23,7 @@ public function publicIndex()
         ->get()
         ->makeHidden(['vendor_id', 'status', 'created_at', 'updated_at']);
 
-    // تحويل القيمة لـ float أو تقريبها
-    $stadiums->transform(function ($item) {
+     $stadiums->transform(function ($item) {
         $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
         return $item;
     });
@@ -34,7 +33,8 @@ public function publicIndex()
 
 public function index()
 {
-    $vendor = auth()->user()->vendor;
+    
+$vendor = auth()->user();
 
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
@@ -42,7 +42,7 @@ public function index()
 
     $stadiums = Stadium::where('vendor_id', $vendor->id)
         ->where('status', 'approved')
-        ->withAvg('reviews', 'rating') // حساب متوسط التقييم للفيندور
+        ->withAvg('reviews', 'rating')   
         ->latest()
         ->get()
         ->makeHidden(['vendor_id', 'status', 'created_at', 'updated_at']);
@@ -59,11 +59,12 @@ public function index()
 public function publicShow(int $id)
 {
     $stadium = Stadium::with([
-        'reviews' => function ($q) {
-            $q->where('is_hidden', false)
-              ->with('user:id,name');
-        }
-    ])->findOrFail($id);
+    'reviews' => function ($q) {
+        $q->where('is_hidden', false)
+          ->with('user:id,name');
+    },
+    'videos','schedules'
+])->findOrFail($id);
 
     $stadium->makeHidden([
         'id','vendor_id','status','created_at','updated_at'
@@ -84,7 +85,7 @@ public function publicShow(int $id)
 
     public function show($id)
     {
-$vendor = auth()->user()->vendor;
+$vendor = auth()->user();
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
@@ -106,7 +107,7 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 
     public function store(Request $request)
     {
-        $vendor = auth()->user()->vendor;
+$vendor = auth()->user();
         if (!$vendor) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -144,8 +145,9 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 
 public function update(Request $request, $id)
     {
-        $vendor = auth()->user()->vendor;
-        if (!$vendor) return response()->json(['message' => 'Unauthorized'], 403);
+$vendor = auth()->user();
+
+if (!$vendor) return response()->json(['message' => 'Unauthorized'], 403);
 
         $stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id);
 
@@ -179,7 +181,7 @@ public function update(Request $request, $id)
   public function destroy(Request $request, $id)
 {
 
-$vendor = auth()->user()->vendor;
+$vendor = auth()->user();
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
@@ -233,7 +235,8 @@ return response()->json([
 
     public function stats($stadium_id)
 
-{        $vendor = auth()->user()->vendor;
+{        $vendor = auth()->user();
+
 
     $stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($stadium_id);
     $total_bookings = $stadium->bookings()->count();

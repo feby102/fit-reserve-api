@@ -32,7 +32,7 @@ public function publicShow($id)
 
 public function vendorIndex()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $categories = Category::where('vendor_id', $vendor->id)->get();
 
@@ -47,7 +47,7 @@ public function store(Request $request)
         'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
     ]);
 
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
      if ($request->hasFile('image')) {
         $data['image'] = $request->file('image')->store('categories', 'public');
@@ -65,7 +65,7 @@ public function store(Request $request)
  
 public function update(Request $request, $id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $category = Category::where('vendor_id', $vendor->id)->findOrFail($id);
 
@@ -98,7 +98,7 @@ public function update(Request $request, $id)
 
 public function destroy($id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $category = Category::where('vendor_id', $vendor->id)->findOrFail($id);
 

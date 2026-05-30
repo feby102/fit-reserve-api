@@ -40,7 +40,7 @@ public function publicShow($id)
 
 public function index()
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $challenges = Challenge::whereHas('academy', function ($q) use ($vendor) {
         $q->where('vendor_id', $vendor->id);
@@ -51,7 +51,7 @@ public function index()
 
 public function show($id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $challenge = Challenge::whereHas('academy', function ($q) use ($vendor) {
         $q->where('vendor_id', $vendor->id);
@@ -71,7 +71,7 @@ public function store(Request $request)
         'status' => 'required|in:upcoming,ongoing,completed'
     ]);
 
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
      $academy = Academy::findOrFail($data['academy_id']);
 
@@ -92,7 +92,7 @@ public function store(Request $request)
 
 public function update(Request $request, $id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
      $challenge = Challenge::whereHas('academy', function ($q) use ($vendor) {
         $q->where('vendor_id', $vendor->id);
@@ -139,7 +139,7 @@ return \response()->json($ongoing);
 public function updateParticipant(Request $request, $id)
 {
     $participant = ChallengeParticipant::findOrFail($id);
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $challenge = $participant->challenge;
 
@@ -172,7 +172,7 @@ public function updateParticipant(Request $request, $id)
 public function banParticipant($id)
 {
     $participant = ChallengeParticipant::findOrFail($id);
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     if ($participant->challenge->academy->vendor_id != $vendor->id) {
         return response()->json(['message' => 'Unauthorized'], 403);
@@ -189,7 +189,7 @@ public function banParticipant($id)
 
 public function stats($challenge_id)
 {
-    $vendor = auth()->user()->vendor;
+    $vendor = auth()->user();
 
     $challenge = Challenge::whereHas('academy', function ($q) use ($vendor) {
         $q->where('vendor_id', $vendor->id);
