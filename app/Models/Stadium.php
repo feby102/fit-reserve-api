@@ -24,11 +24,13 @@ class Stadium extends Model
     //owner
 
 
-protected function image(): Attribute
+protected $appends = ['image_url'];
+
+public function getImageUrlAttribute()
 {
-    return Attribute::make(
-        get: fn ($value) => $value ? url(Storage::url($value)) : null,
-    );
+    return $this->image
+        ? asset('storage/' . $this->image)
+        : null;
 }
 
 

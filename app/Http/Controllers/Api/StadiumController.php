@@ -23,9 +23,15 @@ public function publicIndex()
         ->get()
         ->makeHidden(['vendor_id', 'status', 'created_at', 'updated_at']);
 
-     $stadiums->transform(function ($item) {
-        $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
-        return $item;
+   $stadiums->transform(function ($item) {
+    $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
+
+    if ($item->image) {
+        $item->image = asset('storage/' . $item->image);
+    }
+
+    return $item;
+ 
     });
 
     return response()->json($stadiums);
@@ -47,11 +53,15 @@ $vendor = auth()->user();
         ->get()
         ->makeHidden(['vendor_id', 'status', 'created_at', 'updated_at']);
 
-    $stadiums->transform(function ($item) {
-        $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
-        return $item;
-    });
+$stadiums->transform(function ($item) {
+    $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
 
+    if ($item->image) {
+        $item->image = asset('storage/' . $item->image);
+    }
+
+    return $item;
+});
     return response()->json($stadiums);
 }
 
@@ -71,6 +81,10 @@ public function publicShow(int $id)
     ]);
 
     $average = $stadium->reviews->avg('rating');
+if ($stadium->image) {
+    $stadium->image = asset('storage/' . $stadium->image);
+}
+
 
     return response()->json([
         'stadium' => $stadium,
@@ -92,7 +106,9 @@ if (!$vendor) {
 $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 ->makeHidden(['id','vendor_id','status','created_at','updated_at']);
 
-   
+   if ($Stadium->image) {
+    $Stadium->image = asset('storage/' . $Stadium->image);
+}
  return response()->json([
 
             'Stadium'=>$Stadium,
