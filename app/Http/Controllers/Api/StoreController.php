@@ -121,7 +121,7 @@ public function store(Request $request)
         'description' => $data['description'] ?? null,
         'logo' => $data['logo'] ?? null,
         'is_active' => true,
-            'image'=>$request->image
+            'image' => $data['image'] ?? null,
 
         
     ]);
@@ -135,7 +135,7 @@ public function store(Request $request)
  
  public function update(Request $request, $id)
 {
-    $vendor = auth()->user()
+    $vendor = auth()->user();
 
     $store = Store::findOrFail($id);
 

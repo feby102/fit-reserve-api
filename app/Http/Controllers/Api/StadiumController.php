@@ -27,7 +27,7 @@ public function publicIndex()
     $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
 
     if ($item->image) {
-        $item->image = asset('storage/' . $item->image);
+        $item->image = url('/deploy/file/' . $item->image);
     }
 
     return $item;
@@ -57,7 +57,7 @@ $stadiums->transform(function ($item) {
     $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
 
     if ($item->image) {
-        $item->image = asset('storage/' . $item->image);
+        $item->image = url('/deploy/file/' . $item->image);
     }
 
     return $item;

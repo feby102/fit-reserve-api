@@ -14,6 +14,16 @@ class Gym extends Model
 
 
 
+protected $appends = ['image_url'];   
+
+public function getImageUrlAttribute()
+{
+    if ($this->image) {
+        return asset('storage/' . $this->image);
+    }
+
+    return null;  }
+
 protected function image(): Attribute
 {
     return Attribute::make(

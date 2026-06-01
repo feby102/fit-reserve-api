@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7a68cc2dad68f119a56c6c7fd0bdfbe",
+    "content-hash": "64c3fff1cbac741bce676813d654106a",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -10493,21 +10493,20 @@
         },
         {
             "name": "knuckleswtf/scribe",
-            "version": "5.9.0",
+            "version": "5.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/knuckleswtf/scribe.git",
-                "reference": "170cb6f8c56f1b26db692fdd1f26574b1765c6f7"
+                "reference": "d4da86e57e49dac4694b200354cfa962bfae3168"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/knuckleswtf/scribe/zipball/170cb6f8c56f1b26db692fdd1f26574b1765c6f7",
-                "reference": "170cb6f8c56f1b26db692fdd1f26574b1765c6f7",
+                "url": "https://api.github.com/repos/knuckleswtf/scribe/zipball/d4da86e57e49dac4694b200354cfa962bfae3168",
+                "reference": "d4da86e57e49dac4694b200354cfa962bfae3168",
                 "shasum": ""
             },
             "require": {
                 "ext-fileinfo": "*",
-                "ext-json": "*",
                 "ext-pdo": "*",
                 "fakerphp/faker": "^1.23.1",
                 "laravel/framework": "^9.21 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
@@ -10574,7 +10573,7 @@
             ],
             "support": {
                 "issues": "https://github.com/knuckleswtf/scribe/issues",
-                "source": "https://github.com/knuckleswtf/scribe/tree/5.9.0"
+                "source": "https://github.com/knuckleswtf/scribe/tree/5.10.0"
             },
             "funding": [
                 {
@@ -10582,7 +10581,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-03-21T00:39:27+00:00"
+            "time": "2026-05-09T21:49:49+00:00"
         },
         {
             "name": "laravel/pail",

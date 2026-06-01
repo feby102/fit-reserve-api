@@ -9,14 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class AcademyController extends Controller
 {
+    
 public function publicIndex()
 {
-     $academies = Academy::with('type')
-        ->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+    $academies = Academy::withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
         ->latest()
         ->get();
 
-     $academies->transform(function ($academy) {
+    $academies->transform(function ($academy) {
         $academy->reviews_avg_rating = round($academy->reviews_avg_rating ?? 0, 1);
         return $academy;
     });
@@ -27,12 +27,12 @@ public function publicIndex()
 public function index()
 {
     $vendor = auth()->user();
+
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 
-    $academies = Academy::with('type')
-        ->withAvg('reviews', 'rating')   
+    $academies = Academy::withAvg('reviews', 'rating')
         ->where('vendor_id', $vendor->id)
         ->latest()
         ->get();
@@ -45,62 +45,56 @@ public function index()
     return response()->json($academies);
 }
 
-
-    public function publicShow(int $id)
+ public function publicShow(int $id)
 {
     $academy = Academy::with([
-        'type',
         'plans',
         'services',
         'reviews' => function ($q) {
-             $q->where('is_hidden', false)->with('user:id,name');
-        },'videos'
+            $q->where('is_hidden', false)->with('user:id,name');
+        },
+        'videos'
     ])->findOrFail($id);
 
-     $average = $academy->reviews->avg('rating');
+    $average = $academy->reviews->avg('rating');
 
     return response()->json([
         'academy' => $academy,
-        'average_rating' => round($average ?? 0, 1),   
-    ]); 
+        'average_rating' => round($average ?? 0, 1),
+    ]);
 } 
 
-    public function show($id)
-    {
-$vendor = auth()->user();
-if (!$vendor) {
-    return response()->json(['message' => 'Unauthorized'], 403);
-}
-$academy = Academy::with([
-    'type',
-    'plans',
-    'services',
-    'reviews.user'
-])
-->where('vendor_id', $vendor->id)
-->findOrFail($id);
+ public function show($id)
+{
+    $vendor = auth()->user();
 
-   
-  $studentsCount = DB::table('academy_subscriptions')
-->join('academy_plans','academy_plans.id','=','academy_subscriptions.academy_plan_id')
-->where('academy_plans.academy_id',$id)->count();
+    if (!$vendor) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
 
+    $academy = Academy::with([
+        'plans',
+        'services',
+        'reviews.user'
+    ])
+    ->where('vendor_id', $vendor->id)
+    ->findOrFail($id);
 
-$revenue=DB::table('academy_subscriptions')
-->join('academy_plans','academy_plans.id','=','academy_subscriptions.academy_plan_id')
- ->where('academy_plans.academy_id',$id) 
- ->sum('academy_plans.price');
+    $studentsCount = DB::table('academy_subscriptions')
+        ->join('academy_plans', 'academy_plans.id', '=', 'academy_subscriptions.academy_plan_id')
+        ->where('academy_plans.academy_id', $id)
+        ->count();
 
+    $revenue = DB::table('academy_subscriptions')
+        ->join('academy_plans', 'academy_plans.id', '=', 'academy_subscriptions.academy_plan_id')
+        ->where('academy_plans.academy_id', $id)
+        ->sum('academy_plans.price');
 
- return response()->json([
-
-            'academy'=>$academy,
-
-            'students_count'=>$studentsCount,
-
-            'revenue'=>$revenue
-
-        ]);
+    return response()->json([
+        'academy' => $academy,
+        'students_count' => $studentsCount,
+        'revenue' => $revenue
+    ]);
 }
 
 
@@ -109,7 +103,7 @@ public function store(Request $request)
     {
 
         $request->validate([
-            'academy_type_id'=>'required|exists:academy_types,id',
+                'type' => 'required|string',
             'name'=>'required',
             'location'=>'required',
             'price_per_hour'=>'required',
@@ -129,12 +123,11 @@ if (!$vendor) {
         }
 $academy = Academy::create([
     'vendor_id' => $vendor->id,
-    'academy_type_id'=>$request->academy_type_id,
+'type' => $request->type,
     'name'=>$request->name,
     'location'=>$request->location,
     'price_per_hour'=>$request->price_per_hour,
-    'image'=>$request->image
-]);
+'image' => $data['image'] ?? null,]);
   return response()->json([
             'message'=>'Academy created',
             'academy'=>$academy
@@ -154,7 +147,7 @@ if (!$vendor) {
 $academy = Academy::where('vendor_id', $vendor->id)->findOrFail($id);
 $academy->update([
 
-            'academy_type_id'=>$request->academy_type_id ??$academy->academy_type_id,
+            'type'=>$request->academy_type ,
             'name'=>$request->name ??$academy->name ,
             'location'=>$request->location??$academy->location
             ]);

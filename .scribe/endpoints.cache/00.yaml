@@ -6,6 +6,46 @@ endpoints:
   -
     custom: []
     httpMethods:
+      - GET
+    uri: api/test-token
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"user":null,"bearer_token":null}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
       - POST
     uri: api/register
     metadata:
@@ -37,23 +77,12 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      email:
+      phone:
         custom: []
-        name: email
-        description: 'Must be a valid email address.'
+        name: phone
+        description: 'Must match the regex /^([0-9\s\-\+\(\)]*)$/. Must be at least 10 characters.'
         required: true
-        example: kunde.eloisa@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      password:
-        custom: []
-        name: password
-        description: 'Must be at least 6 characters.'
-        required: true
-        example: '4[*UyPJ"}6'
+        example: amniihfqcoynlazghdtqtqxbajwbpilpmufinllwloauydlsmsjuryvojcybzvrbyickznkyglo
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -62,75 +91,82 @@ endpoints:
       city:
         custom: []
         name: city
-        description: ''
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: igmkwxphlvazjrcnfbaqy
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      area:
+        custom: []
+        name: area
+        description: 'Must not be greater than 255 characters.'
         required: false
-        example: consequatur
+        example: wuxhgjjmzuxjubqouzswi
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Must be at least 8 characters.'
+        required: true
+        example: 'tf`G?M4+"i''ueW}La!~'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
       role:
         custom: []
         name: role
         description: ''
-        required: false
+        required: true
         example: player
         type: string
         enumValues:
           - player
           - coach
           - vendor
+          - academy
           - merchant
-          - admin
-          - photographer
         exampleWasSpecified: false
-        nullable: true
+        nullable: false
         deprecated: false
       referral_code:
         custom: []
         name: referral_code
-        description: ''
+        description: 'The <code>my_referral_code</code> of an existing record in the users table.'
         required: false
-        example: consequatur
+        example: null
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         deprecated: false
-      birth_date:
+      email:
         custom: []
-        name: birth_date
-        description: 'Must be a valid date.'
+        name: email
+        description: 'Must be a valid email address.'
         required: true
-        example: '2026-04-05T01:33:32'
+        example: laurence94@example.org
         type: string
         enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      gender:
-        custom: []
-        name: gender
-        description: ''
-        required: true
-        example: male
-        type: string
-        enumValues:
-          - male
-          - female
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
       name: vmqeopfuudtdsufvyvddq
-      email: kunde.eloisa@example.com
-      password: '4[*UyPJ"}6'
-      city: consequatur
+      phone: amniihfqcoynlazghdtqtqxbajwbpilpmufinllwloauydlsmsjuryvojcybzvrbyickznkyglo
+      city: igmkwxphlvazjrcnfbaqy
+      area: wuxhgjjmzuxjubqouzswi
+      password: 'tf`G?M4+"i''ueW}La!~'
       role: player
-      referral_code: consequatur
-      birth_date: '2026-04-05T01:33:32'
-      gender: male
+      email: laurence94@example.org
     fileParameters: []
     responses: []
     responseFields: []
@@ -161,12 +197,12 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      email:
+      phone:
         custom: []
-        name: email
-        description: 'Must be a valid email address.'
+        name: phone
+        description: ''
         required: true
-        example: qkunze@example.com
+        example: consequatur
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -177,15 +213,15 @@ endpoints:
         name: password
         description: ''
         required: true
-        example: consequatur
+        example: 'O[2UZ5ij-e/dl4m{o,'
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      email: qkunze@example.com
-      password: consequatur
+      phone: consequatur
+      password: 'O[2UZ5ij-e/dl4m{o,'
     fileParameters: []
     responses: []
     responseFields: []
@@ -281,9 +317,9 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      token:
+      code:
         custom: []
-        name: token
+        name: code
         description: ''
         required: true
         example: consequatur
@@ -295,7 +331,7 @@ endpoints:
     cleanBodyParameters:
       email: qkunze@example.com
       password: 'Z5ij-e/dl4m{o,'
-      token: consequatur
+      code: consequatur
     fileParameters: []
     responses: []
     responseFields: []
@@ -488,7 +524,7 @@ endpoints:
         name: bookable_type
         description: ''
         required: true
-        example: gym
+        example: academy
         type: string
         enumValues:
           - stadium
@@ -516,7 +552,7 @@ endpoints:
         name: start_time
         description: 'Must be a valid date in the format <code>H:i</code>.'
         required: true
-        example: '01:33'
+        example: '09:45'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -527,7 +563,7 @@ endpoints:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2026-04-05T01:33:33'
+        example: '2026-05-31T09:45:44'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -549,7 +585,7 @@ endpoints:
         name: payment_method
         description: ''
         required: true
-        example: visa
+        example: wallet
         type: string
         enumValues:
           - visa
@@ -671,12 +707,12 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      bookable_type: gym
+      bookable_type: academy
       bookable_id: 17
-      start_time: '01:33'
-      date: '2026-04-05T01:33:33'
+      start_time: '09:45'
+      date: '2026-05-31T09:45:44'
       hours: 45
-      payment_method: visa
+      payment_method: wallet
       type: daily
       package_id: 17
       use_points: 45
@@ -762,7 +798,7 @@ endpoints:
         name: date
         description: 'Must be a valid date.'
         required: true
-        example: '2026-04-05T01:33:33'
+        example: '2026-05-31T09:45:44'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -784,7 +820,7 @@ endpoints:
         name: bookable_type
         description: ''
         required: true
-        example: academy
+        example: coach
         type: string
         enumValues:
           - stadium
@@ -797,9 +833,9 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      date: '2026-04-05T01:33:33'
+      date: '2026-05-31T09:45:44'
       bookable_id: 17
-      bookable_type: academy
+      bookable_type: coach
     fileParameters: []
     responses:
       -
@@ -1610,7 +1646,7 @@ endpoints:
         name: start_time
         description: 'Must be a valid date.'
         required: true
-        example: '2026-04-05T01:33:34'
+        example: '2026-05-31T09:45:45'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -1629,7 +1665,7 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       private_coach_id: consequatur
-      start_time: '2026-04-05T01:33:34'
+      start_time: '2026-05-31T09:45:45'
       hours: 17
     fileParameters: []
     responses: []
@@ -1666,9 +1702,15 @@ endpoints:
         name: reviewable_type
         description: ''
         required: true
-        example: consequatur
+        example: store
         type: string
-        enumValues: []
+        enumValues:
+          - stadium
+          - academy
+          - Privatecoach
+          - gym
+          - challenge
+          - store
         exampleWasSpecified: false
         nullable: false
         deprecated: false
@@ -1706,7 +1748,7 @@ endpoints:
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      reviewable_type: consequatur
+      reviewable_type: store
       reviewable_id: 17
       rating: 3
       comment: consequatur
@@ -1844,6 +1886,58 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/gyms/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the gym.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: consequatur
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -3059,7 +3153,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: academy
+        example: coach
         type: string
         enumValues:
           - user
@@ -3090,11 +3184,33 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         deprecated: false
+      stadium_id:
+        custom: []
+        name: stadium_id
+        description: 'The <code>id</code> of an existing record in the stadiums table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      gym_id:
+        custom: []
+        name: gym_id
+        description: 'The <code>id</code> of an existing record in the gyms table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
       title: vmqeopfuudtdsufvyvddq
       description: 'Dolores dolorum amet iste laborum eius est dolor.'
       url: 'http://reynolds.com/'
-      type: academy
+      type: coach
     fileParameters: []
     responses: []
     responseFields: []
@@ -3424,7 +3540,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: audio
+        example: text
         type: string
         enumValues:
           - text
@@ -3447,7 +3563,7 @@ endpoints:
     cleanBodyParameters:
       conversation_id: consequatur
       message: consequatur
-      type: audio
+      type: text
       receiver_id: consequatur
     fileParameters:
       file: null
@@ -3775,7 +3891,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '[{"id":1,"academy_id":1,"name":"Coach Ahmed","sport":"Football","price_per_hour":"200.00","bio":null,"reviews_avg_rating":null,"academy":{"id":1,"vendor_id":1,"academy_type_id":1,"name":"Academy A","location":"Cairo","is_active":1,"price_per_hour":"200.00","created_at":"2026-03-29T15:15:27.000000Z","updated_at":"2026-03-29T15:15:27.000000Z"},"locations":[{"id":1,"private_coach_id":1,"location":"Cairo Stadium","created_at":"2026-03-29T20:59:46.000000Z","updated_at":"2026-03-29T20:59:46.000000Z"}],"services":[{"id":1,"private_coach_id":1,"name":"Personal Training","price":"300.00","created_at":"2026-03-29T21:15:10.000000Z","updated_at":"2026-03-29T21:15:10.000000Z"}]}]'
+        content: '[]'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -3815,7 +3931,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '[{"id":1,"vendor_id":1,"academy_type_id":1,"name":"Academy A","location":"Cairo","is_active":1,"price_per_hour":"200.00","created_at":"2026-03-29T15:15:27.000000Z","updated_at":"2026-03-29T15:15:27.000000Z","reviews_avg_rating":"5.0000","subscriptions_count":1},{"id":2,"vendor_id":1,"academy_type_id":1,"name":"Academy A","location":"Cairo","is_active":1,"price_per_hour":"200.00","created_at":"2026-03-29T17:07:05.000000Z","updated_at":"2026-03-29T17:07:05.000000Z","reviews_avg_rating":null,"subscriptions_count":0}]'
+        content: '[]'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -3855,7 +3971,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '[{"id":1,"name":"\u0645\u0644\u0639\u0628 \u0627\u0644\u0632\u0645\u0627\u0644\u0643","city":"\u0627\u0644\u0642\u0627\u0647\u0631\u0629","address":"\u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631","price_per_hour":"200.00","description":null,"created_at":"2026-03-29T14:13:17.000000Z","updated_at":"2026-03-30T06:00:49.000000Z","reviews_avg_rating":null,"bookings_count":1},{"id":2,"name":"\u0645\u0644\u0639\u0628 \u0627\u0644\u0632\u0645\u0627\u0644\u0643","city":"\u0627\u0644\u0642\u0627\u0647\u0631\u0629","address":"\u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631","price_per_hour":"200.00","description":null,"created_at":"2026-03-29T14:14:36.000000Z","updated_at":"2026-03-29T14:23:48.000000Z","reviews_avg_rating":null,"bookings_count":0},{"id":4,"name":"\u0645\u0644\u0639\u0628 \u0627\u0644\u0632\u0645\u0627\u0644\u0643","city":"\u0627\u0644\u0642\u0627\u0647\u0631\u0629","address":"\u0645\u062f\u064a\u0646\u0629 \u0646\u0635\u0631","price_per_hour":"200.00","description":"\u0645\u0644\u0639\u0628 \u0645\u0645\u062a\u0627\u0632","created_at":"2026-03-29T14:16:43.000000Z","updated_at":"2026-03-29T14:16:43.000000Z","reviews_avg_rating":null,"bookings_count":0}]'
+        content: '[]'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -3895,7 +4011,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '[{"id":1,"vendor_id":1,"name":"Gym A","type":"gym","location":"Cairo","description":"Best gym in town","created_at":"2026-03-29T20:26:53.000000Z","updated_at":"2026-03-29T20:26:53.000000Z","reviews_avg_rating":null,"subscriptions_count":2},{"id":2,"vendor_id":1,"name":"Gym A","type":"gym","location":"Cairo","description":"Best gym in town","created_at":"2026-03-29T20:26:58.000000Z","updated_at":"2026-03-29T20:26:58.000000Z","reviews_avg_rating":null,"subscriptions_count":0}]'
+        content: '[]'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -3962,7 +4078,7 @@ endpoints:
       authenticated: false
       deprecated: false
     headers:
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
@@ -3972,9 +4088,9 @@ endpoints:
       name:
         custom: []
         name: name
-        description: ''
+        description: 'Must not be greater than 255 characters.'
         required: true
-        example: consequatur
+        example: vmqeopfuudtdsufvyvddq
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -3985,7 +4101,7 @@ endpoints:
         name: description
         description: ''
         required: false
-        example: null
+        example: 'Dolores dolorum amet iste laborum eius est dolor.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -4024,12 +4140,25 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      image:
+        custom: []
+        name: image
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
-      name: consequatur
+      name: vmqeopfuudtdsufvyvddq
+      description: 'Dolores dolorum amet iste laborum eius est dolor.'
       city: consequatur
       address: consequatur
       price_per_hour: 11613.31890586
-    fileParameters: []
+    fileParameters:
+      image: null
     responses: []
     responseFields: []
     auth: []
@@ -4060,14 +4189,14 @@ endpoints:
         name: id
         description: 'The ID of the stadium.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4105,7 +4234,7 @@ endpoints:
       authenticated: false
       deprecated: false
     headers:
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters:
       id:
@@ -4113,14 +4242,14 @@ endpoints:
         name: id
         description: 'The ID of the stadium.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -4129,7 +4258,7 @@ endpoints:
         name: name
         description: ''
         required: false
-        example: null
+        example: consequatur
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -4146,9 +4275,46 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      city:
+        custom: []
+        name: city
+        description: ''
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      address:
+        custom: []
+        name: address
+        description: ''
+        required: false
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      image:
+        custom: []
+        name: image
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
+      name: consequatur
       price_per_hour: 11613.31890586
-    fileParameters: []
+      city: consequatur
+      address: consequatur
+    fileParameters:
+      image: null
     responses: []
     responseFields: []
     auth: []
@@ -4179,14 +4345,14 @@ endpoints:
         name: id
         description: 'The ID of the stadium.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4222,14 +4388,14 @@ endpoints:
         name: id
         description: 'The ID of the stadium.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4576,14 +4742,14 @@ endpoints:
         name: id
         description: 'The ID of the academy plan.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4619,14 +4785,14 @@ endpoints:
         name: id
         description: 'The ID of the academy plan.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4694,7 +4860,7 @@ endpoints:
       authenticated: false
       deprecated: false
     headers:
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
@@ -4745,12 +4911,24 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      image:
+        custom: []
+        name: image
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
       academy_type_id: consequatur
       name: consequatur
       location: consequatur
       price_per_hour: consequatur
-    fileParameters: []
+    fileParameters:
+      image: null
     responses: []
     responseFields: []
     auth: []
@@ -4781,14 +4959,14 @@ endpoints:
         name: id
         description: 'The ID of the academy.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4834,14 +5012,14 @@ endpoints:
         name: id
         description: 'The ID of the academy.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -4877,14 +5055,14 @@ endpoints:
         name: id
         description: 'The ID of the academy.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -5427,11 +5605,23 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         deprecated: false
+      image:
+        custom: []
+        name: image
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
       name: consequatur
       description: 'Dolores dolorum amet iste laborum eius est dolor.'
     fileParameters:
       logo: null
+      image: null
     responses: []
     responseFields: []
     auth: []
@@ -5564,7 +5754,7 @@ endpoints:
         name: is_active
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -5573,7 +5763,7 @@ endpoints:
     cleanBodyParameters:
       name: consequatur
       description: 'Dolores dolorum amet iste laborum eius est dolor.'
-      is_active: true
+      is_active: false
     fileParameters:
       logo: null
     responses: []
@@ -6150,7 +6340,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: confirmed
+        example: shipped
         type: string
         enumValues:
           - pending
@@ -6162,7 +6352,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      status: confirmed
+      status: shipped
     fileParameters: []
     responses: []
     responseFields: []
@@ -6261,12 +6451,12 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Store a newly created resource in storage.'
+      title: ''
       description: ''
       authenticated: false
       deprecated: false
     headers:
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
@@ -6317,12 +6507,24 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
+      image:
+        custom: []
+        name: image
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
     cleanBodyParameters:
       name: consequatur
       type: consequatur
       location: consequatur
       description: consequatur
-    fileParameters: []
+    fileParameters:
+      image: null
     responses: []
     responseFields: []
     auth: []
@@ -6340,7 +6542,7 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Display the specified resource.'
+      title: 'عرض الجيم الخاص بالـ Vendor مع متوسط التقييم'
       description: ''
       authenticated: false
       deprecated: false
@@ -6353,14 +6555,14 @@ endpoints:
         name: id
         description: 'The ID of the gym.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6393,7 +6595,7 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update the specified resource in storage.'
+      title: ''
       description: ''
       authenticated: false
       deprecated: false
@@ -6406,14 +6608,14 @@ endpoints:
         name: id
         description: 'The ID of the gym.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6449,14 +6651,14 @@ endpoints:
         name: id
         description: 'The ID of the gym.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6492,14 +6694,14 @@ endpoints:
         name: id
         description: 'The ID of the gym.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -6530,7 +6732,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: 1year
+        example: weekly
         type: string
         enumValues:
           - weekly
@@ -6555,7 +6757,7 @@ endpoints:
     cleanBodyParameters:
       name: consequatur
       price: 11613.31890586
-      type: 1year
+      type: weekly
       hours_per_day: 17
     fileParameters: []
     responses: []
@@ -6588,14 +6790,14 @@ endpoints:
         name: id
         description: 'The ID of the gym plan.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -6684,14 +6886,14 @@ endpoints:
         name: id
         description: 'The ID of the gym plan.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6767,14 +6969,14 @@ endpoints:
         name: id
         description: 'The ID of the gym subscription.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6810,14 +7012,14 @@ endpoints:
         name: id
         description: 'The ID of the gym.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -6901,6 +7103,58 @@ endpoints:
         deprecated: false
     cleanUrlParameters:
       id: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/vendor/gyms/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'عرض الجيم الخاص بالـ Vendor مع متوسط التقييم'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the gym.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7064,14 +7318,14 @@ endpoints:
         name: id
         description: 'The ID of the private coach.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7117,14 +7371,14 @@ endpoints:
         name: id
         description: 'The ID of the private coach.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7160,14 +7414,14 @@ endpoints:
         name: id
         description: 'The ID of the private coach.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -7627,7 +7881,7 @@ endpoints:
         name: expires_at
         description: 'Must be a valid date.'
         required: false
-        example: '2026-04-05T01:33:42'
+        example: '2026-05-31T09:45:51'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -7660,7 +7914,7 @@ endpoints:
       type: specific
       value: 11613.31890586
       max_usage: 17
-      expires_at: '2026-04-05T01:33:42'
+      expires_at: '2026-05-31T09:45:51'
     fileParameters: []
     responses: []
     responseFields: []
@@ -7719,7 +7973,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: specific
+        example: fixed
         type: string
         enumValues:
           - fixed
@@ -7757,7 +8011,7 @@ endpoints:
         name: expires_at
         description: 'Must be a valid date.'
         required: false
-        example: '2026-04-05T01:33:43'
+        example: '2026-05-31T09:45:51'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -7786,10 +8040,10 @@ endpoints:
         nullable: true
         deprecated: false
     cleanBodyParameters:
-      type: specific
+      type: fixed
       value: 11613.31890586
       max_usage: 17
-      expires_at: '2026-04-05T01:33:43'
+      expires_at: '2026-05-31T09:45:51'
     fileParameters: []
     responses: []
     responseFields: []
@@ -8284,7 +8538,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: completed
+        example: upcoming
         type: string
         enumValues:
           - upcoming
@@ -8299,7 +8553,7 @@ endpoints:
       max_players: 17
       price: 11613.31890586
       duration: 17
-      status: completed
+      status: upcoming
     fileParameters: []
     responses: []
     responseFields: []
@@ -8402,7 +8656,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: upcoming
+        example: completed
         type: string
         enumValues:
           - upcoming
@@ -8416,7 +8670,7 @@ endpoints:
       max_players: 17
       price: 11613.31890586
       duration: 17
-      status: upcoming
+      status: completed
     fileParameters: []
     responses: []
     responseFields: []
@@ -8464,7 +8718,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: ongoing
+        example: completed
         type: string
         enumValues:
           - upcoming
@@ -8474,7 +8728,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      status: ongoing
+      status: completed
     fileParameters: []
     responses: []
     responseFields: []
@@ -8522,7 +8776,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: accepted
+        example: rejected
         type: string
         enumValues:
           - accepted
@@ -8531,7 +8785,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      status: accepted
+      status: rejected
     fileParameters: []
     responses: []
     responseFields: []
@@ -8674,7 +8928,7 @@ endpoints:
         name: status
         description: ''
         required: true
-        example: ongoing
+        example: completed
         type: string
         enumValues:
           - upcoming
@@ -8684,7 +8938,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      status: ongoing
+      status: completed
     fileParameters: []
     responses: []
     responseFields: []
@@ -8972,14 +9226,14 @@ endpoints:
         name: id
         description: 'The ID of the stadium.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -9015,14 +9269,14 @@ endpoints:
         name: id
         description: 'The ID of the stadium.'
         required: true
-        example: 1
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: 1
+      id: 17
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -9167,7 +9421,7 @@ endpoints:
         name: is_store_enabled
         description: ''
         required: false
-        example: 'false'
+        example: 'true'
         type: string
         enumValues:
           - '0'
@@ -9182,7 +9436,7 @@ endpoints:
         name: is_challenges_enabled
         description: 'تعديل بسيط لضمان القبول.'
         required: false
-        example: '0'
+        example: '1'
         type: string
         enumValues:
           - '0'
@@ -9197,7 +9451,7 @@ endpoints:
         name: is_videos_enabled
         description: ''
         required: false
-        example: '0'
+        example: 'false'
         type: string
         enumValues:
           - '0'
@@ -9254,9 +9508,9 @@ endpoints:
     cleanBodyParameters:
       commission_rate: 21
       cancellation_policy: consequatur
-      is_store_enabled: 'false'
-      is_challenges_enabled: '0'
-      is_videos_enabled: '0'
+      is_store_enabled: 'true'
+      is_challenges_enabled: '1'
+      is_videos_enabled: 'false'
       terms: consequatur
       privacy_policy: consequatur
       about_us: consequatur
@@ -10033,7 +10287,7 @@ endpoints:
         name: type
         description: ''
         required: true
-        example: privacy
+        example: terms
         type: string
         enumValues:
           - about
@@ -10046,7 +10300,7 @@ endpoints:
     cleanBodyParameters:
       title: vmqeopfuudtdsufvyvddq
       content: consequatur
-      type: privacy
+      type: terms
     fileParameters: []
     responses: []
     responseFields: []
@@ -10116,7 +10370,7 @@ endpoints:
         name: type
         description: ''
         required: false
-        example: about
+        example: policy
         type: string
         enumValues:
           - about
@@ -10129,7 +10383,7 @@ endpoints:
     cleanBodyParameters:
       title: vmqeopfuudtdsufvyvddq
       content: consequatur
-      type: about
+      type: policy
     fileParameters: []
     responses: []
     responseFields: []

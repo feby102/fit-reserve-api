@@ -11,6 +11,34 @@ tags:
     name: Endpoints
     description: ''
 paths:
+  /api/test-token:
+    get:
+      summary: ''
+      operationId: getApiTestToken
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  user: null
+                  bearer_token: null
+                properties:
+                  user:
+                    type: string
+                    example: null
+                    nullable: true
+                  bearer_token:
+                    type: string
+                    example: null
+                    nullable: true
+      tags:
+        - Endpoints
+      security: []
   /api/register:
     post:
       summary: ''
@@ -31,19 +59,23 @@ paths:
                   type: string
                   description: 'Must not be greater than 255 characters.'
                   example: vmqeopfuudtdsufvyvddq
-                email:
+                phone:
                   type: string
-                  description: 'Must be a valid email address.'
-                  example: kunde.eloisa@example.com
-                password:
-                  type: string
-                  description: 'Must be at least 6 characters.'
-                  example: '4[*UyPJ"}6'
+                  description: 'Must match the regex /^([0-9\s\-\+\(\)]*)$/. Must be at least 10 characters.'
+                  example: amniihfqcoynlazghdtqtqxbajwbpilpmufinllwloauydlsmsjuryvojcybzvrbyickznkyglo
                 city:
                   type: string
-                  description: ''
-                  example: consequatur
+                  description: 'Must not be greater than 255 characters.'
+                  example: igmkwxphlvazjrcnfbaqy
+                area:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: wuxhgjjmzuxjubqouzswi
                   nullable: true
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: 'tf`G?M4+"i''ueW}La!~'
                 role:
                   type: string
                   description: ''
@@ -52,32 +84,24 @@ paths:
                     - player
                     - coach
                     - vendor
+                    - academy
                     - merchant
-                    - admin
-                    - photographer
-                  nullable: true
                 referral_code:
                   type: string
-                  description: ''
-                  example: consequatur
+                  description: 'The <code>my_referral_code</code> of an existing record in the users table.'
+                  example: null
                   nullable: true
-                birth_date:
+                email:
                   type: string
-                  description: 'Must be a valid date.'
-                  example: '2026-04-05T01:33:32'
-                gender:
-                  type: string
-                  description: ''
-                  example: male
-                  enum:
-                    - male
-                    - female
+                  description: 'Must be a valid email address.'
+                  example: laurence94@example.org
               required:
                 - name
-                - email
+                - phone
+                - city
                 - password
-                - birth_date
-                - gender
+                - role
+                - email
       security: []
   /api/login:
     post:
@@ -95,16 +119,16 @@ paths:
             schema:
               type: object
               properties:
-                email:
-                  type: string
-                  description: 'Must be a valid email address.'
-                  example: qkunze@example.com
-                password:
+                phone:
                   type: string
                   description: ''
                   example: consequatur
+                password:
+                  type: string
+                  description: ''
+                  example: 'O[2UZ5ij-e/dl4m{o,'
               required:
-                - email
+                - phone
                 - password
       security: []
   /api/forgot-password:
@@ -154,14 +178,14 @@ paths:
                   type: string
                   description: 'Must be at least 8 characters.'
                   example: 'Z5ij-e/dl4m{o,'
-                token:
+                code:
                   type: string
                   description: ''
                   example: consequatur
               required:
                 - email
                 - password
-                - token
+                - code
       security: []
   /api/logout:
     post:
@@ -260,7 +284,7 @@ paths:
                 bookable_type:
                   type: string
                   description: ''
-                  example: gym
+                  example: academy
                   enum:
                     - stadium
                     - academy
@@ -275,11 +299,11 @@ paths:
                 start_time:
                   type: string
                   description: 'Must be a valid date in the format <code>H:i</code>.'
-                  example: '01:33'
+                  example: '09:45'
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-04-05T01:33:33'
+                  example: '2026-05-31T09:45:44'
                 hours:
                   type: integer
                   description: 'This field is required when <code>type</code> is <code>daily</code>. Must be at least 1.'
@@ -288,7 +312,7 @@ paths:
                 payment_method:
                   type: string
                   description: ''
-                  example: visa
+                  example: wallet
                   enum:
                     - visa
                     - cash
@@ -403,7 +427,7 @@ paths:
                 date:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-04-05T01:33:33'
+                  example: '2026-05-31T09:45:44'
                 bookable_id:
                   type: integer
                   description: ''
@@ -411,7 +435,7 @@ paths:
                 bookable_type:
                   type: string
                   description: ''
-                  example: academy
+                  example: coach
                   enum:
                     - stadium
                     - academy
@@ -868,7 +892,7 @@ paths:
                 start_time:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-04-05T01:33:34'
+                  example: '2026-05-31T09:45:45'
                 hours:
                   type: integer
                   description: ''
@@ -897,7 +921,14 @@ paths:
                 reviewable_type:
                   type: string
                   description: ''
-                  example: consequatur
+                  example: store
+                  enum:
+                    - stadium
+                    - academy
+                    - Privatecoach
+                    - gym
+                    - challenge
+                    - store
                 reviewable_id:
                   type: integer
                   description: ''
@@ -996,6 +1027,37 @@ paths:
       tags:
         - Endpoints
       security: []
+  '/api/gyms/{id}':
+    get:
+      summary: ''
+      operationId: getApiGymsId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the gym.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
   /api/gym-plans:
     get:
       summary: ''
@@ -1553,7 +1615,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: academy
+                  example: coach
                   enum:
                     - user
                     - academy
@@ -1566,6 +1628,16 @@ paths:
                 coach_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the private_coaches table.'
+                  example: null
+                  nullable: true
+                stadium_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the stadiums table.'
+                  example: null
+                  nullable: true
+                gym_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the gyms table.'
                   example: null
                   nullable: true
               required:
@@ -1814,7 +1886,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: audio
+                  example: text
                   enum:
                     - text
                     - image
@@ -1961,7 +2033,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: privacy
+                  example: terms
                   enum:
                     - about
                     - terms
@@ -2020,7 +2092,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: about
+                  example: policy
                   enum:
                     - about
                     - terms
@@ -2070,152 +2142,7 @@ paths:
                 type: array
                 items:
                   type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    academy_id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: 'Coach Ahmed'
-                    sport:
-                      type: string
-                      example: Football
-                    price_per_hour:
-                      type: string
-                      example: '200.00'
-                    bio:
-                      type: string
-                      example: null
-                      nullable: true
-                    reviews_avg_rating:
-                      type: string
-                      example: null
-                      nullable: true
-                    academy:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        vendor_id:
-                          type: integer
-                          example: 1
-                        academy_type_id:
-                          type: integer
-                          example: 1
-                        name:
-                          type: string
-                          example: 'Academy A'
-                        location:
-                          type: string
-                          example: Cairo
-                        is_active:
-                          type: integer
-                          example: 1
-                        price_per_hour:
-                          type: string
-                          example: '200.00'
-                        created_at:
-                          type: string
-                          example: '2026-03-29T15:15:27.000000Z'
-                        updated_at:
-                          type: string
-                          example: '2026-03-29T15:15:27.000000Z'
-                    locations:
-                      type: array
-                      example:
-                        -
-                          id: 1
-                          private_coach_id: 1
-                          location: 'Cairo Stadium'
-                          created_at: '2026-03-29T20:59:46.000000Z'
-                          updated_at: '2026-03-29T20:59:46.000000Z'
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                            example: 1
-                          private_coach_id:
-                            type: integer
-                            example: 1
-                          location:
-                            type: string
-                            example: 'Cairo Stadium'
-                          created_at:
-                            type: string
-                            example: '2026-03-29T20:59:46.000000Z'
-                          updated_at:
-                            type: string
-                            example: '2026-03-29T20:59:46.000000Z'
-                    services:
-                      type: array
-                      example:
-                        -
-                          id: 1
-                          private_coach_id: 1
-                          name: 'Personal Training'
-                          price: '300.00'
-                          created_at: '2026-03-29T21:15:10.000000Z'
-                          updated_at: '2026-03-29T21:15:10.000000Z'
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                            example: 1
-                          private_coach_id:
-                            type: integer
-                            example: 1
-                          name:
-                            type: string
-                            example: 'Personal Training'
-                          price:
-                            type: string
-                            example: '300.00'
-                          created_at:
-                            type: string
-                            example: '2026-03-29T21:15:10.000000Z'
-                          updated_at:
-                            type: string
-                            example: '2026-03-29T21:15:10.000000Z'
-                example:
-                  -
-                    id: 1
-                    academy_id: 1
-                    name: 'Coach Ahmed'
-                    sport: Football
-                    price_per_hour: '200.00'
-                    bio: null
-                    reviews_avg_rating: null
-                    academy:
-                      id: 1
-                      vendor_id: 1
-                      academy_type_id: 1
-                      name: 'Academy A'
-                      location: Cairo
-                      is_active: 1
-                      price_per_hour: '200.00'
-                      created_at: '2026-03-29T15:15:27.000000Z'
-                      updated_at: '2026-03-29T15:15:27.000000Z'
-                    locations:
-                      -
-                        id: 1
-                        private_coach_id: 1
-                        location: 'Cairo Stadium'
-                        created_at: '2026-03-29T20:59:46.000000Z'
-                        updated_at: '2026-03-29T20:59:46.000000Z'
-                    services:
-                      -
-                        id: 1
-                        private_coach_id: 1
-                        name: 'Personal Training'
-                        price: '300.00'
-                        created_at: '2026-03-29T21:15:10.000000Z'
-                        updated_at: '2026-03-29T21:15:10.000000Z'
+                example: []
       tags:
         - Endpoints
       security: []
@@ -2234,65 +2161,7 @@ paths:
                 type: array
                 items:
                   type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    vendor_id:
-                      type: integer
-                      example: 1
-                    academy_type_id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: 'Academy A'
-                    location:
-                      type: string
-                      example: Cairo
-                    is_active:
-                      type: integer
-                      example: 1
-                    price_per_hour:
-                      type: string
-                      example: '200.00'
-                    created_at:
-                      type: string
-                      example: '2026-03-29T15:15:27.000000Z'
-                    updated_at:
-                      type: string
-                      example: '2026-03-29T15:15:27.000000Z'
-                    reviews_avg_rating:
-                      type: string
-                      example: '5.0000'
-                    subscriptions_count:
-                      type: integer
-                      example: 1
-                example:
-                  -
-                    id: 1
-                    vendor_id: 1
-                    academy_type_id: 1
-                    name: 'Academy A'
-                    location: Cairo
-                    is_active: 1
-                    price_per_hour: '200.00'
-                    created_at: '2026-03-29T15:15:27.000000Z'
-                    updated_at: '2026-03-29T15:15:27.000000Z'
-                    reviews_avg_rating: '5.0000'
-                    subscriptions_count: 1
-                  -
-                    id: 2
-                    vendor_id: 1
-                    academy_type_id: 1
-                    name: 'Academy A'
-                    location: Cairo
-                    is_active: 1
-                    price_per_hour: '200.00'
-                    created_at: '2026-03-29T17:07:05.000000Z'
-                    updated_at: '2026-03-29T17:07:05.000000Z'
-                    reviews_avg_rating: null
-                    subscriptions_count: 0
+                example: []
       tags:
         - Endpoints
       security: []
@@ -2311,73 +2180,7 @@ paths:
                 type: array
                 items:
                   type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: 'ملعب الزمالك'
-                    city:
-                      type: string
-                      example: القاهرة
-                    address:
-                      type: string
-                      example: 'مدينة نصر'
-                    price_per_hour:
-                      type: string
-                      example: '200.00'
-                    description:
-                      type: string
-                      example: null
-                      nullable: true
-                    created_at:
-                      type: string
-                      example: '2026-03-29T14:13:17.000000Z'
-                    updated_at:
-                      type: string
-                      example: '2026-03-30T06:00:49.000000Z'
-                    reviews_avg_rating:
-                      type: string
-                      example: null
-                      nullable: true
-                    bookings_count:
-                      type: integer
-                      example: 1
-                example:
-                  -
-                    id: 1
-                    name: 'ملعب الزمالك'
-                    city: القاهرة
-                    address: 'مدينة نصر'
-                    price_per_hour: '200.00'
-                    description: null
-                    created_at: '2026-03-29T14:13:17.000000Z'
-                    updated_at: '2026-03-30T06:00:49.000000Z'
-                    reviews_avg_rating: null
-                    bookings_count: 1
-                  -
-                    id: 2
-                    name: 'ملعب الزمالك'
-                    city: القاهرة
-                    address: 'مدينة نصر'
-                    price_per_hour: '200.00'
-                    description: null
-                    created_at: '2026-03-29T14:14:36.000000Z'
-                    updated_at: '2026-03-29T14:23:48.000000Z'
-                    reviews_avg_rating: null
-                    bookings_count: 0
-                  -
-                    id: 4
-                    name: 'ملعب الزمالك'
-                    city: القاهرة
-                    address: 'مدينة نصر'
-                    price_per_hour: '200.00'
-                    description: 'ملعب ممتاز'
-                    created_at: '2026-03-29T14:16:43.000000Z'
-                    updated_at: '2026-03-29T14:16:43.000000Z'
-                    reviews_avg_rating: null
-                    bookings_count: 0
+                example: []
       tags:
         - Endpoints
       security: []
@@ -2396,61 +2199,7 @@ paths:
                 type: array
                 items:
                   type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    vendor_id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: 'Gym A'
-                    type:
-                      type: string
-                      example: gym
-                    location:
-                      type: string
-                      example: Cairo
-                    description:
-                      type: string
-                      example: 'Best gym in town'
-                    created_at:
-                      type: string
-                      example: '2026-03-29T20:26:53.000000Z'
-                    updated_at:
-                      type: string
-                      example: '2026-03-29T20:26:53.000000Z'
-                    reviews_avg_rating:
-                      type: string
-                      example: null
-                      nullable: true
-                    subscriptions_count:
-                      type: integer
-                      example: 2
-                example:
-                  -
-                    id: 1
-                    vendor_id: 1
-                    name: 'Gym A'
-                    type: gym
-                    location: Cairo
-                    description: 'Best gym in town'
-                    created_at: '2026-03-29T20:26:53.000000Z'
-                    updated_at: '2026-03-29T20:26:53.000000Z'
-                    reviews_avg_rating: null
-                    subscriptions_count: 2
-                  -
-                    id: 2
-                    vendor_id: 1
-                    name: 'Gym A'
-                    type: gym
-                    location: Cairo
-                    description: 'Best gym in town'
-                    created_at: '2026-03-29T20:26:58.000000Z'
-                    updated_at: '2026-03-29T20:26:58.000000Z'
-                    reviews_avg_rating: null
-                    subscriptions_count: 0
+                example: []
       tags:
         - Endpoints
       security: []
@@ -2487,18 +2236,18 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
                 name:
                   type: string
-                  description: ''
-                  example: consequatur
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
                 description:
                   type: string
                   description: ''
-                  example: null
+                  example: 'Dolores dolorum amet iste laborum eius est dolor.'
                   nullable: true
                 city:
                   type: string
@@ -2512,6 +2261,11 @@ paths:
                   type: number
                   description: ''
                   example: 11613.31890586
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
               required:
                 - name
                 - city
@@ -2551,18 +2305,31 @@ paths:
       requestBody:
         required: false
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
                 name:
                   type: string
                   description: ''
-                  example: null
+                  example: consequatur
                 price_per_hour:
                   type: number
                   description: ''
                   example: 11613.31890586
+                city:
+                  type: string
+                  description: ''
+                  example: consequatur
+                address:
+                  type: string
+                  description: ''
+                  example: consequatur
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
       security: []
     delete:
       summary: ''
@@ -2578,7 +2345,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the stadium.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -2609,7 +2376,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the stadium.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -2786,7 +2553,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the academy plan.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -2823,7 +2590,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -2843,6 +2610,11 @@ paths:
                   type: string
                   description: ''
                   example: consequatur
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
               required:
                 - academy_type_id
                 - name
@@ -2894,7 +2666,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the academy.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -3158,6 +2930,11 @@ paths:
                   format: binary
                   description: 'Must be an image.'
                   nullable: true
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
               required:
                 - name
       security: []
@@ -3215,7 +2992,7 @@ paths:
                 is_active:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
       security: []
     delete:
       summary: ''
@@ -3484,7 +3261,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: confirmed
+                  example: shipped
                   enum:
                     - pending
                     - confirmed
@@ -3548,8 +3325,8 @@ paths:
         - Endpoints
       security: []
     post:
-      summary: 'Store a newly created resource in storage.'
-      operationId: storeANewlyCreatedResourceInStorage
+      summary: ''
+      operationId: postApiVendorGyms
       description: ''
       parameters: []
       responses: {  }
@@ -3558,7 +3335,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -3578,6 +3355,11 @@ paths:
                   type: string
                   description: ''
                   example: consequatur
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
               required:
                 - name
                 - type
@@ -3586,8 +3368,8 @@ paths:
       security: []
   '/api/vendor/gyms/{id}':
     get:
-      summary: 'Display the specified resource.'
-      operationId: displayTheSpecifiedResource
+      summary: 'عرض الجيم الخاص بالـ Vendor مع متوسط التقييم'
+      operationId: Vendor
       description: ''
       parameters: []
       responses:
@@ -3607,8 +3389,8 @@ paths:
         - Endpoints
       security: []
     put:
-      summary: 'Update the specified resource in storage.'
-      operationId: updateTheSpecifiedResourceInStorage
+      summary: ''
+      operationId: putApiVendorGymsId
       description: ''
       parameters: []
       responses: {  }
@@ -3629,7 +3411,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the gym.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -3660,7 +3442,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: 1year
+                  example: weekly
                   enum:
                     - weekly
                     - monthly
@@ -3682,7 +3464,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the gym.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -3739,7 +3521,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the gym plan.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -3780,7 +3562,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the gym subscription.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -3811,7 +3593,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the gym.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -3960,7 +3742,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the private coach.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -4203,7 +3985,7 @@ paths:
                 expires_at:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-04-05T01:33:42'
+                  example: '2026-05-31T09:45:51'
                   nullable: true
                 services:
                   type: object
@@ -4265,7 +4047,7 @@ paths:
                 type:
                   type: string
                   description: ''
-                  example: specific
+                  example: fixed
                   enum:
                     - fixed
                     - percent
@@ -4285,7 +4067,7 @@ paths:
                 expires_at:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2026-04-05T01:33:43'
+                  example: '2026-05-31T09:45:51'
                   nullable: true
                 services:
                   type: object
@@ -4496,7 +4278,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: completed
+                  example: upcoming
                   enum:
                     - upcoming
                     - ongoing
@@ -4569,7 +4351,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: upcoming
+                  example: completed
                   enum:
                     - upcoming
                     - ongoing
@@ -4603,7 +4385,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: ongoing
+                  example: completed
                   enum:
                     - upcoming
                     - ongoing
@@ -4629,7 +4411,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: ongoing
+                  example: completed
                   enum:
                     - upcoming
                     - ongoing
@@ -4665,7 +4447,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: accepted
+                  example: rejected
                   enum:
                     - accepted
                     - rejected
@@ -4896,7 +4678,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the stadium.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -4915,7 +4697,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the stadium.'
-        example: 1
+        example: 17
         required: true
         schema:
           type: integer
@@ -4992,7 +4774,7 @@ paths:
                 is_store_enabled:
                   type: string
                   description: ''
-                  example: 'false'
+                  example: 'true'
                   enum:
                     - '0'
                     - '1'
@@ -5002,7 +4784,7 @@ paths:
                 is_challenges_enabled:
                   type: string
                   description: 'تعديل بسيط لضمان القبول.'
-                  example: '0'
+                  example: '1'
                   enum:
                     - '0'
                     - '1'
@@ -5012,7 +4794,7 @@ paths:
                 is_videos_enabled:
                   type: string
                   description: ''
-                  example: '0'
+                  example: 'false'
                   enum:
                     - '0'
                     - '1'

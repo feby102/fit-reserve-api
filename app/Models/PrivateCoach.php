@@ -12,6 +12,16 @@ class PrivateCoach extends Model
 ];
 
 
+protected $appends = ['image_url'];   
+
+public function getImageUrlAttribute()
+{
+    if ($this->image) {
+        return asset('storage/' . $this->image);
+    }
+
+    return null;  }
+
 public function vendor()
 {
     return $this->belongsTo(Vendor::class);

@@ -8,9 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 use Storage;
 class Academy extends Model
 {
-  protected $fillable = [ 'academy_type_id','vendor_id','name','location','is_active','price_per_hour',
+  protected $fillable = [ 'type','vendor_id','name','location','is_active','price_per_hour',
         'image','is_verified'
 ];
+
+protected $appends = ['image_url'];   
+
+public function getImageUrlAttribute()
+{
+    if ($this->image) {
+        return asset('storage/' . $this->image);
+    }
+
+    return null;  }
 
 
 protected function image(): Attribute
@@ -39,11 +49,7 @@ return $this->hasMany( PrivateCoach::class);
 
 
 
-
-public function type()
-{
-    return $this->belongsTo(AcademyType::class);
-}
+ 
 
 public function plans()
 {
