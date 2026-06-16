@@ -23,7 +23,7 @@ class AuthController extends Controller
         'city'          => 'required|string|max:255',
         'area'          => 'nullable|string|max:255',
         'password'      => 'required|string|min:8',
-        'role'          => 'required|in:player,coach,vendor,academy,merchant',
+        'role'          => 'required|in:player,coach,vendor,saller',
         'referral_code' => 'nullable|exists:users,my_referral_code',
         'email'         => 'required|email',
     ]);

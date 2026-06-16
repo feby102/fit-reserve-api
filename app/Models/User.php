@@ -30,8 +30,8 @@ public function referrer() {
     return $this->belongsTo(User::class, 'referred_by');
 }
 
-public function vendor(){
-    return $this->hasOne(Vendor::class);
+public function vendor() {
+    return $this->belongsTo(Vendor::class, 'vendor_id');
 }
 
 

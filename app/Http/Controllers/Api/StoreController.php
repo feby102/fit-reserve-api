@@ -92,9 +92,9 @@ public function show($id)
  
 public function store(Request $request)
 {
-    $vendor = auth()->user();
+    $user = auth()->user();
 
-    if (!$vendor) {
+    if (!$user->role=='saller') {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 
@@ -116,7 +116,7 @@ public function store(Request $request)
         }
 
     $store = Store::create([
-        'vendor_id' => $vendor->id,
+        'user_id' => $user->id,
         'name' => $data['name'],
         'description' => $data['description'] ?? null,
         'logo' => $data['logo'] ?? null,
@@ -132,42 +132,49 @@ public function store(Request $request)
 
 
 
- 
  public function update(Request $request, $id)
 {
-    $vendor = auth()->user();
-
+    $user = auth()->user();
     $store = Store::findOrFail($id);
 
-     if ($store->vendor_id != $vendor->id) {
+    if ($store->user_id != $user->id) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 
     $data = $request->validate([
         'name' => 'sometimes|string',
         'description' => 'nullable|string',
-        'logo' => 'nullable|image',
+        'image' => 'nullable|image', 
         'is_active' => 'boolean'
     ]);
 
-    // لو فيه صورة
-    if ($request->hasFile('logo')) {
-        $data['logo'] = $request->file('logo')->store('stores', 'public');
+    if ($request->hasFile('image')) {
+        // تأكدنا هنا إن المفتاح هو image عشان يتخزن صح في العمود الخاص به بقاعدة البيانات
+        $data['image'] = $request->file('image')->store('stores', 'public');
     }
 
     $store->update($data);
 
-    return response()->json($store);
+    return response()->json([
+        'store' => $store,
+        'message' => 'done'
+    ]);
 }
+
+
+
+
+
  public function destroy($id)
 {
-    $vendor = auth()->user();
+    $user = auth()->user();
 
     $store = Store::findOrFail($id);
 
-    if ($store->vendor_id != $vendor->id) {
+     if ($store->user_id != $user->id) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
+
 
     $store->delete();
 

@@ -15,7 +15,7 @@ Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('phone')->unique();
-            $table->string('role')->default('player');  
+            $table->enum('role',['player','vendor','Seller','Coach'])->default('player');  
             $table->string('city')->nullable();
             $table->string('area')->nullable();
             $table->string('email')->unique();

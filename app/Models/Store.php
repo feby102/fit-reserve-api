@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Storage;
 class Store extends Model
 {
-    protected $fillable = ['vendor_id','name','description','logo','is_active',
+    protected $fillable = ['user_id','name','description','logo','is_active',
         'image','is_verified'
 ];
 

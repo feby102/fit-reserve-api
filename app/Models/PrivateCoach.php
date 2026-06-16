@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PrivateCoach extends Model
 {
  protected $fillable = [
-    'name', 'sport', 'price_per_hour', 'bio', 'academy_id', 'image', 'vendor_id'
+    'name', 'sport', 'price_per_hour', 'bio', 'academy_id', 'image', 'user_id'
 ];
 
 
