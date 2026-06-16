@@ -35,6 +35,15 @@ class Vendor extends Authenticatable
     return $this->belongsTo(User::class);
 }
 
+
+
+    public function wallet()
+{
+    return $this->hasOne(Wallet::class);
+}
+
+
+
 public function products()
 {
 

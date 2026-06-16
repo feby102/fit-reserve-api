@@ -38,40 +38,49 @@ return PrivateCoach::with('academy','locations','services')->get()->makeHidden([
     }
 
 //add new PrivateCoach
- 
-public function store(Request $request)
+ public function store(Request $request)
 {
+    $data = $request->validate([
+        'academy_id'     => 'required|exists:academies,id',
+        'name'           => 'required|string',
+        'sport'          => 'required|string',
+        'price_per_hour' => 'required|numeric',
+        'bio'            => 'nullable|string',
+        'image'          => 'nullable|image',
+    ]);
 
-$data=$request->validate([
-'academy_id'=>'required|exists:academies,id',
-'name'=>'required',
-'sport'=>'required',
-'price_per_hour'=>'required'
+    // جلب الـ Vendor مباشرة باستخدام الـ Guard المخصص له في الـ auth.php
+    $vendor = auth()->guard('vendor-api')->user();
 
-]);
+    // تحقق وقائي للتأكد من أن الـ Token المرسل يخص Vendor بالفعل وليس مستخدم عادي أو فارغ
+    if (!$vendor) {
+        return response()->json([
+            'message' => 'Unauthenticated or you are not logged in as a vendor.'
+        ], 401);
+    }
 
- $vendor = auth()->user();
- if(!$vendor->academies()->where('id', $data['academy_id'])->exists()){
-            return response()->json(['message'=>'This academy does not belong to you'], 403);
-        }
-
-$coach = PrivateCoach::create(
-[
-    'name'=> $data['name'],
-'sport'=> $data['sport'],
-'price_per_hour'=> $data['price_per_hour'],
-'academy_id'=>$data['academy_id']
-]
-
-);
-
-
-        return response()->json(['message'=>'Coach created','coach'=>$coach]);
-
+    // التحقق من أن الأكاديمية تابعة لهذا الـ Vendor
+    if (!$vendor->academies()->where('id', $data['academy_id'])->exists()) {
+    return response()->json([
+        'message' => 'This academy does not belong to you'
+    ], 403);
 }
 
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('gyms', 'public');
+        $data['image'] = $path;   
+    }
+ 
+    // ربط الكوتش بالـ Vendor الذي يقوم بالعملية حالياً
+    $data['vendor_id'] = $vendor->id;
 
+    $coach = PrivateCoach::create($data);
 
+    return response()->json([
+        'message' => 'Coach created successfully',
+        'coach'   => $coach->load('academy')
+    ], 201);
+}
 
  
     public function publicShow($id)
@@ -84,13 +93,11 @@ $coach = PrivateCoach::create(
 
 public function show($id)
 {
+$vendor = auth('vendor-api')->user();
+$academiesIds = $vendor->academies()->pluck('id');
 
-$vendor=\auth()->user()->vendor;
-
-$academy=$vendor->academies->pluck('id');
-$coach=PrivateCoach::where('academy_id',$academy)->findOrFail($id);
-
-
+$coach = PrivateCoach::whereIn('academy_id', $academiesIds)
+    ->findOrFail($id);
     return response()->json($coach);
 
 }

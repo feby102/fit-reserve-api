@@ -124,8 +124,8 @@ $gym=Gym::create([
 'location'=>$data['location'],
 'description'=>$data['description'],
 'vendor_id' => $vendor->id,
-    'image'=>$request->image
-]);
+'image' => $data['image'] ?? null,
+ ]);
 
 return \response()->json([ 'message'=>'Gym created',
             'Gym'=>$gym]);

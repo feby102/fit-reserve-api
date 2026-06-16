@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\APi\AcademyController;
-use App\Http\Controllers\APi\AcademyPlanController;
-use App\Http\Controllers\APi\AcademyServiceController;
-use App\Http\Controllers\APi\AcademySubscriptionController;
+use App\Http\Controllers\Api\AcademyController;
+use App\Http\Controllers\Api\AcademyPlanController;
+use App\Http\Controllers\Api\AcademyServiceController;
+use App\Http\Controllers\Api\AcademySubscriptionController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\BookingController;
@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ChallengeController;
 use App\Http\Controllers\Api\ChatController;
-use App\Http\Controllers\APi\CoachBookingController;
+use App\Http\Controllers\Api\CoachBookingController;
 use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\GymController;
@@ -20,10 +20,10 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PlayerRatingController;
-use App\Http\Controllers\APi\PrivateCoachController;
+use App\Http\Controllers\Api\PrivateCoachController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ReportController;
-use App\Http\Controllers\APi\ReviewController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\StadiumController;
 use App\Http\Controllers\Api\StadiumScheduleController;
@@ -55,6 +55,9 @@ Route::post('/reset-password', [AuthController::class, 'reset']);
 
 
   Route::middleware('auth:user-api,vendor-api')->group(function(){
+
+ Route::get('/showuser',[UserController::class,'show']);
+
 
 Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -371,7 +374,7 @@ Route::get('videos/{id}/reports',[VideoController::class,'reports']);
     Route::patch('{id}/toggle-active', [UserController::class, 'toggleActive']);  
     Route::patch('{id}/verify', [UserController::class, 'verifyAccount']);  
     Route::get('{id}/wallet', [UserController::class, 'wallet']);  
-    Route::get('users/{id}',[UserController::class,'show']);
+   
     Route::post('users/{id}',[UserController::class,'update']);
     Route::delete('users/{id}',[UserController::class,'destroy']);
     Route::get('ranking',[UserController::class,'ranking']);

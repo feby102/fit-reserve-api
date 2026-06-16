@@ -86,11 +86,18 @@ $query->where('is_active',$request->is_active);
 
 
 
-     public function show($id)
-    {
-        return User::with('wallet','academySubscriptions','privateCoachBookings')->findOrFail($id);
-    }
+ public function show()
+{
+    $user = auth()->user();
 
+    $user->load(
+        'wallet',
+        'academySubscriptions',
+        'privateCoachBookings'
+    );
+
+    return response()->json($user);
+}
 
     
      public function update(Request $request,$id)
