@@ -28,12 +28,7 @@ protected $fillable = [
     }
 
 
-public function vendor()
-{
-
-return $this->belongsTo(Vendor::class);
-
-}
+ 
 
 
 
@@ -45,5 +40,10 @@ public function orderItems()
 public function reviews()
 {
 return $this->morphMany(Review::class,'reviewable');
+}
+
+public function seller()
+{
+    return $this->belongsTo(User::class, 'seller_id');
 }
 }

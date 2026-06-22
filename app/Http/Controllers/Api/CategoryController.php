@@ -9,104 +9,106 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
- 
-public function publicIndex()
-{
-    $categories = Category::with('vendor')->get();
+    // عرض الأقسام للعامة مع بيانات السيلر
+    public function publicIndex()
+    {
+        // تغيير الـ eager loading من vendor إلى seller
+        $categories = Category::with('seller')->get();
 
-    return response()->json($categories);
-}
- 
-
-
-
-public function publicShow($id)
-{
-    $category = Category::with('vendor')->findOrFail($id);
-
-    return response()->json($category);
-}
-  
-
-
-
-public function vendorIndex()
-{
-    $vendor = auth()->user();
-
-    $categories = Category::where('vendor_id', $vendor->id)->get();
-
-    return response()->json($categories);
-}
- 
-
-public function store(Request $request)
-{
-    $data = $request->validate([
-        'name' => 'required|string',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-    ]);
-
-    $vendor = auth()->user();
-
-     if ($request->hasFile('image')) {
-        $data['image'] = $request->file('image')->store('categories', 'public');
+        return response()->json($categories);
     }
 
-    $data['vendor_id'] = $vendor->id;
+    // عرض قسم معين للعامة
+    public function publicShow($id)
+    {
+        $category = Category::with('seller')->findOrFail($id);
 
-    $category = Category::create($data);
+        return response()->json($category);
+    }
 
-    return response()->json([
-        'message' => 'created',
-        'data' => $category
-    ]);
-}
- 
-public function update(Request $request, $id)
-{
-    $vendor = auth()->user();
+    // عرض الأقسام الخاصة بالسيلر المسجل حالياً فقط
+    public function sellerIndex()
+    {
+        $seller = auth()->user();
 
-    $category = Category::where('vendor_id', $vendor->id)->findOrFail($id);
+        // الفلترة بناءً على الـ seller_id
+        $categories = Category::where('seller_id', $seller->id)->get();
 
-    $data = $request->validate([
-        'name' => 'required|string',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-    ]);
+        return response()->json($categories);
+    }
 
-     if ($request->hasFile('image')) {
+    // إضافة قسم جديد بواسطة السيلر
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
 
-         if ($category->image) {
+        $seller = auth()->user();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        }
+
+        // ربط القسم بمعرف السيلر الحالي
+        $data['seller_id'] = $seller->id;
+
+        $category = Category::create($data);
+
+        return response()->json([
+            'message' => 'created',
+            'data' => $category
+        ], 21);
+    }
+
+    // تحديث القسم الخاص بالسيلر
+    public function update(Request $request, $id)
+    {
+        $seller = auth()->user();
+
+        // التأكد أن القسم يخص السيلر الحالي أولاً
+        $category = Category::where('seller_id', $seller->id)->findOrFail($id);
+
+        // تعديل الـ Validation ليكون PUT/PATCH friendly (استخدام 'sometimes' أو جعل الاسم 'nullable')
+        $data = $request->validate([
+            'name' => 'sometimes|required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
+
+        if ($request->hasFile('image')) {
+            // حذف الصورة القديمة إذا وجدت
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        }
+
+        $category->update($data);
+
+        return response()->json([
+            'message' => 'updated',
+            'data' => $category
+        ]);
+    }
+
+    // حذف قسم خاص بالسيلر
+    public function destroy($id)
+    {
+        $seller = auth()->user();
+
+        $category = Category::where('seller_id', $seller->id)->findOrFail($id);
+
+        // يفضل حذف ملف الصورة من السيرفر عند حذف القسم نهائياً
+        if ($category->image) {
             Storage::disk('public')->delete($category->image);
         }
 
-        $data['image'] = $request->file('image')->store('categories', 'public');
+        $category->delete();
+
+        return response()->json([
+            'message' => 'deleted'
+        ]);
     }
-
-    $category->update($data);
-
-    return response()->json([
-        'message' => 'updated',
-        'data' => $category
-    ]);
 }
-
-
-
-
-
-
-public function destroy($id)
-{
-    $vendor = auth()->user();
-
-    $category = Category::where('vendor_id', $vendor->id)->findOrFail($id);
-
-    $category->delete();
-
-    return response()->json([
-        'message' => 'deleted'
-    ]);
-}
-}
-

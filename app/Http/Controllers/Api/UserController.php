@@ -9,56 +9,42 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-
 class UserController extends Controller
 {
-
- public function totaluser()
+    // جلب إحصائيات المستخدمين بدون تحميل البيانات بالكامل في الذاكرة
+    public function totaluser()
     {
-$totalUser=User::all();
-$usersActive=User::where('is_active',true)->count();
-$totalUser=User::count();
-return response()->json([
-    'total_users' => $totalUser,
-    'active_users' => $usersActive
-]);
+        $usersActive = User::where('is_active', true)->count();
+        $totalUser = User::count();
+
+        return response()->json([
+            'total_users' => $totalUser,
+            'active_users' => $usersActive
+        ]);
     }
 
- public function index(Request $request)
+    // عرض وتصفية المستخدمين بناءً على دورهم، مدينتهم، أو حالتهم
+    public function index(Request $request)
     {
+        $query = User::query();
 
-     $query=User::query();
+        if ($request->has('role')) {
+            $query->where('role', $request->role);
+        }
 
-    if($request->has('role')){
+        if ($request->has('city')) {
+            $query->where('city', $request->city);
+        }
 
-       $query->where('role',$request->role);
+        if ($request->has('is_active')) {
+            $query->where('is_active', $request->is_active);
+        }
 
+        $users = $query->get();
+        return response()->json($users);
     }
 
-
-     if($request->has('city')){
-
-      $query->where('city',$request->city);
-
-    }
-
-
- if($request->has('is_active')){
-
-
-$query->where('is_active',$request->is_active);
-    }
-
-
-    $user=$query->get();
-        return \response()->json($user);
-    }
-
-
-
-//is_active
-
-
+    // تفعيل أو تعطيل حساب مستخدم
     public function toggleActive($id)
     {
         $user = User::findOrFail($id);
@@ -71,7 +57,7 @@ $query->where('is_active',$request->is_active);
         ]);
     }
 
-    // (is_verified)
+    // توثيق الحساب
     public function verifyAccount($id)
     {
         $user = User::findOrFail($id);
@@ -79,88 +65,90 @@ $query->where('is_active',$request->is_active);
         $user->email_verified_at = now();
         $user->save();
 
-        return response()->json(['message' => 'User verified successfully', 'user' => $user]);
+        return response()->json([
+            'message' => 'User verified successfully', 
+            'user' => $user
+        ]);
     }
 
-
-
-
-
- public function show()
-{
-    $user = auth()->user();
-
-    $user->load(
-        'wallet',
-        'academySubscriptions',
-        'privateCoachBookings'
-    );
-
-    return response()->json($user);
-}
-
-    
-     public function update(Request $request,$id)
+    // عرض الملف الشخصي للمستخدم الحالي مع علاقاته
+    public function show()
     {
-        $user=User::findOrFail($id);
-$user->update($request->only(['name','email','city']));
-        return response()->json(['message'=>'updated']);
+        $user = auth()->user();
+
+        $user->load([
+            'wallet',
+            'academySubscriptions',
+            'privateCoachBookings'
+        ]);
+
+        return response()->json($user);
     }
 
-     public function destroy($id)
+    // تحديث بيانات مستخدم معين
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        
+        // التحقق من البيانات المرسلة قبل التحديث لحماية قاعدة البيانات
+        $data = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|email|unique:users,email,' . $id,
+            'city' => 'sometimes|required|string|max:255',
+        ]);
+
+        $user->update($data);
+        return response()->json(['message' => 'updated']);
+    }
+
+    // حذف مستخدم
+    public function destroy($id)
     {
         User::findOrFail($id)->delete();
-        return response()->json(['message'=>'deleted']);
+        return response()->json(['message' => 'deleted']);
     }
 
-
-
-
- 
-
+    // الترتيب بناءً على النقاط
     public function ranking()
-{
-
-return Ranking::with('user')->orderByDesc('points')->get();
-}
-
-
-  public function transfer(Request $request)
     {
-        $from=auth()->user();
-        $to=User::findOrFail($request->user_id);
-        $amount=$request->amount;
+        return Ranking::with('user')->orderByDesc('points')->get();
+    }
 
-        $fromWallet=$from->wallet;
-        $toWallet=$to->wallet;
+    // تحويل الأموال بين محافظ المستخدمين بشكل آمن عبر الـ Transactions
+    public function transfer(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'amount' => 'required|numeric|min:1',
+        ]);
 
-        if($fromWallet->balance<$amount){
-            return response()->json(['message'=>'Insufficient balance'],400);
+        $from = auth()->user();
+        $to = User::findOrFail($request->user_id);
+        $amount = $request->amount;
+
+        $fromWallet = $from->wallet;
+        $toWallet = $to->wallet;
+
+        if (!$fromWallet || $fromWallet->balance < $amount) {
+            return response()->json(['message' => 'Insufficient balance or wallet not found'], 400);
         }
 
-        DB::transaction(function() use($fromWallet,$toWallet,$amount){
-            $fromWallet->decrement('balance',$amount);
-            $toWallet->increment('balance',$amount);
+        DB::transaction(function() use ($fromWallet, $toWallet, $amount) {
+            $fromWallet->decrement('balance', $amount);
+            $toWallet->increment('balance', $amount);
         });
 
-        return response()->json(['message'=>'transfer done']);
+        return response()->json(['message' => 'transfer done']);
     }
 
-
-
-
-
+    // معدل نمو المستخدمين شهرياً (تم تصحيح كلمة mounth إلى month)
     public function usersGrowth()
-{
-$users=User::select(
-DB::raw('MONTH(created_at) as mounth')
-,
-DB::raw('count(*) as total')
-)->groupBy('mounth')->orderBy('mounth')->get();
+    {
+        $users = User::select(
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('count(*) as total')
+        )->groupBy('month')->orderBy('month')->get();
 
-
-return response()->json($users);
-
-
-}
+        return response()->json($users);
+    }
 }
