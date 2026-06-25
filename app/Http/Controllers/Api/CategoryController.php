@@ -39,29 +39,31 @@ class CategoryController extends Controller
 
     // إضافة قسم جديد بواسطة السيلر
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-        ]);
+{
+    $data = $request->validate([
+        'name' => 'required|string',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+    ]);
 
-        $seller = auth()->user();
+    $seller = auth()->user();
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('categories', 'public');
-        }
-
-        // ربط القسم بمعرف السيلر الحالي
-        $data['seller_id'] = $seller->id;
-
-        $category = Category::create($data);
-
-        return response()->json([
-            'message' => 'created',
-            'data' => $category
-        ], 21);
+    // رفع الصورة وتحديث المصفوفة بالمسار إذا وجدت
+    if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image')->store('categories', 'public');
     }
 
+    // إنشاء القسم وتمرير الـ seller_id صراحة داخل الـ create
+    $category = Category::create([
+        'name'      => $data['name'],
+        'image'     => $data['image'] ?? null,
+        'seller_id' => $seller->id, // هنا تم إدخال السيلر آي دي مباشرة
+    ]);
+
+    return response()->json([
+        'message' => 'created',
+        'data' => $category
+    ], 201); // تصحيح الـ HTTP status code ليكون 201 Created
+}
     // تحديث القسم الخاص بالسيلر
     public function update(Request $request, $id)
     {

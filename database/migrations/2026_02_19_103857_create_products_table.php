@@ -22,7 +22,7 @@ return new class extends Migration
            $table->string('video')->nullable();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
            $table->foreignId('store_id')->constrained()->cascadeOnDelete(); 
-
+$table->foreignId('seller_id')->constrained('users')->cascadeOnDelete(); 
            $table->timestamps();
            });
            

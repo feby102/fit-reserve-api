@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image')->nullable();
-            $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
-            $table->unique(['name', 'vendor_id']); 
-
+$table->foreignId('seller_id')->constrained('users')->onDelete('cascade'); 
+ 
             $table->timestamps();
         });
     }

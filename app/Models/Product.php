@@ -13,7 +13,7 @@ protected $fillable = [
           'discount' ,
          'image'  ,
          'category_id'  ,
-       'vendor_id',
+       'seller_id',
            'store_id'];
 
 
@@ -45,5 +45,12 @@ return $this->morphMany(Review::class,'reviewable');
 public function seller()
 {
     return $this->belongsTo(User::class, 'seller_id');
+}
+
+
+public function scopeByCategory($query,$category_id){
+
+return $query->where('category_id',$category_id);
+
 }
 }

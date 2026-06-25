@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Ranking;
 use App\Models\User;
+use App\Models\VerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -23,8 +24,7 @@ class UserController extends Controller
         ]);
     }
 
-    // عرض وتصفية المستخدمين بناءً على دورهم، مدينتهم، أو حالتهم
-    public function index(Request $request)
+     public function index(Request $request)
     {
         $query = User::query();
 
@@ -57,19 +57,169 @@ class UserController extends Controller
         ]);
     }
 
-    // توثيق الحساب
-    public function verifyAccount($id)
+public function showVerifyRequest(Request $request)
     {
-        $user = User::findOrFail($id);
-        $user->is_verified = true;
-        $user->email_verified_at = now();
-        $user->save();
 
-        return response()->json([
-            'message' => 'User verified successfully', 
-            'user' => $user
-        ]);
+ $requests=VerificationRequest::with('user')
+->when($request->status,fn($q)=>
+$q->where('status',$request->status))->latest()
+            ->paginate(20);
+
+        return response()->json($requests);
+
+
     }
+
+
+
+
+public function requestToVerify(Request $request)
+{
+    $data = $request->validate([
+        'role'           => 'required|in:coach,seller,vendor',
+        'documents'      => 'nullable|array',
+        'documents.*'    => 'file|mimes:jpg,jpeg,png,pdf|max:5120',
+        'payment_method' => 'required|in:visa,vodafone_cash',
+        'phone_number'   => 'required_if:payment_method,vodafone_cash|string',
+    ]);
+
+    // ما يبعتش أكتر من طلب
+    $exist = VerificationRequest::where('user_id', auth()->id())
+        ->whereIn('status', ['pending', 'approved'])
+        ->exists();
+
+    if ($exist) {
+        return response()->json([
+            'message' => 'عندك طلب قيد المراجعة بالفعل'
+        ], 422);
+    }
+
+    // رفع الوثائق
+    $documentPaths = [];
+    if ($request->hasFile('documents')) {
+        foreach ($request->file('documents') as $file) {
+            $documentPaths[] = $file->store('verifications', 'public');
+        }
+    }
+
+    // حفظ الطلب
+    $verificationRequest = VerificationRequest::create([
+        'user_id'        => auth()->id(),
+        'role'           => $data['role'],
+        'documents'      => $documentPaths,
+        'payment_method' => $data['payment_method'],
+        'phone_number'   => $data['phone_number'] ?? null,
+        'price'          => 1250,
+        'status'         => 'pending',
+        'payment_status' => 'unpaid',
+    ]);
+
+    // روح على الدفع مباشرة
+    $paymentController = new \App\Http\Controllers\Api\PaymentController();
+
+    if ($data['payment_method'] == 'visa') {
+        return $paymentController->payWithVisaForVerification(
+            $request,
+            $verificationRequest
+        );
+    }
+
+    if ($data['payment_method'] == 'vodafone_cash') {
+        return $paymentController->payWithWalletForVerification(
+            $request,
+            $verificationRequest,
+            $data['phone_number']
+        );
+    }
+}
+
+    // توثيق الحسابت
+   public function approve($id)
+    {
+        $verificationRequest = VerificationRequest::findOrFail($id);
+
+         $verificationRequest->update([
+            'status'      => 'approved',
+            'reviewed_by' => auth()->id(),
+            'reviewed_at' => now(),
+        ]);
+
+         $verificationRequest->user->update([
+            'role' => $verificationRequest->role
+        ]);
+ 
+        return response()->json(['message' => 'تم قبول الطلب']);
+    }
+
+
+
+
+
+
+
+
+    
+    // ارفض طلب
+   public function reject(Request $request, $id)
+{
+    $request->validate(['reason' => 'required|string']);
+
+    $verificationRequest = VerificationRequest::findOrFail($id);
+
+    // متقدرش ترفض طلب اتوافق عليه قبل كده
+    if ($verificationRequest->status === 'approved') {
+        return response()->json(['message' => 'الطلب اتوافق عليه مش ممكن ترفضه'], 422);
+    }
+
+    $verificationRequest->update([
+        'status'           => 'rejected',
+        'rejection_reason' => $request->reason,
+        'reviewed_by'      => auth()->id(),
+        'reviewed_at'      => now(),
+    ]);
+
+    // لو دفع → رجّعله فلوسه
+    if (
+        $verificationRequest->payment_status === 'paid' &&
+        $verificationRequest->transaction_id
+    ) {
+        $this->processRefund($verificationRequest);
+    }
+
+    return response()->json([
+        'message' => 'تم رفض الطلب' .
+            ($verificationRequest->payment_status === 'refunded' ? ' وجاري إرجاع الفلوس' : '')
+    ]);
+}
+    // لو كان دفع، رجّعله فلوسه
+    if ($verificationRequest->payment_status == 'paid' && $verificationRequest->transaction_id) {
+        Http::withHeaders(['Content-Type' => 'application/json'])
+            ->post(env('PAYMOB_BASE_URL') . '/api/acceptance/void_refund/refund', [
+                'auth_token'     => $this->getPaymobToken(),
+                'transaction_id' => $verificationRequest->transaction_id,
+                'amount_cents'   => $verificationRequest->price * 100,
+            ]);
+
+        $verificationRequest->update(['payment_status' => 'refunded']);
+    }
+
+    return response()->json(['message' => 'تم رفض الطلب وإرجاع الفلوس']);
+}
+
+// helper صغير
+private function getPaymobToken()
+{
+    return Http::post(env('PAYMOB_BASE_URL') . '/api/auth/tokens', [
+        'api_key' => env('PAYMOB_API_KEY')
+    ])->json()['token'] ?? null;
+}
+
+
+
+
+
+
+
 
     // عرض الملف الشخصي للمستخدم الحالي مع علاقاته
     public function show()

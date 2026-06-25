@@ -39,13 +39,7 @@ use Illuminate\Support\Facades\Route;
   
 
 
-Route::get('/test-token', function (Request $request) {
-    return response()->json([
-        'user' => $request->user(), // هيجيب بيانات صاحب التوكن لو سانكتوم قراه
-        'bearer_token' => $request->bearerToken(), // هيعرض التوكن اللي مبعوث
-    ]);
-});
-
+ 
 
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -53,6 +47,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'sendResetCode']);
 Route::post('/reset-password', [AuthController::class, 'reset']);
 
+
+Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
 
   Route::middleware('auth:user-api,vendor-api')->group(function(){
 
@@ -135,6 +131,7 @@ Route::get('/categories/{id}', [CategoryController::class, 'publicShow']);
 
 
 Route::get('/products',[ProductController::class,'index']);
+Route::get('/filter',[ProductController::class,'filter']);
 
     Route::post('/orders', [OrderController::class, 'store']);
  
@@ -191,7 +188,7 @@ Route::get('/pages/{id}', [PageController::class, 'show']);
 
 // transfer
 Route::post('wallet/transfer',[UserController::class,'transfer']);
-
+ Route::post('/verification/apply',  [UserController::class, 'requestToVerify']);
 });
 
 
@@ -372,7 +369,13 @@ Route::get('videos/{id}/reports',[VideoController::class,'reports']);
 
     Route::get('/', [UserController::class, 'index']);  
     Route::patch('{id}/toggle-active', [UserController::class, 'toggleActive']);  
-    Route::patch('{id}/verify', [UserController::class, 'verifyAccount']);  
+ 
+ Route::get('/verifications',              [UserController::class, 'showVerifyRequest']);
+    Route::post('/verifications/{id}/approve',[UserController::class, 'approve']);
+    Route::post('/verifications/{id}/reject', [UserController::class, 'reject']);
+
+ 
+ 
     Route::get('{id}/wallet', [UserController::class, 'wallet']);  
    
     Route::post('users/{id}',[UserController::class,'update']);

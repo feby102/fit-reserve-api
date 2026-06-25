@@ -94,7 +94,7 @@ public function store(Request $request)
 {
     $user = auth()->user();
 
-    if (!$user->role=='saller') {
+    if (!$user->role=='seller') {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 

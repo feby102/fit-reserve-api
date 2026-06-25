@@ -126,4 +126,14 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully'
         ]);
     }
+
+
+    public function filter(Request $request){
+         $product=Product::query()
+         ->when($request->category_id,fn($q)=>
+         $q->byCategory($request->category_id))->paginate(10);
+        
+return \response()->json($product);
+
+    }
 }

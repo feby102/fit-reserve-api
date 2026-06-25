@@ -15,8 +15,8 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int $vendor_id
- * @property int $academy_type_id
  * @property string $name
+ * @property string $type
  * @property string $location
  * @property int $is_active
  * @property numeric $price_per_hour
@@ -30,6 +30,7 @@ namespace App\Models{
  * @property-read int|null $challenge_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Facility> $facilities
  * @property-read int|null $facilities_count
+ * @property-read mixed $image_url
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AcademyPackage> $packages
  * @property-read int|null $packages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AcademyPlan> $plans
@@ -44,12 +45,12 @@ namespace App\Models{
  * @property-read int|null $students_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AcademySubscription> $subscriptions
  * @property-read int|null $subscriptions_count
- * @property-read \App\Models\AcademyType|null $type
  * @property-read \App\Models\Vendor $vendor
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Video> $videos
+ * @property-read int|null $videos_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereAcademyTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereImage($value)
@@ -58,6 +59,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereLocation($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy wherePricePerHour($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy whereVendorId($value)
  */
@@ -352,7 +354,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
- * @property-read \App\Models\Vendor $vendor
+ * @property-read \App\Models\User|null $seller
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category query()
@@ -640,6 +642,7 @@ namespace App\Models{
  * @property-read int|null $bookings_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Facility> $facilities
  * @property-read int|null $facilities_count
+ * @property-read mixed $image_url
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GymPackage> $packages
  * @property-read int|null $packages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GymPlan> $plans
@@ -653,6 +656,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GymSubscription> $subscriptions
  * @property-read int|null $subscriptions_count
  * @property-read \App\Models\Vendor $vendor
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Video> $videos
+ * @property-read int|null $videos_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Gym newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Gym newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Gym query()
@@ -967,7 +972,8 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property int $academy_id
+ * @property int $user_id
+ * @property int|null $academy_id
  * @property string $name
  * @property string $sport
  * @property numeric $price_per_hour
@@ -975,11 +981,12 @@ namespace App\Models{
  * @property string|null $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Academy $academy
+ * @property-read \App\Models\Academy|null $academy
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Booking> $bookings
  * @property-read int|null $bookings_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Facility> $facilities
  * @property-read int|null $facilities_count
+ * @property-read mixed $image_url
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CoachLocation> $locations
  * @property-read int|null $locations_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PrivateCoachPackage> $packages
@@ -1001,6 +1008,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach wherePricePerHour($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach whereSport($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach whereUserId($value)
  */
 	class PrivateCoach extends \Eloquent {}
 }
@@ -1051,8 +1059,9 @@ namespace App\Models{
  * @property-read int|null $order_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Review> $reviews
  * @property-read int|null $reviews_count
+ * @property-read \App\Models\User|null $seller
  * @property-read \App\Models\Store $store
- * @property-read \App\Models\Vendor|null $vendor
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product byCategory($category_id)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
@@ -1222,6 +1231,7 @@ namespace App\Models{
  * @property-read int|null $bookings_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Facility> $facilities
  * @property-read int|null $facilities_count
+ * @property-read mixed $image_url
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\StadiumPackage> $packages
  * @property-read int|null $packages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Review> $reviews
@@ -1229,6 +1239,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\StadiumSchedule> $schedules
  * @property-read int|null $schedules_count
  * @property-read \App\Models\Vendor $vendor
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Video> $videos
+ * @property-read int|null $videos_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium query()
@@ -1319,7 +1331,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property int $vendor_id
+ * @property int|null $user_id
  * @property string $name
  * @property string|null $description
  * @property string|null $logo
@@ -1330,11 +1342,14 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $categories
  * @property-read int|null $categories_count
+ * @property-read mixed $image_url
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Review> $reviews
  * @property-read int|null $reviews_count
- * @property-read \App\Models\Vendor $vendor
+ * @property-read \App\Models\Vendor|null $vendor
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Video> $videos
+ * @property-read int|null $videos_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Store newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Store newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Store query()
@@ -1347,7 +1362,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Store whereLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Store whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Store whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Store whereVendorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Store whereUserId($value)
  */
 	class Store extends \Eloquent {}
 }
@@ -1505,6 +1520,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\Wallet|null $wallet
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor query()
@@ -1526,23 +1542,61 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property int $user_id
+ * @property string $role
+ * @property string|null $business_name
+ * @property array<array-key, mixed>|null $documents
+ * @property string $status
+ * @property string|null $rejection_reason
+ * @property int|null $reviewed_by
+ * @property \Illuminate\Support\Carbon|null $reviewed_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $reviewer
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereBusinessName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereDocuments($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereRejectionReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereReviewedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereReviewedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereUserId($value)
+ */
+	class VerificationRequest extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property string $title
  * @property string|null $description
  * @property string $url
  * @property string $type
  * @property int|null $user_id
- * @property int|null $academy_id
- * @property int|null $coach_id
  * @property int $views
  * @property int $likes
  * @property int $dislikes
  * @property string $status
+ * @property int|null $academy_id
+ * @property int|null $coach_id
+ * @property int|null $stadium_id
+ * @property int|null $gym_id
+ * @property int|null $store_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Academy|null $academy
  * @property-read \App\Models\PrivateCoach|null $coach
+ * @property-read \App\Models\Gym|null $gym
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\VideoReport> $reports
  * @property-read int|null $reports_count
+ * @property-read \App\Models\Stadium|null $stadium
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video newQuery()
@@ -1552,9 +1606,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereDislikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereGymId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereLikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereStadiumId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereStoreId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Video whereUpdatedAt($value)
