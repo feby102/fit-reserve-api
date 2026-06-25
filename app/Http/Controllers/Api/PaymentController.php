@@ -236,7 +236,7 @@ class PaymentController extends Controller
                     'payment_method' => 'app_wallet',
                     'status' => 'confirmed'
                 ]);
-            ]);
+        });
 
             return response()->json([
                 'message' => 'Paid successfully using wallet',
@@ -342,30 +342,31 @@ public function payWithVisaForVerification(Request $request, $verificationReques
     $verificationRequest->update(['paymob_order_id' => $paymob_order_id]);
 
     // 3. Payment Key
-    $payment_token = Http::post($base . '/api/acceptance/payment_keys', [
-        'auth_token'     => $token,
-        'amount_cents'   => $amount_cents,
-        'expiration'     => 3600,
-        'order_id'       => $paymob_order_id,
-        'currency'       => 'EGP',
-        'integration_id' => env('PAYMOB_VISA_INTEGRATION_ID'),
-        'billing_data'   => [
-            'first_name'      => $user->name,
-            'last_name'       => $user->name,
-            'email'           => $user->email,
-            'phone_number'    => $user->phone ?? '01000000000',
-            'apartment'       => 'NA', 'floor'           => 'NA',
-            'street'          => 'NA', 'building'        => 'NA',
-            'shipping_method' => 'NA', 'postal_code'     => 'NA',
-            'city'            => 'Cairo', 'country'      => 'EG',
-            'state'           => 'NA',
-        ]
-    ])->json()['token'] ?? null;
+ $response = Http::post($base . '/api/acceptance/payment_keys', [
+    'auth_token'     => $token,
+    'amount_cents'   => $amount_cents,
+    'expiration'     => 3600,
+    'order_id'       => $paymob_order_id,
+    'currency'       => 'EGP',
+    'integration_id' => env('PAYMOB_VISA_INTEGRATION_ID'),
+    'billing_data'   => [
+        'first_name'      => $user->name,
+        'last_name'       => $user->name,
+        'email'           => $user->email,
+        'phone_number'    => $user->phone ?? '01000000000',
+        'apartment'       => 'NA',
+        'floor'           => 'NA',
+        'street'          => 'NA',
+        'building'        => 'NA',
+        'shipping_method' => 'NA',
+        'postal_code'     => '12345',
+        'city'            => 'Cairo',
+        'country'         => 'EG',
+        'state'           => 'Cairo',
+    ]
+]);
 
-    if (!$payment_token) {
-        return response()->json(['message' => 'Failed to generate payment key'], 500);
-    }
-
+return response()->json($response->json());
     $url = 'https://accept.paymob.com/api/acceptance/iframes/'
          . env('PAYMOB_IFRAME_ID')
          . '?payment_token=' . $payment_token;
@@ -438,20 +439,37 @@ public function payWithWalletForVerification(Request $request, $verificationRequ
     }
 
     // 4. Wallet redirect URL
-    $walletData = Http::post($base . '/api/acceptance/pay', [
+    // 4. Wallet redirect URL
+$walletResponse = Http::post(
+    $base . '/api/acceptance/payments/pay',
+    [
         'source' => [
             'identifier' => $phone_number,
-            'subtype'    => 'WALLET'
+            'subtype' => 'WALLET',
         ],
-        'payment_token' => $payment_token
-    ])->json();
+        'payment_token' => $payment_token,
+    ]
+);
 
-    $url = $walletData['iframe_url'] ?? $walletData['redirection_url'] ?? null;
 
-    if (!$url) {
-        return response()->json(['message' => 'Failed to get wallet payment URL'], 500);
-    }
 
+
+$walletData = $walletResponse->json();
+
+$url =
+    $walletData['iframe_redirection_url']
+    ?? $walletData['iframe_url']
+    ?? $walletData['redirection_url']
+    ?? $walletData['redirect_url']
+    ?? null;
+
+    
+  if (!$url) {
+    return response()->json([
+        'message' => 'Failed to get wallet payment URL',
+        'paymob_response' => $walletData
+    ], 500);
+}
     return response()->json([
         'message'         => 'تم إنشاء طلب التوثيق، أكمل الدفع',
         'verification_id' => $verificationRequest->id,
