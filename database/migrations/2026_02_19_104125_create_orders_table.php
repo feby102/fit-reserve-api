@@ -17,7 +17,7 @@ $table->id();
 $table->foreignId('user_id')->constrained();
 $table->decimal('total_price',10,2);
 $table->enum('status',['pending','confirmed','shipped','delivered','cancelled'])->default('pending');
-$table->enum('payment_method', ['wallet', 'visa'])->nullable();
+$table->enum('payment_method', ['wallet', 'visa','vodafone_cash'])->nullable();
 
 $table->timestamps();
 

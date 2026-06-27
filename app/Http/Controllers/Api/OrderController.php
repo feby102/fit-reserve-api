@@ -42,15 +42,13 @@ public function store(Request $request)
 
     $totalPrice = 0;
 
-    // إنشاء الطلب
-    $order = Order::create([
+     $order = Order::create([
         'user_id' => $user->id,
         'total_price' => 0,
         'status' => 'pending'
     ]);
 
-    // إضافة المنتجات
-    foreach ($data['items'] as $item) {
+     foreach ($data['items'] as $item) {
 
         $product = Product::findOrFail($item['product_id']);
 

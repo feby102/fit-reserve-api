@@ -118,7 +118,7 @@ class PaymentController extends Controller
         return response()->json(['payment_url' => $url]);
     }
 
-    // 2️⃣ فانكشن الدفع بفودافون كاش / المحافظ الإلكترونية الجديدة
+    //    الدفع بفودافون كاش  
     public function payWithWallet($request, $amount, $phone_number)
     {
         $base = env("PAYMOB_BASE_URL");
@@ -154,14 +154,14 @@ class PaymentController extends Controller
 
         $order_id = $order['id'];
 
-        /* generate payment key (باستخدام ID المحافظ) */
+        /* generate payment key   */
         $paymentKeyResponse = Http::post($base.'/api/acceptance/payment_keys', [
             "auth_token" => $token,
             "amount_cents" => $amount_cents,
             "expiration" => 3600,
             "order_id" => $order_id,
             "currency" => "EGP",
-            "integration_id" => env('PAYMOB_WALLET_INTEGRATION_ID'), // الـ ID الجديد للمحافظ
+            "integration_id" => env('PAYMOB_WALLET_INTEGRATION_ID'),   
             "billing_data" => [
                 "first_name" => "Test", "last_name" => "User", "email" => "test@test.com",
                 "phone_number" => $phone_number, "apartment" => "NA", "floor" => "NA",
@@ -176,8 +176,7 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Failed to generate payment key'], 500);
         }
 
-        /* الخطوة الرابعة والأهم: طلب الـ Redirection URL للمحافظ */
-        $walletResponse = Http::post($base.'/api/acceptance/void_refund/transactions/pay', [
+         $walletResponse = Http::post($base.'/api/acceptance/void_refund/transactions/pay', [
             "source" => [
                 "identifier" => $phone_number, // رقم فودافون كاش للعميل
                 "subtype" => "WALLET"
@@ -187,8 +186,7 @@ class PaymentController extends Controller
 
         $walletData = $walletResponse->json();
 
-        // Paymob بترجع اللينك في خانة 'iframe_url' أو 'redirection_url' للمحافظ
-        $url = $walletData['iframe_url'] ?? $walletData['redirection_url'] ?? null;
+         $url = $walletData['iframe_url'] ?? $walletData['redirection_url'] ?? null;
 
         if (!$url) {
             return response()->json(['message' => 'Failed to generate wallet payment url', 'error' => $walletData], 500);
@@ -199,14 +197,12 @@ class PaymentController extends Controller
         ]);
     }
 
-    // 3️⃣ تحديث الميثود الأساسية للتحكم في الاختيارات
-    public function pay(Request $request, $order_id)
+     public function pay(Request $request, $order_id)
     {
-        // تم تغيير الـ Validation ليدعم الاختيارين: paymob_visa و paymob_wallet
-        // وإضافة شرط وجود رقم تليفون لو اختار محفظة
+         
         $data = $request->validate([
-            'payment_method' => 'required|in:app_wallet,visa,wallet',
-            'phone_number' => 'required_if:payment_method,paymob_wallet|string' 
+            'payment_method' => 'required|in:app_wallet,visa,vodafone_cash',
+            'phone_number' => 'required_if:payment_method,vodafone_cash|string' 
         ]);
 
         $user = auth()->user();
@@ -216,8 +212,7 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Already paid']);
         }
 
-        // الاختيار القديم: الدفع بمحفظة التطبيق الداخلية (App Wallet)
-        if ($data['payment_method'] == 'app_wallet') {
+         if ($data['payment_method'] == 'app_wallet') {
             $wallet = $user->wallet;
 
             if ($wallet->balance < $order->total_price) {
@@ -245,18 +240,18 @@ class PaymentController extends Controller
         }
 
         // الاختيار الثاني: دفع فيزا بايموب
-        if ($data['payment_method'] == 'paymob_visa') {
+        if ($data['payment_method'] == 'visa') {
             $order->update([
-                'payment_method' => 'paymob_visa'
+                'payment_method' => 'visa'
             ]);
 
             return $this->payWithvisa($request, $order->total_price);
         }
 
         // الاختيار الثالث الجديد: دفع فودافون كاش بايموب
-        if ($data['payment_method'] == 'paymob_wallet') {
+        if ($data['payment_method'] == 'vodafone_cash') {
             $order->update([
-                'payment_method' => 'paymob_wallet'
+                'payment_method' => 'vodafone_cash'
             ]);
 
             return $this->payWithWallet($request, $order->total_price, $data['phone_number']);
