@@ -21,8 +21,7 @@ public function store(Request $request)
 
     $user = $request->user();
 
-    // يجب إضافة باقي الأنواع هنا لتجنب الـ abort
-    $class = match ($request->reviewable_type) {
+     $class = match ($request->reviewable_type) {
         'stadium'      => \App\Models\Stadium::class,
         'academy'      => \App\Models\Academy::class,
         'gym'          => \App\Models\Gym::class,

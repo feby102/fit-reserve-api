@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('private_coaches', function (Blueprint $table) {
          $table->id();
-         $table->foreignId('user_id')->constrained()->onDelete('cascade');   
+         $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
          $table->foreignId('academy_id')->nullable()->constrained()->cascadeOnDelete();
          $table->string('name');
          $table->string('sport');

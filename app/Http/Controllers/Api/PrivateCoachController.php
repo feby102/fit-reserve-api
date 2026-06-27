@@ -7,6 +7,7 @@ use App\Models\Academy;
 use App\Models\CoachLocation;
 use App\Models\CoachService;
 use App\Models\PrivateCoach;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 
 class PrivateCoachController extends Controller
@@ -47,17 +48,28 @@ return PrivateCoach::with('academy','locations','services')->get()->makeHidden([
         'price_per_hour' => 'required|numeric',
         'bio'            => 'nullable|string',
         'image'          => 'nullable|image',
+        'user_id'        => 'nullable|exists:users,id', // الكوتش المراد ربطه (إجباري لو فيندور بيضيف)
     ]);
 
     $user = auth()->user();
+    
+    // جلب موديل الفيندور الحقيقي وليس قيمة boolean
+    $vendor = \App\Models\Vendor::where('id', $user->id)->first();
 
-     if ($user->role !== 'Coach') {
-        return response()->json([
-            'message' => 'Unauthorized or you are not logged in as a coach.'
-        ], 403);      }
-     if (!empty($data['academy_id'])) {
-         $academyExists = \App\Models\Academy::where('id', $data['academy_id'])
-                                            ->where('user_id', $user->id)
+    if ($vendor) {
+        // إذا كان فيندور، يجب تحديد الأكاديمية
+        if (empty($data['academy_id'])) {
+            return response()->json(['message' => 'As a vendor, you must specify an academy.'], 422);
+        }
+
+        // يجب تحديد الكوتش المراد إضافته من الـ request
+        if (empty($data['user_id'])) {
+            return response()->json(['message' => 'As a vendor, you must provide a valid user_id for the coach.'], 422);
+        }
+
+        // التأكد من أن الأكاديمية ملك الفيندور الحالي باستخدام الـ ID الصحيح
+        $academyExists = \App\Models\Academy::where('id', $data['academy_id'])
+                                            ->where('vendor_id', $vendor->id) // تم الإصلاح هنا
                                             ->exists();
 
         if (!$academyExists) {
@@ -65,14 +77,30 @@ return PrivateCoach::with('academy','locations','services')->get()->makeHidden([
                 'message' => 'This academy does not belong to you.'
             ], 403);
         }
-    }
 
-     if ($request->hasFile('image')) {
-        $path = $request->file('image')->store('gyms', 'public');
+        // التأكد أن الـ user_id المبعوث يمتلك صلاحية coach فعلاً
+        $isCoach = \App\Models\User::where('id', $data['user_id'])->where('role', 'coach')->exists();
+        if (!$isCoach) {
+            return response()->json(['message' => 'The provided user_id does not belong to a coach account.'], 422);
+        }
+
+    } elseif ($user->role === 'coach') {
+        // إذا كان كوتش حر يسجل لنفسه
+        $data['user_id'] = $user->id;
+        $data['academy_id'] = null; 
+    } else {
+        return response()->json([
+            'message' => 'Unauthorized. Only Coaches or Vendors can perform this action.'
+        ], 403);
+    }    
+
+    // رفع الصورة
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('coach', 'public');
         $data['image'] = $path;   
     }
- 
-     $data['user_id'] = $user->id;
+
+    // !!! تـــم حــذف الـسـطـر الـقـاتـل: $data['user_id'] = $user->id;
 
     $coach = PrivateCoach::create($data);
 

@@ -205,7 +205,7 @@ class PaymentController extends Controller
         // تم تغيير الـ Validation ليدعم الاختيارين: paymob_visa و paymob_wallet
         // وإضافة شرط وجود رقم تليفون لو اختار محفظة
         $data = $request->validate([
-            'payment_method' => 'required|in:app_wallet,paymob_visa,paymob_wallet',
+            'payment_method' => 'required|in:app_wallet,visa,wallet',
             'phone_number' => 'required_if:payment_method,paymob_wallet|string' 
         ]);
 
