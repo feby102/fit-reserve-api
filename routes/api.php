@@ -101,8 +101,7 @@ Route::get('/academies/{academy}/services',[AcademyServiceController::class,'ind
  Route::get('/coaches/{id}', [PrivateCoachController::class, 'publicShow']);
 
 
-Route::post('/coach-book',[CoachBookingController::class,'store']);
-
+ 
 
 Route::post('/reviews',[ReviewController::class,'store']);
 Route::post('/reviews/{id}/hide',[ReviewController::class,'hide']);
