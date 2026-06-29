@@ -68,8 +68,9 @@ $data=$request->validate([
             'start_time' => 'required|date_format:H:i',
             'date'  => 'required|date',
             'hours' => 'required_if:type,daily|nullable|integer|min:1',
-            'payment_method'=> 'required|in:visa,cash,wallet',
-            'type' => 'required|in:daily,package',
+            'payment_method' => 'required|in:app_wallet,visa,vodafone_cash,wallet',
+            'phone_number' => 'required_if:payment_method,vodafone_cash|string' 
+,            'type' => 'required|in:daily,package',
             'package_id' => 'required_if:type,package|nullable|integer',        
             'use_points' => 'nullable|integer|min:0',
             //للاكاديميات
@@ -88,6 +89,10 @@ $start_datetime=Carbon::parse($data['date'].' '.$data['start_time']);
 
     $wallet=$request->user()->wallet;
 $hours = $request->input('hours', 2);
+
+$vendor = null;
+$coach = null;
+
       switch ($data['bookable_type']) {
  case 'gym':
                 $bookable = Gym::findOrFail($data['bookable_id']);
@@ -121,14 +126,14 @@ $hours = $request->input('hours', 2);
             default:
                 return response()->json(['message' => 'Invalid type'], 400);
         }
-$vendor = null;
-
+ 
  
 switch ($data['bookable_type']) {
     case 'stadium':
     case 'gym':
     case 'coach': 
         $vendor = $bookable->vendor; 
+
         break;
 
     case 'academy':
@@ -237,6 +242,18 @@ $paymentController=new \App\Http\Controllers\Api\PaymentController();
 return $paymentController->payWithvisa($request,$total);
 
 }
+
+
+//الدفع بفودافون كاش 
+
+
+if ($data['payment_method'] === 'vodafone_cash') {
+
+$paymentController=new \App\Http\Controllers\Api\PaymentController();
+return $paymentController->payWithWallet($request, $total, $data['phone_number']);
+
+}
+
 
 
 $settings = \App\Models\Setting::first();

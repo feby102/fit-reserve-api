@@ -15,6 +15,10 @@ return new class extends Migration
          $table->id();
          $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
          $table->foreignId('academy_id')->nullable()->constrained()->cascadeOnDelete();
+         $table->foreignId('vendor_id')
+                  ->nullable()
+                   ->constrained('vendors')
+                  ->nullOnDelete();
          $table->string('name');
          $table->string('sport');
          $table->decimal('price_per_hour',10,2);

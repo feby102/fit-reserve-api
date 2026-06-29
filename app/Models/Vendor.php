@@ -36,7 +36,10 @@ class Vendor extends Authenticatable
 }
 
 
-
+public function coaches()
+{
+    return $this->hasMany(PrivateCoach::class);
+}
     public function wallet()
 {
     return $this->hasOne(Wallet::class);

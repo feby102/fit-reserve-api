@@ -176,18 +176,23 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Failed to generate payment key'], 500);
         }
 
-         $walletResponse = Http::post($base.'/api/acceptance/void_refund/transactions/pay', [
-            "source" => [
-                "identifier" => $phone_number, // رقم فودافون كاش للعميل
-                "subtype" => "WALLET"
-            ],
-            "payment_token" => $payment_token
-        ]);
+        $walletResponse = Http::post(
+    $base.'/api/acceptance/payments/pay',
+    [
+        "source" => [
+            "identifier" => $phone_number,
+            "subtype" => "WALLET"
+        ],
+        "payment_token" => $payment_token
+    ]
+);
 
         $walletData = $walletResponse->json();
-
-         $url = $walletData['iframe_url'] ?? $walletData['redirection_url'] ?? null;
-
+ $url = $walletData['iframe_redirection_url']
+    ?? $walletData['iframe_url']
+    ?? $walletData['redirection_url']
+    ?? $walletData['redirect_url']
+    ?? null;
         if (!$url) {
             return response()->json(['message' => 'Failed to generate wallet payment url', 'error' => $walletData], 500);
         }

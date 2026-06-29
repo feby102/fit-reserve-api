@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PrivateCoach extends Model
 {
  protected $fillable = [
-    'name', 'sport', 'price_per_hour', 'bio', 'academy_id', 'image', 'user_id'
+    'name', 'sport', 'price_per_hour', 'bio', 'academy_id', 'image', 'user_id','vendor_id'
 ];
 
 
@@ -20,6 +20,14 @@ public function getImageUrlAttribute()
     }
 
     return null;  }
+
+
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
 
 public function vendor()
 {

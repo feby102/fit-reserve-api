@@ -8,6 +8,7 @@ use App\Models\CoachLocation;
 use App\Models\CoachService;
 use App\Models\PrivateCoach;
 use App\Models\Vendor;
+use Hash;
 use Illuminate\Http\Request;
 
 class PrivateCoachController extends Controller
@@ -60,8 +61,7 @@ return PrivateCoach::with('academy','locations','services')->get()->makeHidden([
             return response()->json(['message' => 'As a vendor, you must specify an academy.'], 422);
         }
 
-        // يجب تحديد الكوتش المراد إضافته من الـ request
-        if (empty($data['user_id'])) {
+         if (empty($data['user_id'])) {
             return response()->json(['message' => 'As a vendor, you must provide a valid user_id for the coach.'], 422);
         }
 
@@ -81,9 +81,24 @@ return PrivateCoach::with('academy','locations','services')->get()->makeHidden([
         }
 
     } elseif ($user->role === 'coach') {
-         $data['user_id'] = $user->id;
-        $data['academy_id'] = null; 
-    } else {
+        $vendor = Vendor::create([
+    'name'     => $user->name,
+    'email'    => $user->email,
+    'phone'    => $user->phone,
+    'city'     => $user->city,
+    'area'     => $user->area,
+    'password' => $user->password,
+    'balance'  => 0,
+]);
+
+$data['vendor_id'] = $vendor->id;
+$data['user_id'] = $user->id;
+$data['academy_id'] = null;
+
+$coach = PrivateCoach::create($data);
+
+
+     } else {
         return response()->json([
             'message' => 'Unauthorized. Only Coaches or Vendors can perform this action.'
         ], 403);

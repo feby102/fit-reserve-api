@@ -147,7 +147,7 @@ if (!$vendor) {
 $academy = Academy::where('vendor_id', $vendor->id)->findOrFail($id);
 $academy->update([
 
-            'type'=>$request->academy_type ,
+            'type'=>$request->academy_type??$academy->type ,
             'name'=>$request->name ??$academy->name ,
             'location'=>$request->location??$academy->location
             ]);
