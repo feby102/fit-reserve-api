@@ -248,22 +248,12 @@ class PaymentController extends Controller
 
         // الاختيار الثاني: دفع فيزا بايموب
         if ($data['payment_method'] == 'visa') {
-            $order->update([
-                'payment_method' => 'visa',    'paymob_order_id' => $order_id
+        return $this->payWithvisa($request, $order); // بنبعت الـ order object نفسه للفيزا
+    }
 
-            ]);
-
-            return $this->payWithvisa($request, $order->total_price);
-        }
-
-        // الاختيار الثالث الجديد: دفع فودافون كاش بايموب
-        if ($data['payment_method'] == 'vodafone_cash') {
-            $order->update([
-                'payment_method' => 'vodafone_cash'
-            ]);
-
-            return $this->payWithWallet($request, $order->total_price, $data['phone_number']);
-        }
+    if ($data['payment_method'] == 'vodafone_cash') {
+        return $this->payWithWallet($request, $order, $data['phone_number']); // بنبعت الـ order object
+    }
     }
 
 
