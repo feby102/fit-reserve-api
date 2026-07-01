@@ -271,7 +271,8 @@ class PaymentController extends Controller
 
 
 public function webhook(Request $request)
-{  dd($request->all());
+{   \Log::info('Webhook reached');
+    \Log::info($request->all());
     $obj = $request->input('obj');
 
     if (!$obj) {
@@ -336,6 +337,13 @@ public function webhook(Request $request)
         'paymob_order_id',
         $paymobOrderId
     )->first();
+
+
+\Log::info([
+    'paymob_order_id' => $paymobOrderId,
+    'pending' => $pending,
+]);
+
             return response()->json(['message' => 'Order updated']);
         }
         // ولا payment لـ verification request
@@ -357,6 +365,8 @@ public function webhook(Request $request)
         )->first();
 
         if ($pending) {
+\Log::info('Creating verification request');
+
 
             VerificationRequest::create([
                 'user_id'         => $pending->user_id,
@@ -371,7 +381,7 @@ public function webhook(Request $request)
             ]);
 
             $pending->delete();
-
+\Log::info('Pending deleted');
             return response()->json([
                 'message' => 'Verification request created'
             ]);
