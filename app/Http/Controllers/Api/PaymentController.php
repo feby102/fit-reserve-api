@@ -61,11 +61,10 @@ class PaymentController extends Controller
     }
 
     // 1️⃣ فانكشن الدفع بالفيزا (تم تحديث الـ Integration ID)
-    public function payWithvisa($request, $amount)
-    {
-        $base = env("PAYMOB_BASE_URL");
-        $amount_cents = $amount * 100;
-
+    public function payWithvisa($request, $order) // استقبل الـ order object هنا
+{
+    $base = env("PAYMOB_BASE_URL");
+    $amount_cents = $order->total_price * 100;
         if ($amount_cents < 10) {
             return response()->json(['message' => 'Minimum payment is 0.10 EGP'], 400);
         }
@@ -95,6 +94,12 @@ class PaymentController extends Controller
         }
 
         $order_id = $order['id'];
+
+
+        $order->update([
+        'payment_method' => 'visa',
+        'paymob_order_id' => $order_id
+    ]);
 
         /* generate payment key */
         $paymentKeyResponse = Http::post($base.'/api/acceptance/payment_keys', [
