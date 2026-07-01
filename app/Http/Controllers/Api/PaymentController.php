@@ -333,22 +333,28 @@ if (hash_equals($calculated_hmac, $hmac)) {
             return response()->json(['message' => 'Transaction not successful, skipping.']);
         }
 
-        // 1️⃣ فحص إذا كان أوردر عادي
-// 🟢 السطر الجديد الصح:
+ // 1️⃣ فحص إذا كان أوردر عادي في جدول المعلقات
 $pending = \App\Models\PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
 
 if (!$pending) {
     Log::error("Pending verification not found for Paymob Order: " . $paymobOrderId);
     return response()->json(['message' => 'Order not found'], 404);
-}        if ($order) {
-            $order->update([
-                'payment_status' => 'paid',
-                'status'         => 'confirmed',
-                'transaction_id' => $obj['id'],
-            ]);
-            return response()->json(['message' => 'Order updated successfully']);
-        }
+}
 
+// 🟢 التعديل هنا: غيرنا $order لـ $pending عشان يطابق المتغير اللي فوق
+if ($pending) {
+    // تحديث حالة الدفع جوه جدول الـ Pending نفسه أو اتمام العملية
+    $pending->update([
+        'payment_status' => 'paid',
+        'status'         => 'confirmed',
+        'transaction_id' => $obj['id'],
+    ]);
+
+    // 📌 هنا الكود بتاعك اللي بينقل البيانات من الـ Pending ويروح للـ Requests (سواء كوتش أو جيم.. إلخ)
+    // ...
+    
+    return response()->json(['message' => 'Verification updated successfully']);
+}
         // 2️⃣ فحص طلب توثيق مؤقت (PendingVerification) ونقله فوراً ومسحه
         $pending = PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
         if ($pending) {
