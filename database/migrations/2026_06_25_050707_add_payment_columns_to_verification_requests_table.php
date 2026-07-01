@@ -12,7 +12,7 @@ return new class extends Migration
    public function up()
 {
     Schema::table('verification_requests', function (Blueprint $table) {
-        $table->string('payment_method')->nullable();   // visa, vodafone_cash
+ $table->string('payment_method')->nullable();   // visa, vodafone_cash
         $table->string('payment_status')->default('unpaid'); // unpaid, paid
         $table->string('paymob_order_id')->nullable();
         $table->string('transaction_id')->nullable();

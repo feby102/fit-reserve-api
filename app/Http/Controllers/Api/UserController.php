@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\PendingVerification;
 use App\Models\Ranking;
 use App\Models\User;
 use App\Models\VerificationRequest;
@@ -99,31 +100,34 @@ class UserController extends Controller
         }
 
         // حفظ الطلب
-        $verificationRequest = VerificationRequest::create([
-            'user_id'        => auth()->id(),
-            'role'           => $data['role'],
-            'documents'      => $documentPaths,
-            'payment_method' => $data['payment_method'],
-            'phone_number'   => $request->phone_number ?? null,
-            'price'          => 1250,
-            'status'         => 'pending',
-            'payment_status' => 'unpaid',
-        ]);
+       $pendingVerification = PendingVerification::create([
+    'user_id'        => auth()->id(),
+    'role'           => $data['role'],
+    'documents'      => $documentPaths,
+    'payment_method' => $data['payment_method'],
+    'phone_number'   => $request->phone_number,
+    'price'          => 1250,
+]);
 
         // روح على الدفع مباشرة
         $paymentController = new \App\Http\Controllers\Api\PaymentController();
 
         if ($data['payment_method'] == 'visa') {
-            return $paymentController->payWithVisaForVerification(
-                $request,
-                $verificationRequest
-            );
+           return $paymentController->payWithVisaForVerification(
+    $request,
+    $pendingVerification
+);
+
+
+
+            
         }
 
         if ($data['payment_method'] == 'vodafone_cash') {
             return $paymentController->payWithWalletForVerification(
                 $request,
-                $verificationRequest,
+    $pendingVerification
+,
                 $request->phone_number
             );
         }

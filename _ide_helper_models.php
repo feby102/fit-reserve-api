@@ -944,6 +944,36 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property int $user_id
+ * @property string $role
+ * @property array<array-key, mixed>|null $documents
+ * @property string $payment_method
+ * @property string|null $phone_number
+ * @property numeric $price
+ * @property string|null $paymob_order_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification whereDocuments($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification wherePaymobOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PendingVerification whereUserId($value)
+ */
+	class PendingVerification extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int $challenge_id
  * @property int $evaluator_id
  * @property int $rated_player_id
@@ -974,6 +1004,7 @@ namespace App\Models{
  * @property int $id
  * @property int $user_id
  * @property int|null $academy_id
+ * @property int|null $vendor_id
  * @property string $name
  * @property string $sport
  * @property numeric $price_per_hour
@@ -995,6 +1026,7 @@ namespace App\Models{
  * @property-read int|null $reviews_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CoachService> $services
  * @property-read int|null $services_count
+ * @property-read \App\Models\User $user
  * @property-read \App\Models\Vendor|null $vendor
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach newQuery()
@@ -1009,6 +1041,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach whereSport($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PrivateCoach whereVendorId($value)
  */
 	class PrivateCoach extends \Eloquent {}
 }
@@ -1510,6 +1543,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Academy> $academies
  * @property-read int|null $academies_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PrivateCoach> $coaches
+ * @property-read int|null $coaches_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Gym> $gyms
  * @property-read int|null $gyms_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -1544,7 +1579,6 @@ namespace App\Models{
  * @property int $id
  * @property int $user_id
  * @property string $role
- * @property string|null $business_name
  * @property array<array-key, mixed>|null $documents
  * @property string $status
  * @property string|null $rejection_reason
@@ -1552,20 +1586,31 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $reviewed_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $payment_method
+ * @property string $payment_status
+ * @property string|null $paymob_order_id
+ * @property string|null $transaction_id
+ * @property numeric $price
+ * @property string|null $phone_number
  * @property-read \App\Models\User|null $reviewer
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereBusinessName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereDocuments($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest wherePaymobOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereRejectionReason($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereReviewedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereReviewedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereTransactionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VerificationRequest whereUserId($value)
  */

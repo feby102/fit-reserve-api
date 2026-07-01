@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\PendingVerification;
+use App\Models\VerificationRequest;
 class PaymentController extends Controller
 {
     public function updateStatus(Request $request, $id)
@@ -238,6 +239,7 @@ class PaymentController extends Controller
                 ]);
         });
 
+        
             return response()->json([
                 'message' => 'Paid successfully using wallet',
                 'order' => $order
@@ -247,7 +249,8 @@ class PaymentController extends Controller
         // الاختيار الثاني: دفع فيزا بايموب
         if ($data['payment_method'] == 'visa') {
             $order->update([
-                'payment_method' => 'visa'
+                'payment_method' => 'visa',    'paymob_order_id' => $order_id
+
             ]);
 
             return $this->payWithvisa($request, $order->total_price);
@@ -268,22 +271,73 @@ class PaymentController extends Controller
 
 
 public function webhook(Request $request)
-{
-    // ... نفس كود الـ HMAC بتاعك
+{  dd($request->all());
+    $obj = $request->input('obj');
+
+    if (!$obj) {
+        return response()->json([
+            'message' => 'Invalid payload'
+        ], 400);
+    }
+
+    $receivedHmac = $request->input('hmac');
+
+       $data = implode('', [
+        $obj['amount_cents'] ?? '',
+        $obj['created_at'] ?? '',
+        $obj['currency'] ?? '',
+        $obj['error_occured'] ?? '',
+        $obj['has_parent_transaction'] ?? '',
+        $obj['id'] ?? '',
+        $obj['integration_id'] ?? '',
+        $obj['is_3d_secure'] ?? '',
+        $obj['is_auth'] ?? '',
+        $obj['is_capture'] ?? '',
+        $obj['is_refunded'] ?? '',
+        $obj['is_standalone_payment'] ?? '',
+        $obj['is_voided'] ?? '',
+        $obj['order']['id'] ?? '',
+        $obj['owner'] ?? '',
+        $obj['pending'] ?? '',
+        $obj['source_data']['pan'] ?? '',
+        $obj['source_data']['sub_type'] ?? '',
+        $obj['source_data']['type'] ?? '',
+        $obj['success'] ?? '',
+    ]);
+
+    $calculatedHmac = hash_hmac(
+        'sha512',
+        $data,
+        env('PAYMOB_HMAC_SECRET')
+    );
+
+       if (!hash_equals($calculatedHmac, $receivedHmac)) {
+        return response()->json([
+            'message' => 'Invalid HMAC'
+        ], 403);
+    }
 
     if ($obj['success'] === true) {
-        $paymobOrderId = $obj['order']['id'];
+    $paymobOrderId = $obj['order']['id'];
 
         // شوفي هل ده payment لأوردر عادي
         $order = Order::where('paymob_order_id', $paymobOrderId)->first();
+
         if ($order) {
+
             $order->update([
                 'payment_status' => 'paid',
                 'status'         => 'confirmed',
                 'transaction_id' => $obj['id'],
             ]);
-        }
 
+
+              $pending = PendingVerification::where(
+        'paymob_order_id',
+        $paymobOrderId
+    )->first();
+            return response()->json(['message' => 'Order updated']);
+        }
         // ولا payment لـ verification request
         $verification = VerificationRequest::where('paymob_order_id', $paymobOrderId)->first();
         if ($verification) {
@@ -293,10 +347,40 @@ public function webhook(Request $request)
                 // status لسه pending → الأدمن هيوافق بعدين
             ]);
         }
+
+
     }
 
-    return response()->json(['message' => 'ok']);
-}
+    $pending = PendingVerification::where(
+            'paymob_order_id',
+            $paymobOrderId
+        )->first();
+
+        if ($pending) {
+
+            VerificationRequest::create([
+                'user_id'         => $pending->user_id,
+                'role'            => $pending->role,
+                'documents'       => $pending->documents,
+                'payment_method'  => $pending->payment_method,
+                'phone_number'    => $pending->phone_number,
+                'price'           => $pending->price,
+                'payment_status'  => 'paid',
+                'status'          => 'pending',
+                'transaction_id'  => $obj['id'],
+            ]);
+
+            $pending->delete();
+
+            return response()->json([
+                'message' => 'Verification request created'
+            ]);
+        }
+    
+
+    return response()->json([
+        'message' => 'ok'
+    ]);}
 
 
 
@@ -366,17 +450,21 @@ public function payWithVisaForVerification(Request $request, $verificationReques
     ]
 ]);
 
-return response()->json($response->json());
-    $url = 'https://accept.paymob.com/api/acceptance/iframes/'
-         . env('PAYMOB_IFRAME_ID')
-         . '?payment_token=' . $payment_token;
+    $payment_token = $response->json()['token'] ?? null;
 
+if (!$payment_token) {
     return response()->json([
-        'message'            => 'تم إنشاء طلب التوثيق، أكمل الدفع',
-        'verification_id'    => $verificationRequest->id,
-        'payment_url'        => $url,
-        'amount'             => $amount,
-    ]);
+        'message' => 'Failed to generate payment key'
+    ],500);
+}
+
+$url = 'https://accept.paymob.com/api/acceptance/iframes/'
+    . env('PAYMOB_IFRAME_ID')
+    . '?payment_token=' . $payment_token;
+
+return response()->json([
+    'payment_url' => $url
+]);
 }
 
 // دفع فودافون كاش للتوثيق

@@ -18,8 +18,7 @@ public function up()
         $table->string('role');  
           $table->json('documents')->nullable();  
         $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-        $table->decimal('price',10,2);
-        $table->text('rejection_reason')->nullable();
+         $table->text('rejection_reason')->nullable();
         $table->foreignId('reviewed_by')->nullable()->constrained('users');
         $table->timestamp('reviewed_at')->nullable();
         $table->timestamps();
