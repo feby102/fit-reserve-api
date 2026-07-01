@@ -269,10 +269,11 @@ class PaymentController extends Controller
 
 
 
-
 public function webhook(Request $request)
-{   \Log::info('Webhook reached');
+{ 
+    \Log::info('Webhook reached');
     \Log::info($request->all());
+    
     $obj = $request->input('obj');
 
     if (!$obj) {
@@ -283,7 +284,7 @@ public function webhook(Request $request)
 
     $receivedHmac = $request->input('hmac');
 
-       $data = implode('', [
+    $data = implode('', [
         $obj['amount_cents'] ?? '',
         $obj['created_at'] ?? '',
         $obj['currency'] ?? '',
@@ -312,86 +313,74 @@ public function webhook(Request $request)
         env('PAYMOB_HMAC_SECRET')
     );
 
-       if (!hash_equals($calculatedHmac, $receivedHmac)) {
+    if (!hash_equals($calculatedHmac, $receivedHmac)) {
         return response()->json([
             'message' => 'Invalid HMAC'
         ], 403);
     }
 
+    // تأكيد أن العملية نجحت تماماً في بايموب
     if ($obj['success'] === true) {
-    $paymobOrderId = $obj['order']['id'];
+        $paymobOrderId = $obj['order']['id'];
 
-        // شوفي هل ده payment لأوردر عادي
+        // 1️⃣ أولاً: التحقق لو كان أوردر عادي (منتجات/كورسات مثلاً)
         $order = Order::where('paymob_order_id', $paymobOrderId)->first();
 
         if ($order) {
-
             $order->update([
                 'payment_status' => 'paid',
                 'status'         => 'confirmed',
                 'transaction_id' => $obj['id'],
             ]);
 
-
-              $pending = PendingVerification::where(
-        'paymob_order_id',
-        $paymobOrderId
-    )->first();
-
-
-\Log::info([
-    'paymob_order_id' => $paymobOrderId,
-    'pending' => $pending,
-]);
-
             return response()->json(['message' => 'Order updated']);
         }
-        // ولا payment لـ verification request
+
+        // 2️⃣ ثانياً: التحقق لو كان طلب توثيق قيد الانتظار (PendingVerification)
+        $pending = PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
+
+        if ($pending) {
+            \Log::info('Creating verification request for order: ' . $paymobOrderId);
+
+            // تحويل البيانات للجدول النهائي للتوثيق
+            VerificationRequest::create([
+                'user_id'         => $pending->user_id,
+                'role'            => $pending->role,
+                'documents'       => $pending->documents, // تأكد إن الـ Model بيعمل Cast للـ Array
+                'payment_method'  => $pending->payment_method,
+                'phone_number'    => $pending->phone_number,
+                'price'           => $pending->price,
+                'payment_status'  => 'paid',
+                'status'          => 'pending', // هيفضل pending لحد ما الأدمن يوافق
+                'transaction_id'  => $obj['id'],
+                'paymob_order_id' => $paymobOrderId
+            ]);
+
+            // مسح الطلب المؤقت بنجاح
+            $pending->delete();
+            
+            \Log::info('Pending deleted successfully');
+
+            return response()->json([
+                'message' => 'Verification request created'
+            ]);
+        }
+
+        // 3️⃣ ثالثاً: لو كان طلب التوثيق اتسيف قبل كده ووصل ويب هوك مكرر أو تحديث
         $verification = VerificationRequest::where('paymob_order_id', $paymobOrderId)->first();
         if ($verification) {
             $verification->update([
                 'payment_status' => 'paid',
                 'transaction_id' => $obj['id'],
-                // status لسه pending → الأدمن هيوافق بعدين
             ]);
+            return response()->json(['message' => 'Verification already processed and updated']);
         }
-
-
     }
-
-    $pending = PendingVerification::where(
-            'paymob_order_id',
-            $paymobOrderId
-        )->first();
-
-        if ($pending) {
-\Log::info('Creating verification request');
-
-
-            VerificationRequest::create([
-                'user_id'         => $pending->user_id,
-                'role'            => $pending->role,
-                'documents'       => $pending->documents,
-                'payment_method'  => $pending->payment_method,
-                'phone_number'    => $pending->phone_number,
-                'price'           => $pending->price,
-                'payment_status'  => 'paid',
-                'status'          => 'pending',
-                'transaction_id'  => $obj['id'],
-            ]);
-
-            $pending->delete();
-\Log::info('Pending deleted');
-            return response()->json([
-                'message' => 'Verification request created'
-            ]);
-        }
-    
 
     return response()->json([
         'message' => 'ok'
-    ]);}
-
+    ]);
+}
 
 
 
