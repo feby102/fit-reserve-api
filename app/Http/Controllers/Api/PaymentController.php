@@ -14,6 +14,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\PendingVerification;
 use App\Models\VerificationRequest;
+use Illuminate\Support\Facades\Log;
+
 class PaymentController extends Controller
 {
     public function updateStatus(Request $request, $id)
@@ -60,11 +62,12 @@ class PaymentController extends Controller
         return $pdf->download('transactions.pdf');
     }
 
-    // 1️⃣ فانكشن الدفع بالفيزا (تم تحديث الـ Integration ID)
-    public function payWithvisa($request, $order) // استقبل الـ order object هنا
-{
-    $base = env("PAYMOB_BASE_URL");
-    $amount_cents = $order->total_price * 100;
+    // 1️⃣ دفع الفيزا للأوردرات العادية (تم إصلاح الـ Crash وتغيير اسم متغير الاستجابة)
+    public function payWithvisa($request, $localOrder) 
+    {
+        $base = env("PAYMOB_BASE_URL");
+        $amount_cents = $localOrder->total_price * 100;
+
         if ($amount_cents < 10) {
             return response()->json(['message' => 'Minimum payment is 0.10 EGP'], 400);
         }
@@ -87,28 +90,29 @@ class PaymentController extends Controller
             'currency' => "EGP",
             'items' => []
         ]);
-        $order = $orderResponse->json();
+        
+        $paymobOrderData = $orderResponse->json();
 
         if (!$orderResponse->successful()) {
-            return response()->json($order, 500);
+            return response()->json($paymobOrderData, 500);
         }
 
-        $order_id = $order['id'];
+        $paymob_order_id = $paymobOrderData['id'];
 
-
-        $order->update([
-        'payment_method' => 'visa',
-        'paymob_order_id' => $order_id
-    ]);
+        // تحديث الموديل المحلي الأصلي بنجاح دون Crash
+        $localOrder->update([
+            'payment_method' => 'visa',
+            'paymob_order_id' => $paymob_order_id
+        ]);
 
         /* generate payment key */
         $paymentKeyResponse = Http::post($base.'/api/acceptance/payment_keys', [
             "auth_token" => $token,
             "amount_cents" => $amount_cents,
             "expiration" => 3600,
-            "order_id" => $order_id,
+            "order_id" => $paymob_order_id,
             "currency" => "EGP",
-            "integration_id" => env('PAYMOB_VISA_INTEGRATION_ID'), // استخدام مفتاح الفيزا
+            "integration_id" => env('PAYMOB_VISA_INTEGRATION_ID'),
             "billing_data" => [
                 "first_name" => "Test", "last_name" => "User", "email" => "test@test.com",
                 "phone_number" => "01000000000", "apartment" => "NA", "floor" => "NA",
@@ -118,17 +122,16 @@ class PaymentController extends Controller
         ]);
 
         $payment_token = $paymentKeyResponse->json()['token'] ?? null;
-
         $url = "https://accept.paymob.com/api/acceptance/iframes/".env('PAYMOB_IFRAME_ID')."?payment_token=".$payment_token;
 
         return response()->json(['payment_url' => $url]);
     }
 
-    //    الدفع بفودافون كاش  
-    public function payWithWallet($request, $amount, $phone_number)
+    // 2️⃣ دفع المحفظة للأوردرات العادية
+    public function payWithWallet($request, $localOrder, $phone_number)
     {
         $base = env("PAYMOB_BASE_URL");
-        $amount_cents = $amount * 100;
+        $amount_cents = $localOrder->total_price * 100;
 
         if ($amount_cents < 10) {
             return response()->json(['message' => 'Minimum payment is 0.10 EGP'], 400);
@@ -152,20 +155,26 @@ class PaymentController extends Controller
             'currency' => "EGP",
             'items' => []
         ]);
-        $order = $orderResponse->json();
+        
+        $paymobOrderData = $orderResponse->json();
 
         if (!$orderResponse->successful()) {
-            return response()->json($order, 500);
+            return response()->json($paymobOrderData, 500);
         }
 
-        $order_id = $order['id'];
+        $paymob_order_id = $paymobOrderData['id'];
 
-        /* generate payment key   */
+        $localOrder->update([
+            'payment_method' => 'vodafone_cash',
+            'paymob_order_id' => $paymob_order_id
+        ]);
+
+        /* generate payment key */
         $paymentKeyResponse = Http::post($base.'/api/acceptance/payment_keys', [
             "auth_token" => $token,
             "amount_cents" => $amount_cents,
             "expiration" => 3600,
-            "order_id" => $order_id,
+            "order_id" => $paymob_order_id,
             "currency" => "EGP",
             "integration_id" => env('PAYMOB_WALLET_INTEGRATION_ID'),   
             "billing_data" => [
@@ -182,35 +191,30 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Failed to generate payment key'], 500);
         }
 
-        $walletResponse = Http::post(
-    $base.'/api/acceptance/payments/pay',
-    [
-        "source" => [
-            "identifier" => $phone_number,
-            "subtype" => "WALLET"
-        ],
-        "payment_token" => $payment_token
-    ]
-);
+        $walletResponse = Http::post($base.'/api/acceptance/payments/pay', [
+            "source" => [
+                "identifier" => $phone_number,
+                "subtype" => "WALLET"
+            ],
+            "payment_token" => $payment_token
+        ]);
 
         $walletData = $walletResponse->json();
- $url = $walletData['iframe_redirection_url']
-    ?? $walletData['iframe_url']
-    ?? $walletData['redirection_url']
-    ?? $walletData['redirect_url']
-    ?? null;
+        $url = $walletData['iframe_redirection_url']
+            ?? $walletData['iframe_url']
+            ?? $walletData['redirection_url']
+            ?? $walletData['redirect_url']
+            ?? null;
+
         if (!$url) {
             return response()->json(['message' => 'Failed to generate wallet payment url', 'error' => $walletData], 500);
         }
 
-        return response()->json([
-            'payment_url' => $url
-        ]);
+        return response()->json(['payment_url' => $url]);
     }
 
-     public function pay(Request $request, $order_id)
+    public function pay(Request $request, $order_id)
     {
-         
         $data = $request->validate([
             'payment_method' => 'required|in:app_wallet,visa,vodafone_cash',
             'phone_number' => 'required_if:payment_method,vodafone_cash|string' 
@@ -223,7 +227,7 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Already paid']);
         }
 
-         if ($data['payment_method'] == 'app_wallet') {
+        if ($data['payment_method'] == 'app_wallet') {
             $wallet = $user->wallet;
 
             if ($wallet->balance < $order->total_price) {
@@ -240,91 +244,88 @@ class PaymentController extends Controller
 
                 $order->update([
                     'payment_method' => 'app_wallet',
+                    'payment_status' => 'paid',
                     'status' => 'confirmed'
                 ]);
-        });
+            });
 
-        
             return response()->json([
                 'message' => 'Paid successfully using wallet',
                 'order' => $order
             ]);
         }
 
-        // الاختيار الثاني: دفع فيزا بايموب
         if ($data['payment_method'] == 'visa') {
-        return $this->payWithvisa($request, $order); // بنبعت الـ order object نفسه للفيزا
-    }
-
-    if ($data['payment_method'] == 'vodafone_cash') {
-        return $this->payWithWallet($request, $order, $data['phone_number']); // بنبعت الـ order object
-    }
-    }
-
-
-
-
-public function webhook(Request $request)
-{   
-    \Log::info('Paymob Webhook Reached');
-    
-    $obj = $request->input('obj');
-    if (!$obj) {
-        return response()->json(['message' => 'Invalid payload'], 400);
-    }
-
-    $receivedHmac = $request->input('hmac');
-
-    // دالة مساعدة لتحويل القيم البوليانية إلى نصوص "true" أو "false" كما تطلبها Paymob
-    $boolToString = function ($value) {
-        if (is_bool($value)) {
-            return $value ? 'true' : 'false';
+            return $this->payWithvisa($request, $order);
         }
-        if ($value === 'true' || $value === 'false') {
-            return $value;
+
+        if ($data['payment_method'] == 'vodafone_cash') {
+            return $this->payWithWallet($request, $order, $data['phone_number']);
         }
-        return $value ?? '';
-    };
+    }
 
-    // بناء النص المشفر بالترتيب الصحيح وحساب البوليان بدقة
-    $data = implode('', [
-        $obj['amount_cents'] ?? '',
-        $obj['created_at'] ?? '',
-        $obj['currency'] ?? '',
-        $boolToString($obj['error_occured'] ?? ''),
-        $boolToString($obj['has_parent_transaction'] ?? ''),
-        $obj['id'] ?? '',
-        $obj['integration_id'] ?? '',
-        $boolToString($obj['is_3d_secure'] ?? ''),
-        $boolToString($obj['is_auth'] ?? ''),
-        $boolToString($obj['is_capture'] ?? ''),
-        $boolToString($obj['is_refunded'] ?? ''),
-        $boolToString($obj['is_standalone_payment'] ?? ''),
-        $boolToString($obj['is_voided'] ?? ''),
-        $obj['order']['id'] ?? '',
-        $obj['owner'] ?? '',
-        $boolToString($obj['pending'] ?? ''),
-        $obj['source_data']['pan'] ?? '',
-        $obj['source_data']['sub_type'] ?? '',
-        $obj['source_data']['type'] ?? '',
-        $boolToString($obj['success'] ?? ''),
-    ]);
+    // 3️⃣ الـ Webhook المطور والآمن 100% من بايموب لعدم تكرار الطلبات والتحويل التلقائي المعزز بالـ Logs
+    public function webhook(Request $request)
+    { 
+        Log::info('Paymob Webhook Reached');
+        
+        $obj = $request->input('obj');
+        if (!$obj) {
+            return response()->json(['message' => 'Invalid payload'], 400);
+        }
 
-    $calculatedHmac = hash_hmac('sha512', $data, env('PAYMOB_HMAC_SECRET'));
+        $receivedHmac = $request->input('hmac');
 
-    if (!hash_equals($calculatedHmac, $receivedHmac)) {
-        \Log::error('HMAC Mismatch!', [
-            'received' => $receivedHmac,
-            'calculated' => $calculatedHmac
+        $boolToString = function ($value) {
+            if (is_bool($value)) {
+                return $value ? 'true' : 'false';
+            }
+            if ($value === 'true' || $value === 'false') {
+                return $value;
+            }
+            return $value ?? '';
+        };
+
+        $data = implode('', [
+            $obj['amount_cents'] ?? '',
+            $obj['created_at'] ?? '',
+            $obj['currency'] ?? '',
+            $boolToString($obj['error_occured'] ?? ''),
+            $boolToString($obj['has_parent_transaction'] ?? ''),
+            $obj['id'] ?? '',
+            $obj['integration_id'] ?? '',
+            $boolToString($obj['is_3d_secure'] ?? ''),
+            $boolToString($obj['is_auth'] ?? ''),
+            $boolToString($obj['is_capture'] ?? ''),
+            $boolToString($obj['is_refunded'] ?? ''),
+            $boolToString($obj['is_standalone_payment'] ?? ''),
+            $boolToString($obj['is_voided'] ?? ''),
+            $obj['order']['id'] ?? '',
+            $obj['owner'] ?? '',
+            $boolToString($obj['pending'] ?? ''),
+            $obj['source_data']['pan'] ?? '',
+            $obj['source_data']['sub_type'] ?? '',
+            $obj['source_data']['type'] ?? '',
+            $boolToString($obj['success'] ?? ''),
         ]);
-        return response()->json(['message' => 'Invalid HMAC'], 403);
-    }
 
-    // التأكد من نجاح المعاملة
-    if ($obj['success'] === true || $obj['success'] === 'true') {
+        $calculatedHmac = hash_hmac('sha512', $data, env('PAYMOB_HMAC_SECRET'));
+
+        if (!hash_equals($calculatedHmac, $receivedHmac)) {
+            Log::error('HMAC Mismatch!');
+            return response()->json(['message' => 'Invalid HMAC'], 403);
+        }
+
         $paymobOrderId = $obj['order']['id'];
+        $isSuccess = ($obj['success'] === true || $obj['success'] === 'true');
 
-        // 1️⃣ أولاً: فحص إذا كان أوردر منتجات عادي
+        // حماية هامة: لو لم تكن العملية ناجحة تماماً لا تقم بإجراء تعديلات داتابيز
+        if (!$isSuccess) {
+            Log::info('Webhook received but transaction not successful yet for order: ' . $paymobOrderId);
+            return response()->json(['message' => 'Transaction not successful, skipping.']);
+        }
+
+        // 1️⃣ فحص إذا كان أوردر عادي
         $order = Order::where('paymob_order_id', $paymobOrderId)->first();
         if ($order) {
             $order->update([
@@ -332,15 +333,14 @@ public function webhook(Request $request)
                 'status'         => 'confirmed',
                 'transaction_id' => $obj['id'],
             ]);
-            return response()->json(['message' => 'Order updated']);
+            return response()->json(['message' => 'Order updated successfully']);
         }
 
-        // 2️⃣ ثانياً: فحص طلب توثيق معلق (PendingVerification)
+        // 2️⃣ فحص طلب توثيق مؤقت (PendingVerification) ونقله فوراً ومسحه
         $pending = PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
         if ($pending) {
-            \Log::info('Processing PendingVerification for ID: ' . $paymobOrderId);
+            Log::info('Processing verification conversion for paymob order: ' . $paymobOrderId);
 
-            // نقل البيانات للجدول الرئيسي للتوثيق
             VerificationRequest::create([
                 'user_id'         => $pending->user_id,
                 'role'            => $pending->role,
@@ -354,33 +354,35 @@ public function webhook(Request $request)
                 'paymob_order_id' => $paymobOrderId
             ]);
 
-            // مسح الريكوست المؤقت بنجاح
+            // مسح الريكوست المؤقت بنجاح من الداتابيز لمنع التكرار
             $pending->delete();
 
-            \Log::info('Pending verification converted to permanent request.');
-            return response()->json(['message' => 'Verification request created']);
+            Log::info('Pending verification deleted and permanent request stored successfully.');
+            return response()->json(['message' => 'Verification request created and pending deleted']);
         }
+
+        // 3️⃣ حماية مكررة لو وصل ويب هوك مكرر للتوثيق المحفوظ مسبقاً
+        $verification = VerificationRequest::where('paymob_order_id', $paymobOrderId)->first();
+        if ($verification) {
+            $verification->update([
+                'payment_status' => 'paid',
+                'transaction_id' => $obj['id'],
+            ]);
+            return response()->json(['message' => 'Verification already processed']);
+        }
+
+        return response()->json(['message' => 'No matching records found']);
     }
 
-    return response()->json(['message' => 'ok']);
-}
-
-
-
-
-
-
-
-
-// دفع فيزا للتوثيق
-public function payWithVisaForVerification(Request $request, $verificationRequest)
+    // دفع فيزا للتوثيق
+    // 1️⃣ دفع فيزا للتوثيق - نسخة معدلة ومؤمنة
+public function payWithVisaForVerification(Request $request, $pendingVerification)
 {
     $user   = auth()->user();
-    $amount = $verificationRequest->price;
+    $amount = $pendingVerification->price;
     $base   = env("PAYMOB_BASE_URL");
     $amount_cents = $amount * 100;
 
-    // 1. Token
     $token = Http::post($base . '/api/auth/tokens', [
         'api_key' => env('PAYMOB_API_KEY')
     ])->json()['token'] ?? null;
@@ -389,7 +391,6 @@ public function payWithVisaForVerification(Request $request, $verificationReques
         return response()->json(['message' => 'Paymob auth failed'], 500);
     }
 
-    // 2. Order
     $paymobOrder = Http::post($base . '/api/ecommerce/orders', [
         'auth_token'      => $token,
         'delivery_needed' => false,
@@ -404,60 +405,48 @@ public function payWithVisaForVerification(Request $request, $verificationReques
         return response()->json(['message' => 'Failed to create Paymob order'], 500);
     }
 
-    // احفظ الـ paymob_order_id عشان الـ webhook يلاقيه
-    $verificationRequest->update(['paymob_order_id' => $paymob_order_id]);
+    // 🔥 تعديل حاسم: حفظ يدوي صريح لضمان التخزين بالداتابيز وتجنب مشاكل الـ $fillable
+    $pendingVerification->paymob_order_id = $paymob_order_id;
+    $pendingVerification->save();
 
-    // 3. Payment Key
- $response = Http::post($base . '/api/acceptance/payment_keys', [
-    'auth_token'     => $token,
-    'amount_cents'   => $amount_cents,
-    'expiration'     => 3600,
-    'order_id'       => $paymob_order_id,
-    'currency'       => 'EGP',
-    'integration_id' => env('PAYMOB_VISA_INTEGRATION_ID'),
-    'billing_data'   => [
-        'first_name'      => $user->name,
-        'last_name'       => $user->name,
-        'email'           => $user->email,
-        'phone_number'    => $user->phone ?? '01000000000',
-        'apartment'       => 'NA',
-        'floor'           => 'NA',
-        'street'          => 'NA',
-        'building'        => 'NA',
-        'shipping_method' => 'NA',
-        'postal_code'     => '12345',
-        'city'            => 'Cairo',
-        'country'         => 'EG',
-        'state'           => 'Cairo',
-    ]
-]);
+    Log::info('Saved paymob_order_id into PendingVerification ID: ' . $pendingVerification->id . ' with Order ID: ' . $paymob_order_id);
+
+    $response = Http::post($base . '/api/acceptance/payment_keys', [
+        'auth_token'     => $token,
+        'amount_cents'   => $amount_cents,
+        'expiration'     => 3600,
+        'order_id'       => $paymob_order_id,
+        'currency'       => 'EGP',
+        'integration_id' => env('PAYMOB_VISA_INTEGRATION_ID'),
+        'billing_data'   => [
+            'first_name'      => $user->name ?? 'User',
+            'last_name'       => $user->name ?? 'Test',
+            'email'           => $user->email ?? 'test@test.com',
+            'phone_number'    => $user->phone ?? '01000000000',
+            'apartment'       => 'NA', 'floor' => 'NA', 'street' => 'NA', 'building' => 'NA',
+            'shipping_method' => 'NA', 'postal_code' => '12345', 'city' => 'Cairo', 'country' => 'EG', 'state' => 'Cairo',
+        ]
+    ]);
 
     $payment_token = $response->json()['token'] ?? null;
 
-if (!$payment_token) {
-    return response()->json([
-        'message' => 'Failed to generate payment key'
-    ],500);
+    if (!$payment_token) {
+        return response()->json(['message' => 'Failed to generate payment key'], 500);
+    }
+
+    $url = 'https://accept.paymob.com/api/acceptance/iframes/' . env('PAYMOB_IFRAME_ID') . '?payment_token=' . $payment_token;
+
+    return response()->json(['payment_url' => $url]);
 }
 
-$url = 'https://accept.paymob.com/api/acceptance/iframes/'
-    . env('PAYMOB_IFRAME_ID')
-    . '?payment_token=' . $payment_token;
-
-return response()->json([
-    'payment_url' => $url
-]);
-}
-
-// دفع فودافون كاش للتوثيق
-public function payWithWalletForVerification(Request $request, $verificationRequest, $phone_number)
+// 2️⃣ دفع فودافون كاش للتوثيق - نسخة معدلة ومؤمنة
+public function payWithWalletForVerification(Request $request, $pendingVerification, $phone_number)
 {
     $user   = auth()->user();
-    $amount = $verificationRequest->price;
+    $amount = $pendingVerification->price;
     $base   = env("PAYMOB_BASE_URL");
     $amount_cents = $amount * 100;
 
-    // 1. Token
     $token = Http::post($base . '/api/auth/tokens', [
         'api_key' => env('PAYMOB_API_KEY')
     ])->json()['token'] ?? null;
@@ -466,7 +455,6 @@ public function payWithWalletForVerification(Request $request, $verificationRequ
         return response()->json(['message' => 'Paymob auth failed'], 500);
     }
 
-    // 2. Order
     $paymobOrder = Http::post($base . '/api/ecommerce/orders', [
         'auth_token'      => $token,
         'delivery_needed' => false,
@@ -481,9 +469,12 @@ public function payWithWalletForVerification(Request $request, $verificationRequ
         return response()->json(['message' => 'Failed to create Paymob order'], 500);
     }
 
-    $verificationRequest->update(['paymob_order_id' => $paymob_order_id]);
+    // 🔥 تعديل حاسم: حفظ يدوي صريح لضمان التخزين بالداتابيز وتجنب مشاكل الـ $fillable
+    $pendingVerification->paymob_order_id = $paymob_order_id;
+    $pendingVerification->save();
 
-    // 3. Payment Key
+    Log::info('Saved paymob_order_id into PendingVerification ID: ' . $pendingVerification->id . ' with Order ID: ' . $paymob_order_id);
+
     $payment_token = Http::post($base . '/api/acceptance/payment_keys', [
         'auth_token'     => $token,
         'amount_cents'   => $amount_cents,
@@ -492,15 +483,12 @@ public function payWithWalletForVerification(Request $request, $verificationRequ
         'currency'       => 'EGP',
         'integration_id' => env('PAYMOB_WALLET_INTEGRATION_ID'),
         'billing_data'   => [
-            'first_name'      => $user->name,
-            'last_name'       => $user->name,
-            'email'           => $user->email,
+            'first_name'      => $user->name ?? 'User',
+            'last_name'       => $user->name ?? 'Test',
+            'email'           => $user->email ?? 'test@test.com',
             'phone_number'    => $phone_number,
-            'apartment'       => 'NA', 'floor'           => 'NA',
-            'street'          => 'NA', 'building'        => 'NA',
-            'shipping_method' => 'NA', 'postal_code'     => 'NA',
-            'city'            => 'Cairo', 'country'      => 'EG',
-            'state'           => 'NA',
+            'apartment'       => 'NA', 'floor' => 'NA', 'street' => 'NA', 'building' => 'NA',
+            'shipping_method' => 'NA', 'postal_code' => 'NA', 'city' => 'Cairo', 'country' => 'EG', 'state' => 'NA',
         ]
     ])->json()['token'] ?? null;
 
@@ -508,85 +496,100 @@ public function payWithWalletForVerification(Request $request, $verificationRequ
         return response()->json(['message' => 'Failed to generate payment key'], 500);
     }
 
-    // 4. Wallet redirect URL
-    // 4. Wallet redirect URL
-$walletResponse = Http::post(
-    $base . '/api/acceptance/payments/pay',
-    [
+    $walletResponse = Http::post($base . '/api/acceptance/payments/pay', [
         'source' => [
             'identifier' => $phone_number,
             'subtype' => 'WALLET',
         ],
         'payment_token' => $payment_token,
-    ]
-);
+    ]);
 
+    $walletData = $walletResponse->json();
+    $url = $walletData['iframe_redirection_url']
+        ?? $walletData['iframe_url']
+        ?? $walletData['redirection_url']
+        ?? $walletData['redirect_url']
+        ?? null;
 
+    if (!$url) {
+        return response()->json(['message' => 'Failed to get wallet payment URL', 'paymob_response' => $walletData], 500);
+    }
 
-
-$walletData = $walletResponse->json();
-
-$url =
-    $walletData['iframe_redirection_url']
-    ?? $walletData['iframe_url']
-    ?? $walletData['redirection_url']
-    ?? $walletData['redirect_url']
-    ?? null;
-
-    
-  if (!$url) {
-    return response()->json([
-        'message' => 'Failed to get wallet payment URL',
-        'paymob_response' => $walletData
-    ], 500);
-}
     return response()->json([
         'message'         => 'تم إنشاء طلب التوثيق، أكمل الدفع',
-        'verification_id' => $verificationRequest->id,
+        'verification_id' => $pendingVerification->id,
         'payment_url'     => $url,
         'amount'          => $amount,
     ]);
 }
+    public function processRefund($verificationRequest)
+    {
+        $token = $this->getPaymobToken();
+        if (!$token) return false;
 
-
-
-
-
-public function processRefund($verificationRequest)
-{
-    $token = $this->getPaymobToken();
-
-    if (!$token) return false;
-
-    $response = Http::post(
-        env('PAYMOB_BASE_URL') . '/api/acceptance/void_refund/refund',
-        [
+        $response = Http::post(env('PAYMOB_BASE_URL') . '/api/acceptance/void_refund/refund', [
             'auth_token'     => $token,
             'transaction_id' => $verificationRequest->transaction_id,
             'amount_cents'   => $verificationRequest->price * 100,
-        ]
-    );
+        ]);
 
-    if ($response->successful()) {
-        $verificationRequest->update(['payment_status' => 'refunded']);
-        
-        // ابعت notification للـ user
-        $verificationRequest->user->notify(
-            new \App\Notifications\VerificationRefunded($verificationRequest)
-        );
+        if ($response->successful()) {
+            $verificationRequest->update(['payment_status' => 'refunded']);
+            $verificationRequest->user->notify(new \App\Notifications\VerificationRefunded($verificationRequest));
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
-    return false;
-}
+    private function getPaymobToken()
+    {
+        return Http::post(env('PAYMOB_BASE_URL') . '/api/auth/tokens', [
+            'api_key' => env('PAYMOB_API_KEY')
+        ])->json()['token'] ?? null;
+    }
 
-private function getPaymobToken()
-{
-    return Http::post(env('PAYMOB_BASE_URL') . '/api/auth/tokens', [
-        'api_key' => env('PAYMOB_API_KEY')
-    ])->json()['token'] ?? null;
-}
+    public function requestToVerify(Request $request)
+    {
+        $data = $request->validate([
+            'name'            => 'required|string',
+            'role'            => 'required|in:coach,Seller,vendor',
+            'documents'       => 'nullable|array',
+            'documents.*'     => 'file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'payment_method'  => 'required|in:visa,vodafone_cash',
+            'phone_number'    => 'required_if:payment_method,vodafone_cash|string',
+        ]);
 
+        $exist = VerificationRequest::where('user_id', auth()->id())
+            ->whereIn('status', ['pending', 'approved'])
+            ->exists();
 
+        if ($exist) {
+            return response()->json(['message' => 'عندك طلب قيد المراجعة بالفعل'], 422);
+        }
+
+        $documentPaths = [];
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $file) {
+                $documentPaths[] = $file->store('verifications', 'public');
+            }
+        }
+
+        $pendingVerification = PendingVerification::create([
+            'user_id'        => auth()->id(),
+            'role'           => $data['role'],
+            'documents'      => $documentPaths,
+            'payment_method' => $data['payment_method'],
+            'phone_number'   => $request->phone_number,
+            'price'          => 1250,
+        ]);
+
+        if ($data['payment_method'] == 'visa') {
+            return $this->payWithVisaForVerification($request, $pendingVerification);
+        }
+
+        if ($data['payment_method'] == 'vodafone_cash') {
+            return $this->payWithWalletForVerification($request, $pendingVerification, $request->phone_number);
+        }
+    }
 }
