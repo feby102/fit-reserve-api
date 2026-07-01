@@ -189,6 +189,8 @@ Route::get('/pages/{id}', [PageController::class, 'show']);
 Route::post('wallet/transfer',[UserController::class,'transfer']);
  Route::post('/verification/apply',  [UserController::class, 'requestToVerify']);
  Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
+
+ 
 });
 
 

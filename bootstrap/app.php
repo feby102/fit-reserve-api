@@ -13,6 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        
+        $middleware->validateCsrfTokens(except: [
+        'paymob/webhook', // تأكدي إن ده نفس مسار الراوت في api.php
+    ]);
+        
         $middleware->alias(['admin'=>\App\Http\Middleware\AdminMiddleware::class,]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

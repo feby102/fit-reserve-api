@@ -286,33 +286,41 @@ class PaymentController extends Controller
             return $value ?? '';
         };
 
-        $data = implode('', [
-            $obj['amount_cents'] ?? '',
-            $obj['created_at'] ?? '',
-            $obj['currency'] ?? '',
-            $boolToString($obj['error_occured'] ?? ''),
-            $boolToString($obj['has_parent_transaction'] ?? ''),
-            $obj['id'] ?? '',
-            $obj['integration_id'] ?? '',
-            $boolToString($obj['is_3d_secure'] ?? ''),
-            $boolToString($obj['is_auth'] ?? ''),
-            $boolToString($obj['is_capture'] ?? ''),
-            $boolToString($obj['is_refunded'] ?? ''),
-            $boolToString($obj['is_standalone_payment'] ?? ''),
-            $boolToString($obj['is_voided'] ?? ''),
-            $obj['order']['id'] ?? '',
-            $obj['owner'] ?? '',
-            $boolToString($obj['pending'] ?? ''),
-            $obj['source_data']['pan'] ?? '',
-            $obj['source_data']['sub_type'] ?? '',
-            $obj['source_data']['type'] ?? '',
-            $boolToString($obj['success'] ?? ''),
-        ]);
+       // قراءة المفتاح السري من الـ .env
+$secret = env('PAYMOB_HMAC_SECRET'); 
 
-        $calculatedHmac = hash_hmac('sha512', $data, env('PAYMOB_HMAC_SECRET'));
+// حساب الـ HMAC بناءً على البيانات القادمة من بايموب (الترتيب هنا مهم جداً حسب توثيق بايموب)
+$hmacData = [
+    $request->input('obj.amount_cents'),
+    $request->input('obj.created_at'),
+    $request->input('obj.currency'),
+    $request->input('obj.error_occured'),
+    $request->input('obj.has_parent_transaction'),
+    $request->input('obj.id'),
+    $request->input('obj.integration_id'),
+    $request->input('obj.is_3d_secure'),
+    $request->input('obj.is_auth'),
+    $request->input('obj.is_capture'),
+    $request->input('obj.is_voided'),
+    $request->input('obj.order.id'),
+    $request->input('obj.owner'),
+    $request->input('obj.pending'),
+    $request->input('obj.source_data.pan'),
+    $request->input('obj.source_data.sub_type'),
+    $request->input('obj.source_data.type'),
+    $request->input('obj.success'),
+];
 
-        if (!hash_equals($calculatedHmac, $receivedHmac)) {
-            Log::error('HMAC Mismatch!');
+$hmacString = implode('', $hmacData);
+$calculated_hmac = hash_hmac('sha512', $hmacString, $secret);
+
+// استقبال الـ hmac القادم في الـ URL من بايموب وتأمين عدم وجود null
+$hmac = $request->query('hmac') ?? '';
+
+// المقارنة الآمنة لمنع الـ TypeError
+if (hash_equals($calculated_hmac, $hmac)) {
+    // 🟢 مبروك الريكوست حقيقي 100%! نفذي مسح الـ Pending هنا
+     Log::error('HMAC Mismatch!');
             return response()->json(['message' => 'Invalid HMAC'], 403);
         }
 
