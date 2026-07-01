@@ -270,116 +270,104 @@ class PaymentController extends Controller
 
 
 public function webhook(Request $request)
-{ 
-    \Log::info('Webhook reached');
-    \Log::info($request->all());
+{   
+    \Log::info('Paymob Webhook Reached');
     
     $obj = $request->input('obj');
-
     if (!$obj) {
-        return response()->json([
-            'message' => 'Invalid payload'
-        ], 400);
+        return response()->json(['message' => 'Invalid payload'], 400);
     }
 
     $receivedHmac = $request->input('hmac');
 
+    // دالة مساعدة لتحويل القيم البوليانية إلى نصوص "true" أو "false" كما تطلبها Paymob
+    $boolToString = function ($value) {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+        if ($value === 'true' || $value === 'false') {
+            return $value;
+        }
+        return $value ?? '';
+    };
+
+    // بناء النص المشفر بالترتيب الصحيح وحساب البوليان بدقة
     $data = implode('', [
         $obj['amount_cents'] ?? '',
         $obj['created_at'] ?? '',
         $obj['currency'] ?? '',
-        $obj['error_occured'] ?? '',
-        $obj['has_parent_transaction'] ?? '',
+        $boolToString($obj['error_occured'] ?? ''),
+        $boolToString($obj['has_parent_transaction'] ?? ''),
         $obj['id'] ?? '',
         $obj['integration_id'] ?? '',
-        $obj['is_3d_secure'] ?? '',
-        $obj['is_auth'] ?? '',
-        $obj['is_capture'] ?? '',
-        $obj['is_refunded'] ?? '',
-        $obj['is_standalone_payment'] ?? '',
-        $obj['is_voided'] ?? '',
+        $boolToString($obj['is_3d_secure'] ?? ''),
+        $boolToString($obj['is_auth'] ?? ''),
+        $boolToString($obj['is_capture'] ?? ''),
+        $boolToString($obj['is_refunded'] ?? ''),
+        $boolToString($obj['is_standalone_payment'] ?? ''),
+        $boolToString($obj['is_voided'] ?? ''),
         $obj['order']['id'] ?? '',
         $obj['owner'] ?? '',
-        $obj['pending'] ?? '',
+        $boolToString($obj['pending'] ?? ''),
         $obj['source_data']['pan'] ?? '',
         $obj['source_data']['sub_type'] ?? '',
         $obj['source_data']['type'] ?? '',
-        $obj['success'] ?? '',
+        $boolToString($obj['success'] ?? ''),
     ]);
 
-    $calculatedHmac = hash_hmac(
-        'sha512',
-        $data,
-        env('PAYMOB_HMAC_SECRET')
-    );
+    $calculatedHmac = hash_hmac('sha512', $data, env('PAYMOB_HMAC_SECRET'));
 
     if (!hash_equals($calculatedHmac, $receivedHmac)) {
-        return response()->json([
-            'message' => 'Invalid HMAC'
-        ], 403);
+        \Log::error('HMAC Mismatch!', [
+            'received' => $receivedHmac,
+            'calculated' => $calculatedHmac
+        ]);
+        return response()->json(['message' => 'Invalid HMAC'], 403);
     }
 
-    // تأكيد أن العملية نجحت تماماً في بايموب
-    if ($obj['success'] === true) {
+    // التأكد من نجاح المعاملة
+    if ($obj['success'] === true || $obj['success'] === 'true') {
         $paymobOrderId = $obj['order']['id'];
 
-        // 1️⃣ أولاً: التحقق لو كان أوردر عادي (منتجات/كورسات مثلاً)
+        // 1️⃣ أولاً: فحص إذا كان أوردر منتجات عادي
         $order = Order::where('paymob_order_id', $paymobOrderId)->first();
-
         if ($order) {
             $order->update([
                 'payment_status' => 'paid',
                 'status'         => 'confirmed',
                 'transaction_id' => $obj['id'],
             ]);
-
             return response()->json(['message' => 'Order updated']);
         }
 
-        // 2️⃣ ثانياً: التحقق لو كان طلب توثيق قيد الانتظار (PendingVerification)
+        // 2️⃣ ثانياً: فحص طلب توثيق معلق (PendingVerification)
         $pending = PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
-
         if ($pending) {
-            \Log::info('Creating verification request for order: ' . $paymobOrderId);
+            \Log::info('Processing PendingVerification for ID: ' . $paymobOrderId);
 
-            // تحويل البيانات للجدول النهائي للتوثيق
+            // نقل البيانات للجدول الرئيسي للتوثيق
             VerificationRequest::create([
                 'user_id'         => $pending->user_id,
                 'role'            => $pending->role,
-                'documents'       => $pending->documents, // تأكد إن الـ Model بيعمل Cast للـ Array
+                'documents'       => $pending->documents, 
                 'payment_method'  => $pending->payment_method,
                 'phone_number'    => $pending->phone_number,
                 'price'           => $pending->price,
                 'payment_status'  => 'paid',
-                'status'          => 'pending', // هيفضل pending لحد ما الأدمن يوافق
+                'status'          => 'pending', 
                 'transaction_id'  => $obj['id'],
                 'paymob_order_id' => $paymobOrderId
             ]);
 
-            // مسح الطلب المؤقت بنجاح
+            // مسح الريكوست المؤقت بنجاح
             $pending->delete();
-            
-            \Log::info('Pending deleted successfully');
 
-            return response()->json([
-                'message' => 'Verification request created'
-            ]);
-        }
-
-        // 3️⃣ ثالثاً: لو كان طلب التوثيق اتسيف قبل كده ووصل ويب هوك مكرر أو تحديث
-        $verification = VerificationRequest::where('paymob_order_id', $paymobOrderId)->first();
-        if ($verification) {
-            $verification->update([
-                'payment_status' => 'paid',
-                'transaction_id' => $obj['id'],
-            ]);
-            return response()->json(['message' => 'Verification already processed and updated']);
+            \Log::info('Pending verification converted to permanent request.');
+            return response()->json(['message' => 'Verification request created']);
         }
     }
 
-    return response()->json([
-        'message' => 'ok'
-    ]);
+    return response()->json(['message' => 'ok']);
 }
 
 
