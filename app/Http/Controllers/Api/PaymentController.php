@@ -334,8 +334,13 @@ if (hash_equals($calculated_hmac, $hmac)) {
         }
 
         // 1️⃣ فحص إذا كان أوردر عادي
-        $order = Order::where('paymob_order_id', $paymobOrderId)->first();
-        if ($order) {
+// 🟢 السطر الجديد الصح:
+$pending = \App\Models\PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
+
+if (!$pending) {
+    Log::error("Pending verification not found for Paymob Order: " . $paymobOrderId);
+    return response()->json(['message' => 'Order not found'], 404);
+}        if ($order) {
             $order->update([
                 'payment_status' => 'paid',
                 'status'         => 'confirmed',
