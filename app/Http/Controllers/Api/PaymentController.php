@@ -363,91 +363,96 @@ if (!hash_equals($calculated_hmac, $hmac)) {
 
         }
 
-        $order = Order::where('paymob_order_id', $paymobOrderId)->first();
+$booking = null;
+    $order = null;
 
-$booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
-
-if ($booking) {
-
-    DB::transaction(function () use ($booking) {
-
-        $booking->update([
-            'payment_status' => 'paid',
-            'status' => 'confirmed'
-        ]);
-
-        $stadium = $booking->stadium;
-        $owner = $stadium->vendor;
-
-        if ($owner) {
-
-            $amount = $booking->total_price;
-
-            $platformFee = $amount * 0.10;
-            $ownerAmount = $amount - $platformFee;
-
-            app(\App\Services\WalletService::class)->deposit(
-                $owner,
-                $ownerAmount,
-                "Booking #{$booking->id} payout"
-            );
-        }
-    });
-
-    return response()->json([
-        'message' => 'Booking paid successfully'
-    ]);
-}
-
-
-
-
-
-if ($order) {
-
-    if ($order->payment_status == 'paid') {
-        return response()->json([
-            'message' => 'Order already processed'
-        ]);
+    if ($merchantOrderId) {
+        $booking = Booking::find($merchantOrderId);
+        $order = Order::find($merchantOrderId);
     }
 
-    DB::transaction(function () use ($order) {
+    if (!$booking) {
+        $booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
+    }
+    if (!$order) {
+        $order = Order::where('paymob_order_id', $paymobOrderId)->first();
+    }
 
-      app(\App\Services\WalletService::class)->credit(
-    $order->user,
-    $order->total_price,
-    'order_payment',
-    'Order #' . $order->id
-);
-        $order->load('items.product.seller');
-$walletService = app(\App\Services\WalletService::class);
+    // ⚽ معالجة حجز الملعب
+    if ($booking) {
+        if ($booking->payment_status == 'paid') {
+            return response()->json(['message' => 'Booking already processed'], 200);
+        }
 
-foreach ($order->items as $item) {
+        DB::transaction(function () use ($booking) {
+            $booking->update([
+                'payment_status' => 'paid',
+                'status' => 'confirmed'
+            ]);
 
-    $seller = $item->product->seller;
+            $stadium = $booking->stadium;
+            $owner = $stadium->vendor ?? null;
 
-    if (!$seller) continue;
+            if ($owner) {
+                $amount = $booking->total_price;
+                $platformFee = $amount * 0.10; // عمولة المنصة 10%
+                $ownerAmount = $amount - $platformFee;
 
-    $total = $item->price * $item->quantity;
+                app(\App\Services\WalletService::class)->deposit(
+                    $owner,
+                    $ownerAmount,
+                    "Booking #{$booking->id} payout"
+                );
+            }
+        });
 
-    $platformFee = $total * 0.10;
-    $sellerAmount = $total - $platformFee;
+        return response()->json(['message' => 'Booking paid successfully'], 200);
+    }
 
-    // تحويل للبائع
-    $walletService->deposit(
-        $seller,
-        $sellerAmount,
-        "Order #{$order->id} item payout"
-    );
-}    });
+    // 🛒 معالجة الأوردر العادي (تم الإصلاح والتأكيد هنا)
+    if ($order) {
+        if ($order->payment_status == 'paid') {
+            return response()->json(['message' => 'Order already processed'], 200);
+        }
 
-    return response()->json([
-        'message' => 'Order paid successfully'
-    ]);
+        DB::transaction(function () use ($order) {
+            
+            // ✅ السطر السحري اللي كان ناقص: تحديث حالة الأوردر المحلي فوراً
+            $order->update([
+                'payment_status' => 'paid',
+                'status'         => 'confirmed'
+            ]);
+
+            // توزيع الأرباح على البائعين المشتركين في الأوردر
+            $order->load('items.product.seller');
+            $walletService = app(\App\Services\WalletService::class);
+
+            foreach ($order->items as $item) {
+                $seller = $item->product->seller;
+                if (!$seller) continue;
+
+                $total = $item->price * $item->quantity;
+                $platformFee = $total * 0.10; // عمولة المنصة 10%
+                $sellerAmount = $total - $platformFee;
+
+                // تحويل المستحقات لمحفظة البائع
+                $walletService->deposit(
+                    $seller,
+                    $sellerAmount,
+                    "Order #{$order->id} item payout"
+                );
+            }
+        });
+
+        return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
+    }
+
+    // في حال عدم مطابقة أي سجل
+    return response()->json(['message' => 'No matching records found'], 200);
 }
 
-        return response()->json(['message' => 'No matching records found']);
-    }   // 1️⃣ دفع فيزا للتوثيق - نسخة معدلة ومؤمنة
+
+
 public function payWithVisaForVerification(Request $request, $pendingVerification)
 {
     $user   = auth()->user();
