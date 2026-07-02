@@ -36,10 +36,18 @@ public function videos()
     return $this->hasMany(Video::class);
 }
 
-public function vendor(){
-    return $this->belongsTo(Vendor::class);
-}
+// public function vendor(){
+//     return $this->belongsTo(Vendor::class);
+// }
 
+
+
+
+
+public function vendor(){
+
+return $this->belongsTo(User::class, 'vendor_id');
+}
 
 
 public function  privateCoich()

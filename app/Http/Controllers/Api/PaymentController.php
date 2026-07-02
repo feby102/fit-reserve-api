@@ -304,13 +304,10 @@ class PaymentController extends Controller
 
         // استقبال الـ hmac القادم في الـ URL من بايموب
         $hmac = $request->query('hmac') ?? $request->input('hmac') ?? '';
-
-        // تصحيح الشرط: لو الـ HMAC غير متطابق نرفض الريكوست، لو متطابق يكمل عادي
-        // if (!hash_equals($calculated_hmac, $hmac)) {
-        //     Log::error('HMAC Mismatch!');
-        //     return response()->json(['message' => 'Invalid HMAC'], 403);
-        // }
-
+if (!hash_equals($calculated_hmac, $hmac)) {
+    Log::error('HMAC Mismatch!');
+    return response()->json(['message' => 'Invalid HMAC'], 403);
+}
         // استخراج المعرفات مع حماية التأكد من وجود الـ keys لمنع الـ Undefined array key
         $paymobOrderId = $obj['order']['id'] ?? null;
         $transactionId = $obj['id'] ?? null;

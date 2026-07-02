@@ -30,25 +30,25 @@ class AuthController extends Controller
 
     return DB::transaction(function () use ($validatedData) {
 
-      if ($validatedData['role'] === 'vendor') {
+//       if ($validatedData['role'] === 'vendor') {
 
-    $vendor = Vendor::create([
-        'name'     => $validatedData['name'],
-        'phone'    => $validatedData['phone'],
-        'city'     => $validatedData['city'],
-        'area'     => $validatedData['area'],
-        'email'    => $validatedData['email'],
-        'password' => Hash::make($validatedData['password']),
-    ]);
+//     $vendor = Vendor::create([
+//         'name'     => $validatedData['name'],
+//         'phone'    => $validatedData['phone'],
+//         'city'     => $validatedData['city'],
+//         'area'     => $validatedData['area'],
+//         'email'    => $validatedData['email'],
+//         'password' => Hash::make($validatedData['password']),
+//     ]);
 
-     $token = $vendor->createToken('vendor-token')->plainTextToken;
+//      $token = $vendor->createToken('vendor-token')->plainTextToken;
 
-    return response()->json([
-        'message' => 'Vendor registered successfully',
-        'vendor'  => $vendor,
-        'token'   => $token   
-    ], 201);
-}
+//     return response()->json([
+//         'message' => 'Vendor registered successfully',
+//         'vendor'  => $vendor,
+//         'token'   => $token   
+//     ], 201);
+// }
          $referrer = null;
 
         if (!empty($validatedData['referral_code'])) {
@@ -68,6 +68,8 @@ class AuthController extends Controller
             'email'            => $validatedData['email'],
             'referred_by'      => $referrer ? $referrer->id : null,
             'my_referral_code' => Str::upper(Str::random(8)),
+                'balance' => 0
+
         ]);
 
         if ($referrer) {
@@ -77,8 +79,13 @@ class AuthController extends Controller
                 'reward'      => 50
             ]);
 
-            $referrer->increment('wallet_balance', 50);
-        }
+$referrer->wallet->increment('balance', 50);
+
+$referrer->wallet->transactions()->create([
+    'type' => 'credit',
+    'amount' => 50,
+    'description' => 'Referral reward'
+]);        }
 
         $token = $user->createToken('api-token')->plainTextToken;
 
@@ -111,18 +118,18 @@ class AuthController extends Controller
         ]);
     }
 
-     $vendor = Vendor::where('phone', $request->phone)->first();
+     //$vendor = Vendor::where('phone', $request->phone)->first();
 
-    if ($vendor && Hash::check($request->password, $vendor->password)) {
+//     if ($vendor && Hash::check($request->password, $vendor->password)) {
 
-$token = $vendor->createToken('vendor-token')->plainTextToken;
-        return response()->json([
-            'message' => 'تم تسجيل دخول التاجر بنجاح',
-            'type'    => 'vendor',
-            'vendor'  => $vendor,
-            'token'   => $token
-        ]);
-    }
+// $token = $vendor->createToken('vendor-token')->plainTextToken;
+//         return response()->json([
+//             'message' => 'تم تسجيل دخول التاجر بنجاح',
+//             'type'    => 'vendor',
+//             'vendor'  => $vendor,
+//             'token'   => $token
+//         ]);
+//     }
 
     return response()->json([
         'message' => 'بيانات الدخول غير صحيحة'
@@ -137,8 +144,9 @@ public function sendResetCode(Request $request)
 
     $email = $request->email;
 
-    // البحث في الجدولين لمعرفة من صاحب الطلب
-    $account = User::where('email', $email)->first() ?? Vendor::where('email', $email)->first();
+    //  $account = User::where('email', $email)->first() ?? Vendor::where('email', $email)->first();
+
+$account = User::where('email',$email)->first();
 
     if (!$account) {
         return response()->json([
@@ -185,7 +193,9 @@ public function sendResetCode(Request $request)
     }
 
     // البحث عن الحساب في الجدولين لتحديثه
-    $account = User::where('email', $request->email)->first() ?? Vendor::where('email', $request->email)->first();
+    // $account = User::where('email', $request->email)->first() ?? Vendor::where('email', $request->email)->first();
+
+$account = User::where('email',$request->email)->first();
 
     if ($account) {
         $account->update([

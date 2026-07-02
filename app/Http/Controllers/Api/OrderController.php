@@ -18,8 +18,7 @@ public function vendorOrders()
     $vendor = auth()->user();
 
     $orders = Order::whereHas('items.product', function ($q) use ($vendor) {
-        $q->where('vendor_id', $vendor->id);
-    })
+$q->where('seller_id', $vendor->id);    })
     ->with('items.product')
     ->get();
 
@@ -105,9 +104,9 @@ public function statistics()
 {
     $vendor = auth()->user();
 
-    $totalSales = Order::where('vendor_id', $vendor->id)->sum('total_price');
-    $totalOrders = Order::where('vendor_id', $vendor->id)->count();
-    $totalProducts = Product::where('vendor_id', $vendor->id)->count();
+    $totalSales = Order::where('seller_id', $vendor->id)->sum('total_price');
+    $totalOrders = Order::where('seller_id', $vendor->id)->count();
+    $totalProducts = Product::where('seller_id', $vendor->id)->count();
 
     return response()->json([
         'status' => true,

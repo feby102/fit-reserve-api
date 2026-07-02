@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('gyms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
+$table->foreignId('vendor_id')
+      ->constrained('users')
+      ->cascadeOnDelete();
+                  $table->string('name');
              $table->enum('type',['gym','karate']);
              $table->string('location');
              $table->text('description')->nullable();

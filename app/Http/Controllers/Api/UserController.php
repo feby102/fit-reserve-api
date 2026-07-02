@@ -223,11 +223,11 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         
-        // التحقق من البيانات المرسلة قبل التحديث لحماية قاعدة البيانات
-        $data = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|email|unique:users,email,' . $id,
-            'city' => 'sometimes|required|string|max:255',
+         $data = $request->validate([
+            'name' => 'sometimes|nullable|string|max:255',
+            'email' => 'sometimes|nullable|email|unique:users,email,' . $id,
+            'city' => 'sometimes|nullable|string|max:255',
+            'image'=>'sometimes|nullable'
         ]);
 
         $user->update($data);

@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('academies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
-            $table->string('type');
+$table->foreignId('vendor_id')
+      ->constrained('users')
+      ->cascadeOnDelete();        
+          $table->string('type');
             $table->string('name');
             $table->string('location');
             $table->boolean('is_active')->default(true);

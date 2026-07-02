@@ -139,9 +139,17 @@ return \response()->json([ 'message'=>'Gym created',
     public function update(Request $request, string $id)
     {    $vendor = auth()->user();
 
+    $data = $request->validate([
+    'name' => 'sometimes|string',
+    'type' => 'sometimes|string',
+    'location' => 'sometimes|string',
+    'description' => 'sometimes|string',
+    'image' => 'nullable|image'
+]);
+
     $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
 
-$gym->update($request->all());
+$gym->update($data);
 
 return $gym;
     }
@@ -154,6 +162,7 @@ return $gym;
  $vendor = auth()->user();
 
     $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
+    $gym->delete();
 
 return response()->json([
 
@@ -250,7 +259,7 @@ public function storePlans(Request $request, $gym_id)
         'name' => 'sometimes|string',
         'price' => 'sometimes|numeric',
         'type' => 'sometimes|in:weekly,monthly,3Month,6month,1year',
-        'hours' => 'sometimes|integer'
+        'hours_per_day' => 'sometimes|integer'
     ]);
 
     $plan->update($data);
@@ -293,7 +302,7 @@ return GymplansResource::collection($plans);
 
 public function setSchedule(Request $request,$id){
 $gym=GymSchedule::findOrFail($id);
-return  GymScheduleResource::collection($gym);
+return new GymScheduleResource($gym);
 }
 
 

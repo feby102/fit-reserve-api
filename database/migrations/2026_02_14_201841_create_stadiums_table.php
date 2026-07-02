@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('stadiums', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
-             $table->string('name');
+$table->foreignId('vendor_id')
+      ->constrained('users')
+      ->cascadeOnDelete();
+                   $table->string('name');
             $table->string('city');
             $table->string('address');
             $table->decimal('price_per_hour',10,2);
