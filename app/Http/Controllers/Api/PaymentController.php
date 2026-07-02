@@ -666,23 +666,16 @@ public function payWithWalletForVerification(Request $request, $pendingVerificat
 
 
 
-    public function paymentCallback(Request $request)
+    public function callback(Request $request)
 {
-    // بايموب بيبعت حقل اسمه success بـ true أو false
-    $isSuccess = $request->query('success');
-
-    if ($isSuccess === 'true' || $isSuccess === true) {
-        // هنا تقدري ترجعي ويو بسيط (View) أو تعملي رد مناسب لـ URL الأبلكيشن
-        return response()->json([
-            'status' => 'success',
-            'message' => 'تمت عملية الدفع بنجاح! يمكنك العودة للتطبيق الآن.'
-        ], 200);
+    // بايموب بتبعت في الـ URL متغير اسمه success بـ true أو false
+    $success = $request->query('success');
+    
+    if ($success === 'true') {
+        return response()->json(['message' => 'Payment Successful! You can return to the app now.']);
     }
 
-    return response()->json([
-        'status' => 'failed',
-        'message' => 'للأسف، فشلت عملية الدفع. يرجى المحاولة مرة أخرى.'
-    ], 400);
+    return response()->json(['message' => 'Payment Failed or Canceled.']);
 }
 
 
