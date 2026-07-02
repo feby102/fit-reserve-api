@@ -265,8 +265,7 @@ class PaymentController extends Controller
             return $this->payWithWallet($request, $order, $data['phone_number']);
         }
     }
-
- public function webhook(Request $request)
+public function webhook(Request $request)
 { 
     Log::info('Paymob Webhook Reached');
     
@@ -277,31 +276,28 @@ class PaymentController extends Controller
 
     $secret = env('PAYMOB_HMAC_SECRET'); 
 
-    // استخراج المعرفات المبكرة
+    // 1. تعريف وتأمين المتغيرات في أول الدالة لعدم حدوث Undefined variable
     $paymobOrderId = $obj['order']['id'] ?? null;
     $merchantOrderId = $obj['order']['merchant_order_id'] ?? null;
     $transactionId = $obj['id'] ?? null;
     $isSuccess = (isset($obj['success']) && ($obj['success'] === true || $obj['success'] === 'true'));
 
-    // مصفوفة الـ HMAC للتأمين (لمنع الـ 403)
+    $booking = null;
+    $order = null;
+
+    // 2. التحقق من الـ HMAC للتأمين
     $hmacData = [
-        $obj['amount_cents'] ?? '',
-        $obj['created_at'] ?? '',
-        $obj['currency'] ?? '',
+        $obj['amount_cents'] ?? '', $obj['created_at'] ?? '', $obj['currency'] ?? '',
         (isset($obj['error_occured']) && ($obj['error_occured'] === true || $obj['error_occured'] === 'true')) ? 'true' : 'false',
         (isset($obj['has_parent_transaction']) && ($obj['has_parent_transaction'] === true || $obj['has_parent_transaction'] === 'true')) ? 'true' : 'false',
-        $obj['id'] ?? '',
-        $obj['integration_id'] ?? '',
+        $obj['id'] ?? '', $obj['integration_id'] ?? '',
         (isset($obj['is_3d_secure']) && ($obj['is_3d_secure'] === true || $obj['is_3d_secure'] === 'true')) ? 'true' : 'false',
         (isset($obj['is_auth']) && ($obj['is_auth'] === true || $obj['is_auth'] === 'true')) ? 'true' : 'false',
         (isset($obj['is_capture']) && ($obj['is_capture'] === true || $obj['is_capture'] === 'true')) ? 'true' : 'false',
         (isset($obj['is_voided']) && ($obj['is_voided'] === true || $obj['is_voided'] === 'true')) ? 'true' : 'false',
-        $obj['order']['id'] ?? '',
-        $obj['owner'] ?? '',
+        $obj['order']['id'] ?? '', $obj['owner'] ?? '',
         (isset($obj['pending']) && ($obj['pending'] === true || $obj['pending'] === 'true')) ? 'true' : 'false',
-        $obj['source_data']['pan'] ?? '',
-        $obj['source_data']['sub_type'] ?? '',
-        $obj['source_data']['type'] ?? '',
+        $obj['source_data']['pan'] ?? '', $obj['source_data']['sub_type'] ?? '', $obj['source_data']['type'] ?? '',
         (isset($obj['success']) && ($obj['success'] === true || $obj['success'] === 'true')) ? 'true' : 'false',
     ];
 
@@ -320,40 +316,20 @@ class PaymentController extends Controller
 
     if (!$isSuccess) {
         Log::info('Transaction not successful yet for order: ' . $paymobOrderId);
-        return response()->json(['message' => 'Transaction not successful, skipping.'], 200);
+        return response()->json(['message' => 'Transaction not successful'], 200);
     }
 
     // ---------------------------------------------------------
-    // 1️⃣ البحث والمعالجة لـ (طلب التوثيق)
+    // البحث والمعالجة الآمنة
     // ---------------------------------------------------------
-    $pending = \App\Models\PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
-    if ($pending) {
-        Log::info('Processing verification conversion for paymob order: ' . $paymobOrderId);
-
-        \App\Models\VerificationRequest::create([
-            'user_id'         => $pending->user_id,
-            'role'            => $pending->role,
-            'documents'       => $pending->documents, 
-            'payment_method'  => $pending->payment_method,
-            'phone_number'    => $pending->phone_number,
-            'price'           => $pending->price,
-            'payment_status'  => 'paid',
-            'status'          => 'pending', 
-            'transaction_id'  => $transactionId,
-            'paymob_order_id' => $paymobOrderId
-        ]);
-
-        $pending->delete();
-        return response()->json(['message' => 'Verification request created successfully'], 200);
+    
+    // أولاً: الحجوزات (الملاعب والجيم)
+    $booking = \App\Models\Booking::where('id', $merchantOrderId)->first();
+    
+    // لو ملقيناش بالـ merchant_order_id، وفيه عمود في الجدول اسمه paymob_order_id، ندور بيه كـ حماية احتياطية
+    if (!$booking && \Illuminate\Support\Facades\Schema::hasColumn('bookings', 'paymob_order_id')) {
+        $booking = \App\Models\Booking::where('paymob_order_id', $paymobOrderId)->first();
     }
-
-    // ---------------------------------------------------------
-    // 2️⃣ البحث والمعالجة لـ (حجز الملعب / الجيم)
-    // ---------------------------------------------------------
-    // البحث بالـ paymob_order_id أولاً كـ حماية أساسية وموحدة، والـ merchant_order_id كـ حماية احتياطية
-    $booking = \App\Models\Booking::where('paymob_order_id', $paymobOrderId)
-                ->orWhere('id', $merchantOrderId)
-                ->first();
 
     if ($booking) {
         if ($booking->payment_status == 'paid') {
@@ -361,14 +337,18 @@ class PaymentController extends Controller
         }
 
         \DB::transaction(function () use ($booking, $transactionId, $paymobOrderId) {
-            $booking->update([
+            $updateData = [
                 'payment_status'  => 'paid',
                 'status'          => 'confirmed',
-                'paymob_order_id' => $paymobOrderId // للتأكيد لو مكانش اتحفظ
-            ]);
+            ];
+            if (\Illuminate\Support\Facades\Schema::hasColumn('bookings', 'paymob_order_id')) {
+                $updateData['paymob_order_id'] = $paymobOrderId;
+            }
+            $booking->update($updateData);
 
+            // زيادة محفظة الفيندور
             $stadium = $booking->stadium;
-            $owner = $stadium->vendor ?? null;
+            $owner = $stadium->vendor ?? $stadium->user ?? null; // تجربة ورا تانية لضمان الوصول للريكورد
 
             if ($owner) {
                 $amount = $booking->total_price;
@@ -380,18 +360,21 @@ class PaymentController extends Controller
                     $ownerAmount,
                     "Booking #{$booking->id} payout"
                 );
+                Log::info("Wallet updated for Vendor ID: {$owner->id} with amount: {$ownerAmount}");
+            } else {
+                Log::warning("Stadium owner/vendor not found for booking ID: {$booking->id}");
             }
         });
 
         return response()->json(['message' => 'Booking paid successfully'], 200);
     }
 
-    // ---------------------------------------------------------
-    // 3️⃣ البحث والمعالجة لـ (الأوردر العادي للمنتجات)
-    // ---------------------------------------------------------
-    $order = \App\Models\Order::where('paymob_order_id', $paymobOrderId)
-                ->orWhere('id', $merchantOrderId)
-                ->first();
+    // ثانياً: الأوردرات العادية للمنتجات
+    $order = \App\Models\Order::where('id', $merchantOrderId)->first();
+
+    if (!$order && \Illuminate\Support\Facades\Schema::hasColumn('orders', 'paymob_order_id')) {
+        $order = \App\Models\Order::where('paymob_order_id', $paymobOrderId)->first();
+    }
 
     if ($order) {
         if ($order->payment_status == 'paid') {
@@ -399,28 +382,27 @@ class PaymentController extends Controller
         }
 
         \DB::transaction(function () use ($order, $transactionId, $paymobOrderId) {
-            $order->update([
+            $updateData = [
                 'payment_status'  => 'paid',
                 'status'          => 'confirmed',
-                'paymob_order_id' => $paymobOrderId
-            ]);
+            ];
+            if (\Illuminate\Support\Facades\Schema::hasColumn('orders', 'paymob_order_id')) {
+                $updateData['paymob_order_id'] = $paymobOrderId;
+            }
+            $order->update($updateData);
 
             $order->load('items.product.seller');
             $walletService = app(\App\Services\WalletService::class);
 
             foreach ($order->items as $item) {
-                $seller = $item->product->seller;
+                $seller = $item->product->seller ?? null;
                 if (!$seller) continue;
 
                 $total = $item->price * $item->quantity;
                 $platformFee = $total * 0.10; 
                 $sellerAmount = $total - $platformFee;
 
-                $walletService->deposit(
-                    $seller,
-                    $sellerAmount,
-                    "Order #{$order->id} item payout"
-                );
+                $walletService->deposit($seller, $sellerAmount, "Order #{$order->id} item payout");
             }
         });
 
@@ -429,6 +411,9 @@ class PaymentController extends Controller
 
     return response()->json(['message' => 'No matching records found'], 200);
 }
+
+
+
 
 public function payWithVisaForVerification(Request $request, $pendingVerification)
 {
