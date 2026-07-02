@@ -52,11 +52,10 @@ class CategoryController extends Controller
         $data['image'] = $request->file('image')->store('categories', 'public');
     }
 
-    // إنشاء القسم وتمرير الـ seller_id صراحة داخل الـ create
-    $category = Category::create([
+     $category = Category::create([
         'name'      => $data['name'],
         'image'     => $data['image'] ?? null,
-        'seller_id' => $seller->id, // هنا تم إدخال السيلر آي دي مباشرة
+        'seller_id' => $seller->id, 
     ]);
 
     return response()->json([
