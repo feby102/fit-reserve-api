@@ -49,6 +49,12 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetCode']);
 Route::post('/reset-password', [AuthController::class, 'reset']);
 
 
+
+ Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
+Route::get('/paymob/callback', [PaymentController::class, 'callback']); 
+
+
+
 Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
 
   Route::middleware('auth:user-api,vendor-api')->group(function(){
@@ -197,8 +203,7 @@ Route::get('/pages/{id}', [PageController::class, 'show']);
 // transfer
 Route::post('wallet/transfer',[UserController::class,'transfer']);
  Route::post('/verification/apply',  [UserController::class, 'requestToVerify']);
- Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
-Route::get('/paymob/callback', [PaymentController::class, 'callback']); 
+
 });
 
 
