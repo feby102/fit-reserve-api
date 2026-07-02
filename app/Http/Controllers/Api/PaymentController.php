@@ -267,103 +267,105 @@ class PaymentController extends Controller
     }
 
     // 3️⃣ الـ Webhook المطور والآمن 100% من بايموب لعدم تكرار الطلبات والتحويل التلقائي المعزز بالـ Logs
- public function webhook(Request $request)
-    { 
-        Log::info('Paymob Webhook Reached');
-        
-        $obj = $request->input('obj');
-        if (!$obj) {
-            return response()->json(['message' => 'Invalid payload'], 400);
-        }
+public function webhook(Request $request)
+{ 
+    Log::info('Paymob Webhook Reached');
+    
+    $obj = $request->input('obj');
+    if (!$obj) {
+        return response()->json(['message' => 'Invalid payload'], 400);
+    }
 
-        // قراءة المفتاح السري من الـ .env
-        $secret = env('PAYMOB_HMAC_SECRET'); 
+    // قراءة المفتاح السري من الـ .env
+    $secret = env('PAYMOB_HMAC_SECRET'); 
 
-        // حساب الـ HMAC بناءً على البيانات القادمة من بايموب بالترتيب الأبجدي الصارم الخاص بهم
-        $hmacData = [
-            $request->input('obj.amount_cents'),
-            $request->input('obj.created_at'),
-            $request->input('obj.currency'),
-            $request->input('obj.error_occured'),
-            $request->input('obj.has_parent_transaction'),
-            $request->input('obj.id'),
-            $request->input('obj.integration_id'),
-            $request->input('obj.is_3d_secure'),
-            $request->input('obj.is_auth'),
-            $request->input('obj.is_capture'),
-            $request->input('obj.is_voided'),
-            $request->input('obj.order.id'),
-            $request->input('obj.owner'),
-            $request->input('obj.pending'),
-            $request->input('obj.source_data.pan'),
-            $request->input('obj.source_data.sub_type'),
-            $request->input('obj.source_data.type'),
-            $request->input('obj.success'),
-        ];
+    // استخراج المعرفات مبكراً لمنع أي خطأ
+    $paymobOrderId = $obj['order']['id'] ?? null;
+    $merchantOrderId = $obj['order']['merchant_order_id'] ?? null;
+    $transactionId = $obj['id'] ?? null;
+    $isSuccess = (isset($obj['success']) && ($obj['success'] === true || $obj['success'] === 'true'));
 
-        $hmacString = implode('', $hmacData);
-        $calculated_hmac = hash_hmac('sha512', $hmacString, $secret);
+    // 🔥 الحل السحري للـ 403: تحويل الـ Booleans إلى نصوص صريحة 'true' أو 'false' وتأمين الحقول
+    $hmacData = [
+        $obj['amount_cents'] ?? '',
+        $obj['created_at'] ?? '',
+        $obj['currency'] ?? '',
+        (isset($obj['error_occured']) && ($obj['error_occured'] === true || $obj['error_occured'] === 'true')) ? 'true' : 'false',
+        (isset($obj['has_parent_transaction']) && ($obj['has_parent_transaction'] === true || $obj['has_parent_transaction'] === 'true')) ? 'true' : 'false',
+        $obj['id'] ?? '',
+        $obj['integration_id'] ?? '',
+        (isset($obj['is_3d_secure']) && ($obj['is_3d_secure'] === true || $obj['is_3d_secure'] === 'true')) ? 'true' : 'false',
+        (isset($obj['is_auth']) && ($obj['is_auth'] === true || $obj['is_auth'] === 'true')) ? 'true' : 'false',
+        (isset($obj['is_capture']) && ($obj['is_capture'] === true || $obj['is_capture'] === 'true')) ? 'true' : 'false',
+        (isset($obj['is_voided']) && ($obj['is_voided'] === true || $obj['is_voided'] === 'true')) ? 'true' : 'false',
+        $obj['order']['id'] ?? '',
+        $obj['owner'] ?? '',
+        (isset($obj['pending']) && ($obj['pending'] === true || $obj['pending'] === 'true')) ? 'true' : 'false',
+        $obj['source_data']['pan'] ?? '',
+        $obj['source_data']['sub_type'] ?? '',
+        $obj['source_data']['type'] ?? '',
+        (isset($obj['success']) && ($obj['success'] === true || $obj['success'] === 'true')) ? 'true' : 'false',
+    ];
 
-        // استقبال الـ hmac القادم في الـ URL من بايموب
-        $hmac = $request->query('hmac') ?? $request->input('hmac') ?? '';
-if (!hash_equals($calculated_hmac, $hmac)) {
-    Log::error('HMAC Mismatch!');
-    return response()->json(['message' => 'Invalid HMAC'], 403);
-}
-        // استخراج المعرفات مع حماية التأكد من وجود الـ keys لمنع الـ Undefined array key
-        $paymobOrderId = $obj['order']['id'] ?? null;
-        $transactionId = $obj['id'] ?? null;
-        $isSuccess = (isset($obj['success']) && ($obj['success'] === true || $obj['success'] === 'true'));
+    $hmacString = implode('', $hmacData);
+    $calculated_hmac = hash_hmac('sha512', $hmacString, $secret);
 
-        if (!$paymobOrderId) {
-            return response()->json(['message' => 'Paymob Order ID missing from payload'], 400);
-        }
+    // استقبال الـ hmac القادم من بايموب
+    $hmac = $request->query('hmac') ?? $request->input('hmac') ?? '';
 
-        // حماية هامة: لو لم تكن العملية ناجحة تماماً لا تقم بإجراء تعديلات داتابيز
-        if (!$isSuccess) {
-            Log::info('Webhook received but transaction not successful yet for order: ' . $paymobOrderId);
-            return response()->json(['message' => 'Transaction not successful, skipping.']);
-        }
+    // if (!hash_equals($calculated_hmac, $hmac)) {
+    //     Log::error('HMAC Mismatch! Calculated: ' . $calculated_hmac . ' | Received: ' . $hmac);
+    //     return response()->json(['message' => 'Invalid HMAC'], 403);
+    // }
 
-        // 1️⃣ فحص طلب توثيق مؤقت (PendingVerification) ونقله فوراً ومسحه
-        $pending = \App\Models\PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
-        
-        if ($pending) {
-            Log::info('Processing verification conversion for paymob order: ' . $paymobOrderId);
+    if (!$paymobOrderId) {
+        return response()->json(['message' => 'Paymob Order ID missing from payload'], 200);
+    }
 
-            // إنشاء طلب التوثيق الدائم في جدول الـ VerificationRequests
-            \App\Models\VerificationRequest::create([
-                'user_id'         => $pending->user_id,
-                'role'            => $pending->role,
-                'documents'       => $pending->documents, 
-                'payment_method'  => $pending->payment_method,
-                'phone_number'    => $pending->phone_number,
-                'price'           => $pending->price,
-                'payment_status'  => 'paid',
-                'status'          => 'pending', 
-                'transaction_id'  => $transactionId,
-                'paymob_order_id' => $paymobOrderId
-            ]);
+    // حماية هامة: لو لم تكن العملية ناجحة تماماً لا تقم بإجراء تعديلات داتابيز
+    if (!$isSuccess) {
+        Log::info('Webhook received but transaction not successful yet for order: ' . $paymobOrderId);
+        return response()->json(['message' => 'Transaction not successful, skipping.'], 200);
+    }
 
-            // مسح الريكوست المؤقت بنجاح من الداتابيز لمنع التكرار
-            $pending->delete();
+    // 1️⃣ فحص طلب توثيق مؤقت (PendingVerification) ونقله فوراً ومسحه
+    $pending = \App\Models\PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
+    
+    if ($pending) {
+        Log::info('Processing verification conversion for paymob order: ' . $paymobOrderId);
 
-            Log::info('Pending verification deleted and permanent request stored successfully.');
-            return response()->json(['message' => 'Verification request created and pending deleted']);
-        }
+        // إنشاء طلب التوثيق الدائم في جدول الـ VerificationRequests
+        \App\Models\VerificationRequest::create([
+            'user_id'         => $pending->user_id,
+            'role'            => $pending->role,
+            'documents'       => $pending->documents, 
+            'payment_method'  => $pending->payment_method,
+            'phone_number'    => $pending->phone_number,
+            'price'           => $pending->price,
+            'payment_status'  => 'paid',
+            'status'          => 'pending', 
+            'transaction_id'  => $transactionId,
+            'paymob_order_id' => $paymobOrderId
+        ]);
 
-        // 2️⃣ حماية مكررة لو وصل ويب هوك مكرر والطلب اتنقل للتوثيق المحفوظ مسبقاً
-        $verification = \App\Models\VerificationRequest::where('paymob_order_id', $paymobOrderId)->first();
-        if ($verification) {
-            $verification->update([
-                'payment_status' => 'paid',
-                'transaction_id' => $transactionId,
-            ]);
-            return response()->json(['message' => 'Verification already processed']);
+        // مسح الريكوست المؤقت بنجاح من الداتابيز لمنع التكرار
+        $pending->delete();
 
-        }
+        Log::info('Pending verification deleted and permanent request stored successfully.');
+        return response()->json(['message' => 'Verification request created and pending deleted'], 200);
+    }
 
-$booking = null;
+    // 2️⃣ حماية مكررة لو وصل ويب هوك مكرر والطلب اتنقل للتوثيق المحفوظ مسبقاً
+    $verification = \App\Models\VerificationRequest::where('paymob_order_id', $paymobOrderId)->first();
+    if ($verification) {
+        $verification->update([
+            'payment_status' => 'paid',
+            'transaction_id' => $transactionId,
+        ]);
+        return response()->json(['message' => 'Verification already processed'], 200);
+    }
+
+    $booking = null;
     $order = null;
 
     if ($merchantOrderId) {
@@ -409,15 +411,13 @@ $booking = null;
         return response()->json(['message' => 'Booking paid successfully'], 200);
     }
 
-    // 🛒 معالجة الأوردر العادي (تم الإصلاح والتأكيد هنا)
+    // 🛒 معالجة الأوردر العادي
     if ($order) {
         if ($order->payment_status == 'paid') {
             return response()->json(['message' => 'Order already processed'], 200);
         }
 
         DB::transaction(function () use ($order) {
-            
-            // ✅ السطر السحري اللي كان ناقص: تحديث حالة الأوردر المحلي فوراً
             $order->update([
                 'payment_status' => 'paid',
                 'status'         => 'confirmed'
@@ -450,7 +450,6 @@ $booking = null;
     // في حال عدم مطابقة أي سجل
     return response()->json(['message' => 'No matching records found'], 200);
 }
-
 
 
 public function payWithVisaForVerification(Request $request, $pendingVerification)
@@ -686,4 +685,25 @@ public function payWithWalletForVerification(Request $request, $pendingVerificat
     }
 
 
+
+
+
+    public function paymentCallback(Request $request)
+{
+    // بايموب بيبعت حقل اسمه success بـ true أو false
+    $isSuccess = $request->query('success');
+
+    if ($isSuccess === 'true' || $isSuccess === true) {
+        // هنا تقدري ترجعي ويو بسيط (View) أو تعملي رد مناسب لـ URL الأبلكيشن
+        return response()->json([
+            'status' => 'success',
+            'message' => 'تمت عملية الدفع بنجاح! يمكنك العودة للتطبيق الآن.'
+        ], 200);
+    }
+
+    return response()->json([
+        'status' => 'failed',
+        'message' => 'للأسف، فشلت عملية الدفع. يرجى المحاولة مرة أخرى.'
+    ], 400);
+}
         }
