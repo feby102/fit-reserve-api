@@ -39,7 +39,11 @@ use Illuminate\Support\Facades\Route;
 
   
 
-
+Route::get('/clear-cache', function() {
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+    return "Cache cleared successfully!";
+});
  
 
 
