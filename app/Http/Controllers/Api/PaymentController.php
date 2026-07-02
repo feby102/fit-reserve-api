@@ -266,8 +266,7 @@ class PaymentController extends Controller
         }
     }
 
-    // 3️⃣ الـ Webhook المطور والآمن 100% من بايموب لعدم تكرار الطلبات والتحويل التلقائي المعزز بالـ Logs
-public function webhook(Request $request)
+ public function webhook(Request $request)
 { 
     Log::info('Paymob Webhook Reached');
     
@@ -276,16 +275,15 @@ public function webhook(Request $request)
         return response()->json(['message' => 'Invalid payload'], 400);
     }
 
-    // قراءة المفتاح السري من الـ .env
     $secret = env('PAYMOB_HMAC_SECRET'); 
 
-    // استخراج المعرفات مبكراً لمنع أي خطأ
+    // استخراج المعرفات المبكرة
     $paymobOrderId = $obj['order']['id'] ?? null;
     $merchantOrderId = $obj['order']['merchant_order_id'] ?? null;
     $transactionId = $obj['id'] ?? null;
     $isSuccess = (isset($obj['success']) && ($obj['success'] === true || $obj['success'] === 'true'));
 
-    // 🔥 الحل السحري للـ 403: تحويل الـ Booleans إلى نصوص صريحة 'true' أو 'false' وتأمين الحقول
+    // مصفوفة الـ HMAC للتأمين (لمنع الـ 403)
     $hmacData = [
         $obj['amount_cents'] ?? '',
         $obj['created_at'] ?? '',
@@ -309,32 +307,29 @@ public function webhook(Request $request)
 
     $hmacString = implode('', $hmacData);
     $calculated_hmac = hash_hmac('sha512', $hmacString, $secret);
-
-    // استقبال الـ hmac القادم من بايموب
     $hmac = $request->query('hmac') ?? $request->input('hmac') ?? '';
 
-    // if (!hash_equals($calculated_hmac, $hmac)) {
-    //     Log::error('HMAC Mismatch! Calculated: ' . $calculated_hmac . ' | Received: ' . $hmac);
-    //     return response()->json(['message' => 'Invalid HMAC'], 403);
-    // }
-
-    if (!$paymobOrderId) {
-        return response()->json(['message' => 'Paymob Order ID missing from payload'], 200);
+    if (!hash_equals($calculated_hmac, $hmac)) {
+        Log::error('HMAC Mismatch!');
+        return response()->json(['message' => 'Invalid HMAC'], 403);
     }
 
-    // حماية هامة: لو لم تكن العملية ناجحة تماماً لا تقم بإجراء تعديلات داتابيز
+    if (!$paymobOrderId) {
+        return response()->json(['message' => 'Paymob Order ID missing'], 200);
+    }
+
     if (!$isSuccess) {
-        Log::info('Webhook received but transaction not successful yet for order: ' . $paymobOrderId);
+        Log::info('Transaction not successful yet for order: ' . $paymobOrderId);
         return response()->json(['message' => 'Transaction not successful, skipping.'], 200);
     }
 
-    // 1️⃣ فحص طلب توثيق مؤقت (PendingVerification) ونقله فوراً ومسحه
+    // ---------------------------------------------------------
+    // 1️⃣ البحث والمعالجة لـ (طلب التوثيق)
+    // ---------------------------------------------------------
     $pending = \App\Models\PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
-    
     if ($pending) {
         Log::info('Processing verification conversion for paymob order: ' . $paymobOrderId);
 
-        // إنشاء طلب التوثيق الدائم في جدول الـ VerificationRequests
         \App\Models\VerificationRequest::create([
             'user_id'         => $pending->user_id,
             'role'            => $pending->role,
@@ -348,54 +343,28 @@ public function webhook(Request $request)
             'paymob_order_id' => $paymobOrderId
         ]);
 
-        // مسح الريكوست المؤقت بنجاح من الداتابيز لمنع التكرار
         $pending->delete();
-
-        Log::info('Pending verification deleted and permanent request stored successfully.');
-        return response()->json(['message' => 'Verification request created and pending deleted'], 200);
+        return response()->json(['message' => 'Verification request created successfully'], 200);
     }
 
-    // 2️⃣ حماية مكررة لو وصل ويب هوك مكرر والطلب اتنقل للتوثيق المحفوظ مسبقاً
-    $verification = \App\Models\VerificationRequest::where('paymob_order_id', $paymobOrderId)->first();
-    if ($verification) {
-        $verification->update([
-            'payment_status' => 'paid',
-            'transaction_id' => $transactionId,
-        ]);
-        return response()->json(['message' => 'Verification already processed'], 200);
-    }
+    // ---------------------------------------------------------
+    // 2️⃣ البحث والمعالجة لـ (حجز الملعب / الجيم)
+    // ---------------------------------------------------------
+    // البحث بالـ paymob_order_id أولاً كـ حماية أساسية وموحدة، والـ merchant_order_id كـ حماية احتياطية
+    $booking = \App\Models\Booking::where('paymob_order_id', $paymobOrderId)
+                ->orWhere('id', $merchantOrderId)
+                ->first();
 
-   $booking = null;
-$order = null;
-
-// البحث يعتمد كلياً وبشكل آمن على الـ merchant_order_id القادم من بايموب
-if (!empty($merchantOrderId)) {
-    $booking = \App\Models\Booking::find($merchantOrderId);
-    $order = \App\Models\Order::find($merchantOrderId);
-}
-
-// في حال لم نجد الحجز أو الأوردر بالـ merchant_order_id، نبحث بالـ paymob_order_id كـ حماية احتياطية 
-// ولكن بشرط: التحقق أولاً من وجود العمود في الجدول لحماية السيرفر من الـ Crash
-if (!$booking && !empty($paymobOrderId) && \Illuminate\Support\Facades\Schema::hasColumn('bookings', 'paymob_order_id')) {
-    $booking = \App\Models\Booking::where('paymob_order_id', $paymobOrderId)->first();
-}
-
-if (!$order && !empty($paymobOrderId) && \Illuminate\Support\Facades\Schema::hasColumn('orders', 'paymob_order_id')) {
-    $order = \App\Models\Order::where('paymob_order_id', $paymobOrderId)->first();
-}
-if (!$order && Schema::hasColumn('orders', 'paymob_order_id')) {
-    $order = Order::where('paymob_order_id', $paymobOrderId)->first();
-}
-    // ⚽ معالجة حجز الملعب
     if ($booking) {
         if ($booking->payment_status == 'paid') {
             return response()->json(['message' => 'Booking already processed'], 200);
         }
 
-        DB::transaction(function () use ($booking) {
+        \DB::transaction(function () use ($booking, $transactionId, $paymobOrderId) {
             $booking->update([
-                'payment_status' => 'paid',
-                'status' => 'confirmed'
+                'payment_status'  => 'paid',
+                'status'          => 'confirmed',
+                'paymob_order_id' => $paymobOrderId // للتأكيد لو مكانش اتحفظ
             ]);
 
             $stadium = $booking->stadium;
@@ -403,7 +372,7 @@ if (!$order && Schema::hasColumn('orders', 'paymob_order_id')) {
 
             if ($owner) {
                 $amount = $booking->total_price;
-                $platformFee = $amount * 0.10; // عمولة المنصة 10%
+                $platformFee = $amount * 0.10; 
                 $ownerAmount = $amount - $platformFee;
 
                 app(\App\Services\WalletService::class)->deposit(
@@ -417,19 +386,25 @@ if (!$order && Schema::hasColumn('orders', 'paymob_order_id')) {
         return response()->json(['message' => 'Booking paid successfully'], 200);
     }
 
-    // 🛒 معالجة الأوردر العادي
+    // ---------------------------------------------------------
+    // 3️⃣ البحث والمعالجة لـ (الأوردر العادي للمنتجات)
+    // ---------------------------------------------------------
+    $order = \App\Models\Order::where('paymob_order_id', $paymobOrderId)
+                ->orWhere('id', $merchantOrderId)
+                ->first();
+
     if ($order) {
         if ($order->payment_status == 'paid') {
             return response()->json(['message' => 'Order already processed'], 200);
         }
 
-        DB::transaction(function () use ($order) {
+        \DB::transaction(function () use ($order, $transactionId, $paymobOrderId) {
             $order->update([
-                'payment_status' => 'paid',
-                'status'         => 'confirmed'
+                'payment_status'  => 'paid',
+                'status'          => 'confirmed',
+                'paymob_order_id' => $paymobOrderId
             ]);
 
-            // توزيع الأرباح على البائعين المشتركين في الأوردر
             $order->load('items.product.seller');
             $walletService = app(\App\Services\WalletService::class);
 
@@ -438,10 +413,9 @@ if (!$order && Schema::hasColumn('orders', 'paymob_order_id')) {
                 if (!$seller) continue;
 
                 $total = $item->price * $item->quantity;
-                $platformFee = $total * 0.10; // عمولة المنصة 10%
+                $platformFee = $total * 0.10; 
                 $sellerAmount = $total - $platformFee;
 
-                // تحويل المستحقات لمحفظة البائع
                 $walletService->deposit(
                     $seller,
                     $sellerAmount,
@@ -453,10 +427,8 @@ if (!$order && Schema::hasColumn('orders', 'paymob_order_id')) {
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
     }
 
-    // في حال عدم مطابقة أي سجل
     return response()->json(['message' => 'No matching records found'], 200);
 }
-
 
 public function payWithVisaForVerification(Request $request, $pendingVerification)
 {
@@ -712,4 +684,62 @@ public function payWithWalletForVerification(Request $request, $pendingVerificat
         'message' => 'للأسف، فشلت عملية الدفع. يرجى المحاولة مرة أخرى.'
     ], 400);
 }
+
+
+public function payWithVisaForBooking(Request $request, $booking)
+{
+    $user = auth()->user();
+    $base = env("PAYMOB_BASE_URL");
+    $amount_cents = $booking->total_price * 100;
+
+    // 1. Auth Token
+    $token = Http::post($base . '/api/auth/tokens', [
+        'api_key' => env('PAYMOB_API_KEY')
+    ])->json()['token'] ?? null;
+
+    if (!$token) return response()->json(['message' => 'Paymob auth failed'], 500);
+
+    // 2. Create Paymob Order (ونبعت الـ id كـ merchant_order_id)
+    $paymobOrder = Http::post($base . '/api/ecommerce/orders', [
+        'auth_token'        => $token,
+        'delivery_needed'   => false,
+        'amount_cents'      => $amount_cents,
+        'currency'          => 'EGP',
+        'merchant_order_id' => $booking->id, // ربط صريح
+        'items'             => []
+    ])->json();
+
+    $paymob_order_id = $paymobOrder['id'] ?? null;
+    if (!$paymob_order_id) return response()->json(['message' => 'Failed to create Paymob order'], 500);
+
+    // 🔥 الحفظ السحري لـ paymob_order_id جوه جدول الحجوزات لتفادي الـ 404
+    $booking->paymob_order_id = $paymob_order_id;
+    $booking->save();
+
+    // 3. Payment Key
+    $response = Http::post($base . '/api/acceptance/payment_keys', [
+        'auth_token'     => $token,
+        'amount_cents'   => $amount_cents,
+        'expiration'     => 3600,
+        'order_id'       => $paymob_order_id,
+        'currency'       => 'EGP',
+        'integration_id' => env('PAYMOB_VISA_INTEGRATION_ID'),
+        'billing_data'   => [
+            'first_name'   => $user->name ?? 'User',
+            'last_name'    => $user->name ?? 'Test',
+            'email'        => $user->email ?? 'test@test.com',
+            'phone_number' => $user->phone ?? '01000000000',
+            'apartment' => 'NA', 'floor' => 'NA', 'street' => 'NA', 'building' => 'NA',
+            'shipping_method' => 'NA', 'postal_code' => '12345', 'city' => 'Cairo', 'country' => 'EG', 'state' => 'Cairo',
+        ]
+    ]);
+
+    $payment_token = $response->json()['token'] ?? null;
+    if (!$payment_token) return response()->json(['message' => 'Failed to generate payment key'], 500);
+
+    $url = 'https://accept.paymob.com/api/acceptance/iframes/' . env('PAYMOB_IFRAME_ID') . '?payment_token=' . $payment_token;
+    return response()->json(['payment_url' => $url]);
+}
+
+
         }
