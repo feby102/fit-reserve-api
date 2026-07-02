@@ -373,13 +373,22 @@ public function webhook(Request $request)
         $order = Order::find($merchantOrderId);
     }
 
-    if (!$booking) {
-        $booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
-    }
-    if (!$order) {
-        $order = Order::where('paymob_order_id', $paymobOrderId)->first();
-    }
+    // if (!$booking) {
+    //     $booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
+    // }
+    // if (!$order) {
+    //     $order = Order::where('paymob_order_id', $paymobOrderId)->first();
+    // }
 
+
+
+    if (!$booking && Schema::hasColumn('bookings', 'paymob_order_id')) {
+    $booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
+}
+
+if (!$order && Schema::hasColumn('orders', 'paymob_order_id')) {
+    $order = Order::where('paymob_order_id', $paymobOrderId)->first();
+}
     // ⚽ معالجة حجز الملعب
     if ($booking) {
         if ($booking->payment_status == 'paid') {
