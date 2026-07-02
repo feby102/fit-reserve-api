@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use App\Models\Academy;
