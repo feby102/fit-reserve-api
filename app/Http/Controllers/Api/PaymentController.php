@@ -365,33 +365,24 @@ public function webhook(Request $request)
         return response()->json(['message' => 'Verification already processed'], 200);
     }
 
-    $booking = null;
-    $order = null;
+   $booking = null;
+$order = null;
 
-  if (isset($merchantOrderId)) {
-    $booking = Booking::find($merchantOrderId);
-    $order = Order::find($merchantOrderId);
+// البحث يعتمد كلياً وبشكل آمن على الـ merchant_order_id القادم من بايموب
+if (!empty($merchantOrderId)) {
+    $booking = \App\Models\Booking::find($merchantOrderId);
+    $order = \App\Models\Order::find($merchantOrderId);
 }
 
-// 2. البحث الاحتياطي (Fallback) بالأشياء المنطقية فقط:
-// الأوردر العادي هو اللي متخزن فيه الـ paymob_order_id
-if (!$order) {
-    $order = Order::where('paymob_order_id', $paymobOrderId)->first();
+// في حال لم نجد الحجز أو الأوردر بالـ merchant_order_id، نبحث بالـ paymob_order_id كـ حماية احتياطية 
+// ولكن بشرط: التحقق أولاً من وجود العمود في الجدول لحماية السيرفر من الـ Crash
+if (!$booking && !empty($paymobOrderId) && \Illuminate\Support\Facades\Schema::hasColumn('bookings', 'paymob_order_id')) {
+    $booking = \App\Models\Booking::where('paymob_order_id', $paymobOrderId)->first();
 }
 
-    // if (!$booking) {
-    //     $booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
-    // }
-    // if (!$order) {
-    //     $order = Order::where('paymob_order_id', $paymobOrderId)->first();
-    // }
-
-
-
-    if (!$booking && Schema::hasColumn('bookings', 'paymob_order_id')) {
-    $booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
+if (!$order && !empty($paymobOrderId) && \Illuminate\Support\Facades\Schema::hasColumn('orders', 'paymob_order_id')) {
+    $order = \App\Models\Order::where('paymob_order_id', $paymobOrderId)->first();
 }
-
 if (!$order && Schema::hasColumn('orders', 'paymob_order_id')) {
     $order = Order::where('paymob_order_id', $paymobOrderId)->first();
 }
