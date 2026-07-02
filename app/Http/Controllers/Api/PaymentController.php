@@ -368,10 +368,16 @@ public function webhook(Request $request)
     $booking = null;
     $order = null;
 
-    if ($merchantOrderId) {
-        $booking = Booking::find($merchantOrderId);
-        $order = Order::find($merchantOrderId);
-    }
+  if (isset($merchantOrderId)) {
+    $booking = Booking::find($merchantOrderId);
+    $order = Order::find($merchantOrderId);
+}
+
+// 2. البحث الاحتياطي (Fallback) بالأشياء المنطقية فقط:
+// الأوردر العادي هو اللي متخزن فيه الـ paymob_order_id
+if (!$order) {
+    $order = Order::where('paymob_order_id', $paymobOrderId)->first();
+}
 
     // if (!$booking) {
     //     $booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
