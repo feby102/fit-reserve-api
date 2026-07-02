@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use App\Models\Academy;
+use App\Models\Booking;
+use App\Models\LedgerEntry;
 use App\Models\Order;
 use App\Models\Wallet;
 use App\Models\WalletTransaction;
@@ -358,7 +360,91 @@ if (!hash_equals($calculated_hmac, $hmac)) {
                 'transaction_id' => $transactionId,
             ]);
             return response()->json(['message' => 'Verification already processed']);
+
         }
+
+        $order = Order::where('paymob_order_id', $paymobOrderId)->first();
+
+$booking = Booking::where('paymob_order_id', $paymobOrderId)->first();
+
+if ($booking) {
+
+    DB::transaction(function () use ($booking) {
+
+        $booking->update([
+            'payment_status' => 'paid',
+            'status' => 'confirmed'
+        ]);
+
+        $stadium = $booking->stadium;
+        $owner = $stadium->vendor;
+
+        if ($owner) {
+
+            $amount = $booking->total_price;
+
+            $platformFee = $amount * 0.10;
+            $ownerAmount = $amount - $platformFee;
+
+            app(\App\Services\WalletService::class)->deposit(
+                $owner,
+                $ownerAmount,
+                "Booking #{$booking->id} payout"
+            );
+        }
+    });
+
+    return response()->json([
+        'message' => 'Booking paid successfully'
+    ]);
+}
+
+
+
+
+
+if ($order) {
+
+    if ($order->payment_status == 'paid') {
+        return response()->json([
+            'message' => 'Order already processed'
+        ]);
+    }
+
+    DB::transaction(function () use ($order) {
+
+      app(\App\Services\WalletService::class)->credit(
+    $order->user,
+    $order->total_price,
+    'order_payment',
+    'Order #' . $order->id
+);
+        $order->load('items.product.seller');
+$walletService = app(\App\Services\WalletService::class);
+
+foreach ($order->items as $item) {
+
+    $seller = $item->product->seller;
+
+    if (!$seller) continue;
+
+    $total = $item->price * $item->quantity;
+
+    $platformFee = $total * 0.10;
+    $sellerAmount = $total - $platformFee;
+
+    // تحويل للبائع
+    $walletService->deposit(
+        $seller,
+        $sellerAmount,
+        "Order #{$order->id} item payout"
+    );
+}    });
+
+    return response()->json([
+        'message' => 'Order paid successfully'
+    ]);
+}
 
         return response()->json(['message' => 'No matching records found']);
     }   // 1️⃣ دفع فيزا للتوثيق - نسخة معدلة ومؤمنة
@@ -577,5 +663,22 @@ public function payWithWalletForVerification(Request $request, $pendingVerificat
         if ($data['payment_method'] == 'vodafone_cash') {
             return $this->payWithWalletForVerification($request, $pendingVerification, $request->phone_number);
         }
+   
+        }
+
+
+
+  public function ledger(Request $request)
+    {
+        $user = auth()->user();
+
+        $entries = LedgerEntry::where('account_type', get_class($user))
+            ->where('account_id', $user->id)
+            ->latest()
+            ->paginate(20);
+
+        return response()->json($entries);
     }
-}
+
+
+        }

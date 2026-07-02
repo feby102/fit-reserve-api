@@ -45,7 +45,7 @@ namespace App\Models{
  * @property-read int|null $students_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AcademySubscription> $subscriptions
  * @property-read int|null $subscriptions_count
- * @property-read \App\Models\Vendor $vendor
+ * @property-read \App\Models\User $vendor
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Video> $videos
  * @property-read int|null $videos_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Academy newModelQuery()
@@ -655,7 +655,7 @@ namespace App\Models{
  * @property-read int|null $services_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GymSubscription> $subscriptions
  * @property-read int|null $subscriptions_count
- * @property-read \App\Models\Vendor $vendor
+ * @property-read \App\Models\User $vendor
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Video> $videos
  * @property-read int|null $videos_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Gym newModelQuery()
@@ -1271,7 +1271,7 @@ namespace App\Models{
  * @property-read int|null $reviews_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\StadiumSchedule> $schedules
  * @property-read int|null $schedules_count
- * @property-read \App\Models\Vendor $vendor
+ * @property-read \App\Models\User $vendor
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Video> $videos
  * @property-read int|null $videos_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium newModelQuery()
@@ -1747,5 +1747,33 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|coupon_product query()
  */
 	class coupon_product extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $type
+ * @property int|null $reference_id
+ * @property numeric $amount
+ * @property string|null $paymob_order_id
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment wherePaymobOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment whereReferenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|pending_payment whereUserId($value)
+ */
+	class pending_payment extends \Eloquent {}
 }
 

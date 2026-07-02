@@ -15,12 +15,14 @@ class OrderController extends Controller
 
 public function vendorOrders()
 {
-    $vendor = auth()->user();
+ 
+$user = auth()->user();
 
-    $orders = Order::whereHas('items.product', function ($q) use ($vendor) {
-$q->where('seller_id', $vendor->id);    })
-    ->with('items.product')
-    ->get();
+$orders = Order::whereHas('items.product', function ($q) use ($user) {
+    $q->where('seller_id', $user->id);
+})
+->with('items.product')
+->get();
 
     return response()->json($orders);
 }
@@ -78,14 +80,20 @@ public function store(Request $request)
 
  public function updateStatus(Request $request, $id)
 {
-    $vendor = auth()->user();
+$user = auth()->user();
 
     $request->validate([
         'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled'
     ]);
 
-    $order = Order::where('vendor_id', $vendor->id)->findOrFail($id);
-
+$order = Order::where('user_id', $user->id)->findOrFail($id);
+if (
+    $order->status == 'cancelled' &&
+    $order->payment_status == 'paid'
+) {
+    app(\App\Services\RefundService::class)
+        ->refundOrder($order);
+}
     $order->update([
         'status' => $request->status
     ]);

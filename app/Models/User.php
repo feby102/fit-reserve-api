@@ -144,7 +144,10 @@ public function getTotalPointsAttribute()
 }
 
 
-
+public function withdrawRequests()
+{
+    return $this->hasMany(WithdrawRequest::class);
+}
 
 
     /**

@@ -32,7 +32,8 @@ use App\Http\Controllers\Api\StoreController as ApiStoreController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VideoController;
 use App\Http\Controllers\Api\WalletController;
- use App\Models\Challenge;
+use App\Http\Controllers\Api\WithdrawController;
+use App\Models\Challenge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +54,14 @@ Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
   Route::middleware('auth:user-api,vendor-api')->group(function(){
 
  Route::get('/showuser',[UserController::class,'show']);
+
+
+
+  Route::post('/withdraw/request', [WithdrawController::class, 'request']);
+
+     Route::get('/withdraw/my-requests', [WithdrawController::class, 'myRequests']);
+
+
 
 
 Route::post('/logout', [AuthController::class, 'logout']);
@@ -285,7 +294,7 @@ Route::post('payments/{id}/status',[PaymentController::class,'updateStatus']);
 Route::get('payments/stats',[PaymentController::class,'stats']);
 Route::get('payments/export/excel',[PaymentController::class,'exportExcel']);
 Route::get('payments/export/pdf',[PaymentController::class,'exportPDF']);
-
+Route::get('/ledger', [PaymentController::class, 'ledger']);
 
 
 
@@ -391,5 +400,20 @@ Route::get('videos/{id}/reports',[VideoController::class,'reports']);
     Route::post('/pages', [PageController::class, 'store']);
     Route::put('/pages/{id}', [PageController::class, 'update']);
     Route::delete('/pages/{id}', [PageController::class, 'destroy']);
+
+
+
+
+
+
+
+
+Route::get('/admin/withdraws', [WithdrawController::class, 'index']);
+
+    Route::post('/admin/withdraws/{id}/approve', [WithdrawController::class, 'approve']);
+
+     Route::post('/admin/withdraws/{id}/reject', [WithdrawController::class, 'reject']);
+
+
 });
 

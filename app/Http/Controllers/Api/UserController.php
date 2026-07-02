@@ -163,13 +163,18 @@ class UserController extends Controller
             return response()->json(['message' => 'الطلب اتوافق عليه مش ممكن ترفضه'], 422);
         }
 
-        $verificationRequest->update([
-            'status'           => 'rejected',
-            'rejection_reason' => $request->reason,
-            'reviewed_by'      => auth()->id(),
-            'reviewed_at'      => now(),
-        ]);
 
+$verificationRequest->update([
+    'status'           => 'rejected',
+    'rejection_reason' => $request->reason,
+    'reviewed_by'      => auth()->id(),
+    'reviewed_at'      => now(),
+]);
+
+if ($verificationRequest->payment_status === 'paid') {
+    app(\App\Services\RefundService::class)
+        ->refundVerification($verificationRequest);
+}
         // لو دفع → رجّعله فلوسه
         if (
             $verificationRequest->payment_status === 'paid' &&

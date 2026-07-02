@@ -29,6 +29,7 @@ use App\Models\Studio;
 use App\Models\StudioPackage;
 use App\Models\Vendor;
 use App\Models\Wallet;
+use App\Services\WalletService;
 use Carbon\Carbon;
 use Carbon\Doctrine\CarbonType;
 use Illuminate\Http\Request;
@@ -365,6 +366,24 @@ $booking=Booking::create([
 
 
 
+
+if ($data['payment_method'] === 'visa') {
+
+    $paymentController = new \App\Http\Controllers\Api\PaymentController();
+
+    return $paymentController->payWithvisa(
+        $request,
+        $booking
+    );
+}
+
+
+
+
+
+
+
+
 if ($data['payment_method'] === 'wallet') {
       $wallet = Wallet::firstOrCreate(
     ['user_id' => $user->id],
@@ -376,15 +395,23 @@ if ($wallet->balance < $total) {
 }
 
 
+
+
+
+
 $settings = \App\Models\Setting::first();
     $commissionRate = $settings ? $settings->commission_rate : 0;
 $commissionAmount = ($total * $commissionRate) / 100; 
 
 
     $vendorNetProfit = $total - $commissionAmount;        
+app(WalletService::class)->debit(
+    $user,
+    $total,
+    'booking_payment',
+    'Booking #' . $bookable->id
+);
 
-$wallet->decrement('balance', $total);
-$vendor->increment('balance', $vendorNetProfit);
 
 if ($settings) {
         $settings->increment('total_admin_commissions', $commissionAmount);
@@ -497,18 +524,10 @@ Notification::create([
             'status' => 'rejected',
             'rejection_reason' => $request->rejection_reason  
         ]);
+app(\App\Services\RefundService::class)
+    ->refundBooking($booking);
 
-if($booking->payment_method == 'wallet'){
-
-$userWallet=$booking->user->wallet;
-$userWallet->increment('balance',$booking->total_price);
-$userWallet->transactions()->create([
-                'type' => 'credit',
-                'amount' => $booking->total_price,
-                'description' => 'Refund of rejected booking amount No.' . $booking->id,
-            ]);
-        }
-
+    
         Notification::create([
             'user_id' => $booking->user_id,
             'title'   => 'Unfortunately, the reservation was declined',
