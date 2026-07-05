@@ -86,13 +86,14 @@ class PaymentController extends Controller
         }
 
         /* create order */
-        $orderResponse = Http::post($base.'/api/ecommerce/orders', [
-            'auth_token' => $token,
-            'delivery_needed' => false,
-            'amount_cents' => $amount_cents,
-            'currency' => "EGP",
-            'items' => []
-        ]);
+       $orderResponse = Http::post($base.'/api/ecommerce/orders', [
+    'auth_token'        => $token,
+    'delivery_needed'   => false,
+    'amount_cents'      => $amount_cents,
+    'currency'          => "EGP",
+    'merchant_order_id' => $localOrder->id,
+    'items'             => []
+]);
         
         $paymobOrderData = $orderResponse->json();
 
@@ -125,6 +126,10 @@ class PaymentController extends Controller
         ]);
 
         $payment_token = $paymentKeyResponse->json()['token'] ?? null;
+
+        if(!$payment_token){
+    return response()->json($paymentKeyResponse->json(),500);
+}
         $url = "https://accept.paymob.com/api/acceptance/iframes/".env('PAYMOB_IFRAME_ID')."?payment_token=".$payment_token;
 
         return response()->json(['payment_url' => $url]);
@@ -150,14 +155,14 @@ class PaymentController extends Controller
             return response()->json($tokenResponse->json(), 500);
         }
 
-        /* create order */
-        $orderResponse = Http::post($base.'/api/ecommerce/orders', [
-            'auth_token' => $token,
-            'delivery_needed' => false,
-            'amount_cents' => $amount_cents,
-            'currency' => "EGP",
-            'items' => []
-        ]);
+      $orderResponse = Http::post($base.'/api/ecommerce/orders', [
+    'auth_token'        => $token,
+    'delivery_needed'   => false,
+    'amount_cents'      => $amount_cents,
+    'currency'          => "EGP",
+    'merchant_order_id' => $localOrder->id,
+    'items'             => []
+]);
         
         $paymobOrderData = $orderResponse->json();
 
@@ -412,8 +417,9 @@ $walletService->credit(
     "Order #{$order->id} item payout"
 );
 
+$admin = User::where('role','admin')->first();
 
-if ($admin) {
+if($admin){
     $walletService->credit(
         $admin,
         $platformFee,
@@ -421,9 +427,6 @@ if ($admin) {
         "Commission from Order #{$order->id}"
     );
 }
-// رصيد الأدمن
-$admin = User::where('role', 'admin')->first();
-
 $walletService->credit(
     $admin,
     $platformFee,
