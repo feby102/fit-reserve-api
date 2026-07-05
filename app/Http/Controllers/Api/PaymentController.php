@@ -274,7 +274,11 @@ class PaymentController extends Controller
 public function webhook(Request $request)
 { 
     Log::info('Paymob Webhook Reached');
-    
+    Log::info('Webhook Payload', $request->all());
+
+$obj = $request->input('obj');
+
+Log::info('Obj', [$obj]);
     $obj = $request->input('obj');
     if (!$obj) {
         return response()->json(['message' => 'Invalid payload'], 400);
@@ -284,12 +288,24 @@ public function webhook(Request $request)
 
     // 1. تعريف وتأمين المتغيرات في أول الدالة لعدم حدوث Undefined variable
     $paymobOrderId = $obj['order']['id'] ?? null;
+
+    Log::info('Merchant Order ID', [
+    'merchant_order_id' => $obj['order']['merchant_order_id'] ?? null,
+    'paymob_order_id' => $obj['order']['id'] ?? null,
+]);
+
+
     $merchantOrderId = $obj['order']['merchant_order_id'] ?? null;
     $transactionId = $obj['id'] ?? null;
     $isSuccess = (isset($obj['success']) && ($obj['success'] === true || $obj['success'] === 'true'));
-
+Log::info('Paymob Data', [
+    'paymob_order_id' => $paymobOrderId,
+    'merchant_order_id' => $merchantOrderId,
+    'success' => $isSuccess,
+]);
     $booking = null;
     $order = null;
+
 
     // 2. التحقق من الـ HMAC للتأمين
     $hmacData = [
@@ -378,6 +394,14 @@ public function webhook(Request $request)
     // ثانياً: الأوردرات العادية للمنتجات
     $order = \App\Models\Order::where('id', $merchantOrderId)->first();
 
+Log::info('Paymob Data', [
+    'paymob_order_id' => $paymobOrderId,
+    'merchant_order_id' => $merchantOrderId,
+    'success' => $isSuccess,
+]);
+
+
+
     if (!$order && \Illuminate\Support\Facades\Schema::hasColumn('orders', 'paymob_order_id')) {
         $order = \App\Models\Order::where('paymob_order_id', $paymobOrderId)->first();
     }
@@ -426,13 +450,7 @@ if($admin){
         'commission',
         "Commission from Order #{$order->id}"
     );
-}
-$walletService->credit(
-    $admin,
-    $platformFee,
-    'commission',
-    "Commission from Order #{$order->id}"
-);}
+} }
         });
 
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
