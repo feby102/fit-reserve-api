@@ -123,7 +123,7 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 
     public function store(Request $request)
     {
-                 $this->authorize(' create',Stadium::class);   
+                 $this->authorize('create',Stadium::class);   
 
                  $vendor = auth()->user();
 
