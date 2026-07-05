@@ -364,6 +364,19 @@ Log::info('Paymob Data', [
         return response()->json(['message' => 'Paymob Order ID missing'], 200);
     }
 
+
+
+Log::info('Webhook Flags', [
+    'success' => $obj['success'] ?? null,
+    'pending' => $obj['pending'] ?? null,
+    'is_voided' => $obj['is_voided'] ?? null,
+    'is_refunded' => $obj['is_refunded'] ?? null,
+    'is_capture' => $obj['is_capture'] ?? null,
+]);
+
+
+
+
     if (!$isSuccess) {
         Log::info('Transaction not successful yet for order: ' . $paymobOrderId);
         return response()->json(['message' => 'Transaction not successful'], 200);
