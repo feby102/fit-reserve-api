@@ -105,6 +105,7 @@ public function index()
 //create new academy
 public function store(Request $request)
     {
+$vendor = auth()->user();
 
 
           $this->authorize('create',Academy::class);   
@@ -120,7 +121,6 @@ public function store(Request $request)
             
 
 ]);
-$vendor = auth()->user();
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
@@ -176,15 +176,15 @@ return response()->json([
 }
 
   public function destroy($id)
-    {
+    {$vendor = auth()->user();
+$academy = Academy::where('vendor_id', $vendor->id)->findOrFail($id);
+
+$this->authorize('delete',$academy);
 
 
-
-$vendor = auth()->user();
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
-$academy = Academy::where('vendor_id', $vendor->id)->findOrFail($id);
 $academy->delete();
 
 

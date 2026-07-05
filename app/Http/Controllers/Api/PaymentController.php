@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\PendingVerification;
+use App\Models\User;
 use App\Models\VerificationRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -399,11 +400,36 @@ public function webhook(Request $request)
                 if (!$seller) continue;
 
                 $total = $item->price * $item->quantity;
-                $platformFee = $total * 0.10; 
-                $sellerAmount = $total - $platformFee;
 
-                $walletService->deposit($seller, $sellerAmount, "Order #{$order->id} item payout");
-            }
+$platformFee = $total * 0.10;
+$sellerAmount = $total - $platformFee;
+
+// رصيد الفيندور
+$walletService->credit(
+    $seller,
+    $sellerAmount,
+    'credit',
+    "Order #{$order->id} item payout"
+);
+
+
+if ($admin) {
+    $walletService->credit(
+        $admin,
+        $platformFee,
+        'commission',
+        "Commission from Order #{$order->id}"
+    );
+}
+// رصيد الأدمن
+$admin = User::where('role', 'admin')->first();
+
+$walletService->credit(
+    $admin,
+    $platformFee,
+    'commission',
+    "Commission from Order #{$order->id}"
+);}
         });
 
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);

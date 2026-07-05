@@ -91,16 +91,14 @@ class UserController extends Controller
             ], 422);
         }
 
-        // رفع الوثائق
-        $documentPaths = [];
+         $documentPaths = [];
         if ($request->hasFile('documents')) {
             foreach ($request->file('documents') as $file) {
                 $documentPaths[] = $file->store('verifications', 'public');
             }
         }
 
-        // حفظ الطلب
-       $pendingVerification = PendingVerification::create([
+        $pendingVerification = PendingVerification::create([
     'user_id'        => auth()->id(),
     'role'           => $data['role'],
     'documents'      => $documentPaths,

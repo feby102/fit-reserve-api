@@ -24,7 +24,7 @@ public function request(Request $request)
 
     $user=auth()->user();
 
-    if($user->balance < $data['amount']){
+    if($user->wallet->balance < $data['amount']){
 
         return response()->json([
             'message'=>'Insufficient balance'
