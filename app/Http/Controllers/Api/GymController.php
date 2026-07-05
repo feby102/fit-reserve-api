@@ -10,11 +10,14 @@ use App\Models\Gym;
 use App\Models\GymPlan;
 use App\Models\GymSchedule;
 use App\Models\GymSubscription;
+use App\Models\Stadium;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class GymController extends Controller
-{
+{use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -101,6 +104,8 @@ public function show(string $id)
 
      public function store(Request $request)
     {
+$this->authorize('create',Stadium::class);
+
         $data=$request->validate([
 'name'=>'required|string',
 'type'=>'required|string',
@@ -137,7 +142,13 @@ return \response()->json([ 'message'=>'Gym created',
 
 
     public function update(Request $request, string $id)
-    {    $vendor = auth()->user();
+    {   
+
+        $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
+
+     $this->authorize('update',$gym);   
+    
+    $vendor = auth()->user();
 
     $data = $request->validate([
     'name' => 'sometimes|string',
@@ -147,7 +158,6 @@ return \response()->json([ 'message'=>'Gym created',
     'image' => 'nullable|image'
 ]);
 
-    $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
 
 $gym->update($data);
 
@@ -162,6 +172,8 @@ return $gym;
  $vendor = auth()->user();
 
     $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
+         $this->authorize('delete',$gym);   
+
     $gym->delete();
 
 return response()->json([

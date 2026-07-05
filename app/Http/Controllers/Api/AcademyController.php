@@ -5,10 +5,12 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Academy;
 use App\Models\AcademyType;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class AcademyController extends Controller
-{
+{use AuthorizesRequests;
+
     
 public function publicIndex()
 {
@@ -68,6 +70,8 @@ public function index()
 {
     $vendor = auth()->user();
 
+
+
     if (!$vendor) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
@@ -101,6 +105,10 @@ public function index()
 //create new academy
 public function store(Request $request)
     {
+
+
+          $this->authorize('create',Academy::class);   
+    
 
         $request->validate([
                 'type' => 'required|string',
@@ -139,12 +147,17 @@ $academy = Academy::create([
 
 
     public function update(Request $request,$id){
-
+        
 $vendor = auth()->user();
+$academy = Academy::where('vendor_id', $vendor->id)->findOrFail($id);
+
+             $this->authorize('update',$academy);   
+
+
+
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
-$academy = Academy::where('vendor_id', $vendor->id)->findOrFail($id);
 $academy->update([
 
             'type'=>$request->type??$academy->type ,

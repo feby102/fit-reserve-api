@@ -12,7 +12,8 @@ class Order extends Model
     'total_price',
     'status',
     'payment_method',
-    'payment_status'
+    'payment_status',
+    'paymob_order_id'
 
 ];
 

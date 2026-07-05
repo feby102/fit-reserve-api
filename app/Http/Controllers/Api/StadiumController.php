@@ -123,7 +123,11 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 
     public function store(Request $request)
     {
-$vendor = auth()->user();
+                 $this->authorize(' create',Stadium::class);   
+
+                 $vendor = auth()->user();
+
+
         if (!$vendor) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -161,11 +165,17 @@ $vendor = auth()->user();
 
 public function update(Request $request, $id)
     {
-$vendor = auth()->user();
+
+    $vendor = auth()->user();
+
+        $stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id);
+
+
+             $this->authorize('update',$stadium);   
+
 
 if (!$vendor) return response()->json(['message' => 'Unauthorized'], 403);
 
-        $stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id);
 
         $data = $request->validate([
             'name' => 'sometimes|string',
@@ -196,12 +206,15 @@ if (!$vendor) return response()->json(['message' => 'Unauthorized'], 403);
 
   public function destroy(Request $request, $id)
 {
+    $vendor = auth()->user();
 
-$vendor = auth()->user();
+     $stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id);
+
+         $this->authorize('delete',$stadium);   
+
 if (!$vendor) {
     return response()->json(['message' => 'Unauthorized'], 403);
 }
-     $stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id);
  
     $stadium->delete();
 
