@@ -275,7 +275,7 @@ public function webhook(Request $request)
 { 
 
 
-
+Log::info(json_encode($request->all(), JSON_PRETTY_PRINT));
 
 Log::info('Step 1');
 
