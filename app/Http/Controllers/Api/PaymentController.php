@@ -273,6 +273,34 @@ class PaymentController extends Controller
     }
 public function webhook(Request $request)
 { 
+
+
+
+
+Log::info('Step 1');
+
+$obj = $request->input('obj');
+
+Log::info('Step 2');
+
+$paymobOrderId = $obj['order']['id'] ?? null;
+
+Log::info('Step 3');
+
+$merchantOrderId = $obj['order']['merchant_order_id'] ?? null;
+
+Log::info('Step 4');
+
+$order = Order::where('id', $merchantOrderId)->first();
+
+Log::info('Step 5');
+
+
+
+
+
+
+
     Log::info('Paymob Webhook Reached');
     Log::info('Webhook Payload', $request->all());
 
@@ -405,8 +433,15 @@ Log::info('Paymob Data', [
     if (!$order && \Illuminate\Support\Facades\Schema::hasColumn('orders', 'paymob_order_id')) {
         $order = \App\Models\Order::where('paymob_order_id', $paymobOrderId)->first();
     }
-
+Log::info([
+    'merchant_order_id' => $merchantOrderId,
+    'paymob_order_id' => $paymobOrderId,
+    'order_found' => $order ? true : false,
+]);
     if ($order) {
+
+
+    Log::info($order->toArray());
         if ($order->payment_status == 'paid') {
             return response()->json(['message' => 'Order already processed'], 200);
         }
