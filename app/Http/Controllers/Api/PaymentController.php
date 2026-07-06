@@ -108,8 +108,7 @@ class PaymentController extends Controller
             'payment_method' => 'visa',
             'paymob_order_id' => $paymob_order_id,
 
-                     'payment_status' => 'paid',
-                    'status' => 'confirmed'
+                     
                 
         ]);
 
@@ -180,8 +179,7 @@ class PaymentController extends Controller
         $localOrder->update([
             'payment_method' => 'vodafone_cash',
             'paymob_order_id' => $paymob_order_id,
-            'payment_status' => 'paid',
-                    'status' => 'confirmed'
+            
         ]);
 
         /* generate payment key */
@@ -406,36 +404,42 @@ Log::info('Webhook Flags', [
             return response()->json(['message' => 'Booking already processed'], 200);
         }
 
-        \DB::transaction(function () use ($booking, $transactionId, $paymobOrderId) {
-            $updateData = [
-                'payment_status'  => 'paid',
-                'status'          => 'confirmed',
-            ];
-            if (\Illuminate\Support\Facades\Schema::hasColumn('bookings', 'paymob_order_id')) {
-                $updateData['paymob_order_id'] = $paymobOrderId;
-            }
-            $booking->update($updateData);
+\DB::transaction(function () use ($booking, $transactionId, $paymobOrderId) {
+    $updateData = [
+        'payment_status'  => 'paid',
+        'status'          => 'confirmed',
+    ];
+    if (\Illuminate\Support\Facades\Schema::hasColumn('bookings', 'paymob_order_id')) {
+        $updateData['paymob_order_id'] = $paymobOrderId;
+    }
+    $booking->update($updateData);
 
-            // زيادة محفظة الفيندور
-            $stadium = $booking->stadium;
-            $owner = $stadium->vendor ?? $stadium->user ?? null; // تجربة ورا تانية لضمان الوصول للريكورد
+    $stadium = $booking->stadium;
+    $owner = $stadium->vendor ?? $stadium->user ?? null;
 
-            if ($owner) {
-                $amount = $booking->total_price;
-                $platformFee = $amount * 0.10; 
-                $ownerAmount = $amount - $platformFee;
+    $admin = User::where('role', 'admin')->first();
+    if (!$admin) {
+        Log::error('No admin user found - cannot process payout for booking ' . $booking->id);
+        return;
+    }
 
-                app(\App\Services\WalletService::class)->deposit(
-                    $owner,
-                    $ownerAmount,
-                    "Booking #{$booking->id} payout"
-                );
-                Log::info("Wallet updated for Vendor ID: {$owner->id} with amount: {$ownerAmount}");
-            } else {
-                Log::warning("Stadium owner/vendor not found for booking ID: {$booking->id}");
-            }
-        });
+    $amount = $booking->total_price;
+    $platformFee = $amount * 0.10;
+    $ownerAmount = $amount - $platformFee;
 
+    $walletService = app(\App\Services\WalletService::class);
+
+    // الفلوس كلها بتدخل الأدمن الأول
+    $walletService->credit($admin, $amount, 'credit', "Booking #{$booking->id} - gross amount received from Paymob");
+
+    if ($owner) {
+        // بيتحول نصيب الفيندور
+        $walletService->debit($admin, $ownerAmount, 'debit', "Booking #{$booking->id} - transferred to vendor #{$owner->id}");
+        $walletService->credit($owner, $ownerAmount, 'credit', "Booking #{$booking->id} payout");
+    } else {
+        Log::warning("Stadium owner/vendor not found for booking ID: {$booking->id}");
+    }
+});
         return response()->json(['message' => 'Booking paid successfully'], 200);
     }
 
@@ -465,49 +469,60 @@ Log::info([
         if ($order->payment_status == 'paid') {
             return response()->json(['message' => 'Order already processed'], 200);
         }
+\DB::transaction(function () use ($order, $transactionId, $paymobOrderId) {
+    $updateData = [
+        'payment_status'  => 'paid',
+        'status'          => 'confirmed',
+    ];
+    if (\Illuminate\Support\Facades\Schema::hasColumn('orders', 'paymob_order_id')) {
+        $updateData['paymob_order_id'] = $paymobOrderId;
+    }
+    $order->update($updateData);
 
-        \DB::transaction(function () use ($order, $transactionId, $paymobOrderId) {
-            $updateData = [
-                'payment_status'  => 'paid',
-                'status'          => 'confirmed',
-            ];
-            if (\Illuminate\Support\Facades\Schema::hasColumn('orders', 'paymob_order_id')) {
-                $updateData['paymob_order_id'] = $paymobOrderId;
-            }
-            $order->update($updateData);
+    $order->load('items.product.seller');
+    $walletService = app(\App\Services\WalletService::class);
 
-            $order->load('items.product.seller');
-            $walletService = app(\App\Services\WalletService::class);
+    $admin = User::where('role', 'admin')->first();
+    if (!$admin) {
+        Log::error('No admin user found - cannot process payout for order ' . $order->id);
+        return;
+    }
 
-            foreach ($order->items as $item) {
-                $seller = $item->product->seller ?? null;
-                if (!$seller) continue;
+    foreach ($order->items as $item) {
+        $seller = $item->product->seller ?? null;
+        if (!$seller) continue;
 
-                $total = $item->price * $item->quantity;
+        $total = $item->price * $item->quantity;
+        $platformFee = $total * 0.10;
+        $sellerAmount = $total - $platformFee;
 
-$platformFee = $total * 0.10;
-$sellerAmount = $total - $platformFee;
+        // 1) الفلوس كلها بتدخل محفظة الأدمن الأول (تمثل رصيد باي موب)
+        $walletService->credit(
+            $admin,
+            $total,
+            'credit',
+            "Order #{$order->id} - gross amount received from Paymob"
+        );
 
-// رصيد الفيندور
-$walletService->credit(
-    $seller,
-    $sellerAmount,
-    'credit',
-    "Order #{$order->id} item payout"
-);
+        // 2) بيتخصم نصيب الفيندور من الأدمن
+        $walletService->debit(
+            $admin,
+            $sellerAmount,
+            'debit',
+            "Order #{$order->id} - transferred to vendor #{$seller->id}"
+        );
 
-$admin = User::where('role','admin')->first();
+        // 3) ويتحط في محفظة الفيندور
+        $walletService->credit(
+            $seller,
+            $sellerAmount,
+            'credit',
+            "Order #{$order->id} item payout"
+        );
 
-if($admin){
-    $walletService->credit(
-        $admin,
-        $platformFee,
-        'commission',
-        "Commission from Order #{$order->id}"
-    );
-} }
-        });
-
+        // العمولة (10%) فضلت في محفظة الأدمن أصلاً، مش محتاج نحطها تاني
+    }
+});
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
     }
 
