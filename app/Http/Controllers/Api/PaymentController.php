@@ -179,7 +179,9 @@ class PaymentController extends Controller
 
         $localOrder->update([
             'payment_method' => 'vodafone_cash',
-            'paymob_order_id' => $paymob_order_id
+            'paymob_order_id' => $paymob_order_id,
+            'payment_status' => 'paid',
+                    'status' => 'confirmed'
         ]);
 
         /* generate payment key */
