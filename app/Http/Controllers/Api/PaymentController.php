@@ -106,7 +106,11 @@ class PaymentController extends Controller
         // تحديث الموديل المحلي الأصلي بنجاح دون Crash
         $localOrder->update([
             'payment_method' => 'visa',
-            'paymob_order_id' => $paymob_order_id
+            'paymob_order_id' => $paymob_order_id,
+
+                     'payment_status' => 'paid',
+                    'status' => 'confirmed'
+                
         ]);
 
         /* generate payment key */
