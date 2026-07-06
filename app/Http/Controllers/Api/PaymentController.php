@@ -124,6 +124,7 @@ class PaymentController extends Controller
                 "postal_code" => "NA", "city" => "Cairo", "country" => "EG", "state" => "NA"
             ]
         ]);
+        Log::info('Payment Key Response', $paymentKeyResponse->json());
 
         $payment_token = $paymentKeyResponse->json()['token'] ?? null;
 
@@ -163,7 +164,7 @@ class PaymentController extends Controller
     'merchant_order_id' => $localOrder->id,
     'items'             => []
 ]);
-        
+        Log::info('Order Response', $orderResponse->json());
         $paymobOrderData = $orderResponse->json();
 
         if (!$orderResponse->successful()) {
