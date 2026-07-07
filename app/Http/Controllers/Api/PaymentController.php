@@ -512,56 +512,17 @@ Log::info([
 
     foreach ($order->items as $item) {
 
+    $seller = $item->product->seller;
 
-       Log::info('Seller Debug',[
-        'product_id'=>$item->product_id,
-        'seller_id'=>$item->product->seller_id ?? null,
-        'seller'=>$item->product->seller ?? null,
-    ]);
+    if (!$seller) {
+        continue;
+    }
 
-        $seller = $item->product->seller ?? null;
-        if (!$seller) continue;
+    $total = $item->price * $item->quantity;
 
-        $total = $item->price * $item->quantity;
-        $platformFee = $total * 0.10;
-        $sellerAmount = $total - $platformFee;
-Log::info('Crediting admin');
-
-Log::info('Admin', [
-    'id' => $admin?->id,
-    'role' => $admin?->role,
-]);
-
-
-
-        // 1) الفلوس كلها بتدخل محفظة الأدمن الأول (تمثل رصيد باي موب)
-        $walletService->credit(
-            $admin,
-            $total,
-            'credit',
-            "Order #{$order->id} - gross amount received from Paymob"
-        );
-
-
-        Log::info('Seller credited');
-Log::info('Debiting admin');
-
-       
-
-$walletService->debit(
-    $admin,
-    $sellerAmount,
-    'debit',
-    "Order #{$order->id} - transferred to vendor #{$seller->id}"
-);
-
-$walletService->credit(
-    $seller,
-    $sellerAmount,
-    'credit',
-    "Order #{$order->id} item payout"
-);}
-});
+    app(\App\Services\CommissionService::class)
+        ->distribute($total, $seller);
+}});
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
     }
 

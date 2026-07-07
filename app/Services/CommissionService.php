@@ -1,41 +1,54 @@
 <?php
-namespace App\Services;
 
 use App\Models\LedgerEntry;
+use App\Models\Order;
 use App\Models\Setting;
+use App\Models\User;
+use App\Services\WalletService;
 
 class CommissionService
 {
-    public function distribute($amount, $vendor)
-    {
-        $settings = Setting::first();
-        $rate = $settings->commission_rate ?? 0;
+   public function distribute($amount, User $seller)
+{
+    $settings = Setting::first();
 
-        $commission = ($amount * $rate) / 100;
-        $vendorProfit = $amount - $commission;
+    $rate = $settings->commission_rate ?? 10;
 
-        // ربح vendor
-        $vendor->increment('balance', $vendorProfit);
+    $commission = ($amount * $rate) / 100;
 
-        // عمولة الأدمن
-        $settings->increment('total_admin_commissions', $commission);
-    
-LedgerEntry::create([
-    'account_type' => get_class($vendor),
-    'account_id' => $vendor->id,
-    'type' => 'commission',
-    'amount' => $vendorProfit,
-    'description' => 'Vendor profit'
-]);
+    $sellerAmount = $amount - $commission;
 
-LedgerEntry::create([
-    'account_type' => 'admin',
-    'account_id' => 1,
-    'type' => 'commission',
-    'amount' => $commission,
-    'description' => 'Platform commission'
-]);
+    $walletService = app(WalletService::class);
 
+    $admin = User::where('role','admin')->first();
 
-    }
-    }
+    $walletService->credit(
+        $admin,
+        $amount,
+        'credit',
+        'Gross amount received'
+    );
+
+    $walletService->debit(
+        $admin,
+        $sellerAmount,
+        'debit',
+        "Transferred to vendor #{$seller->id}"
+    );
+
+    $walletService->credit(
+        $seller,
+        $sellerAmount,
+        'credit',
+        'Vendor payout'
+    );
+
+    LedgerEntry::create([
+        'account_type' => get_class($admin),
+        'account_id' => $admin->id,
+        'type' => 'commission',
+        'amount' => $commission,
+        'description' => 'Platform commission',
+    ]);
+}
+}
