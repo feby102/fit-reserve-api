@@ -403,9 +403,10 @@ Log::info('Webhook Flags', [
         if ($booking->payment_status == 'paid') {
             return response()->json(['message' => 'Booking already processed'], 200);
         }
+try {
 
-\DB::transaction(function () use ($booking, $transactionId, $paymobOrderId) {
-    $updateData = [
+    DB::transaction(function () use ($order, $transactionId, $paymobOrderId) {
+  $updateData = [
         'payment_status'  => 'paid',
         'status'          => 'confirmed',
     ];
@@ -440,9 +441,20 @@ Log::info('Webhook Flags', [
         Log::warning("Stadium owner/vendor not found for booking ID: {$booking->id}");
     }
 });
-        return response()->json(['message' => 'Booking paid successfully'], 200);
+ 
+} catch (\Throwable $e) {
+
+    Log::error($e->getMessage());
+    Log::error($e->getFile());
+    Log::error($e->getLine());
+
+    throw $e;
+}
+
+return response()->json(['message' => 'Booking paid successfully'], 200);
     }
 
+    
     // ثانياً: الأوردرات العادية للمنتجات
     $order = \App\Models\Order::where('id', $merchantOrderId)->first();
 
