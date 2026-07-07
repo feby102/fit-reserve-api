@@ -546,13 +546,7 @@ Log::info('Admin', [
         Log::info('Seller credited');
 Log::info('Debiting admin');
 
-        // 2) بيتخصم نصيب الفيندور من الأدمن
-$walletService->credit(
-    $admin,
-    $total,
-    'credit',
-    "Order #{$order->id} - gross amount received from Paymob"
-);
+       
 
 $walletService->debit(
     $admin,
