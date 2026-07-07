@@ -435,6 +435,11 @@ Log::info('Admin',[
 
     $walletService = app(\App\Services\WalletService::class);
 
+
+    Log::info('Admin', [
+    'id' => $admin?->id,
+    'role' => $admin?->role,
+]);
     // الفلوس كلها بتدخل الأدمن الأول
     $walletService->credit($admin, $amount, 'credit', "Booking #{$booking->id} - gross amount received from Paymob");
 
@@ -521,6 +526,13 @@ Log::info([
         $platformFee = $total * 0.10;
         $sellerAmount = $total - $platformFee;
 Log::info('Crediting admin');
+
+Log::info('Admin', [
+    'id' => $admin?->id,
+    'role' => $admin?->role,
+]);
+
+
 
         // 1) الفلوس كلها بتدخل محفظة الأدمن الأول (تمثل رصيد باي موب)
         $walletService->credit(
