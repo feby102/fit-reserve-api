@@ -148,6 +148,8 @@ Route::get('/categories', [CategoryController::class, 'publicIndex']);
 Route::get('/categories/{id}', [CategoryController::class, 'publicShow']);
 
 
+Route::get('/product_details/{id}',[ProductController::class,'publicShow']);
+
 Route::get('/products',[ProductController::class,'index']);
 Route::get('/filter',[ProductController::class,'filter']);
 

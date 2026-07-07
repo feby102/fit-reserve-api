@@ -10,28 +10,27 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // جلب جميع المنتجات للعامة مع السيلر والـ Category
-    public function index()
-    {
-        // تغيير الـ eager loading من vendor إلى seller
-        $products = Product::with('seller', 'category')->get();
+     public function index()
+    {    $products = Product::with('seller', 'category')->get();
 
         return response()->json($products);
     }
 
-    // جلب المنتجات الخاصة بالسيلر الحالي فقط
-    public function sellerProducts()
+    public function publicShow($id){
+$product=Product::findOrFail($id);
+return \response()->json($product);
+
+    }
+
+     public function sellerProducts()
     {
         $seller = auth()->user();
-        
-        // الفلترة بناءً على الـ seller_id
-        $products = Product::where('seller_id', $seller->id)->with('category')->get();
+         $products = Product::where('seller_id', $seller->id)->with('category')->get();
         
         return response()->json($products);
     }
 
-    // إضافة منتج جديد بواسطة السيلر
-    public function store(Request $request)
+     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string',
@@ -46,14 +45,12 @@ class ProductController extends Controller
         $seller = auth()->user();  
         $image_path = null;   
 
-        // رفع الصورة إذا وجدت وتخزين المسار
-        if ($request->hasFile('image')) {
-            $folder = 'product_images'; // تعديل الاسم ليكون جمع وأوضح
-            $image_path = $request->file('image')->store($folder, 'public');
+         if ($request->hasFile('image')) {
+            $folder = 'product_images';  
+                        $image_path = $request->file('image')->store($folder, 'public');
         }
 
-        // إنشاء المنتج وربطه بالـ seller_id
-        $product = Product::create([
+         $product = Product::create([
             'seller_id' => $seller->id,
             'name' => $data['name'],
             'description' => $data['description'],
@@ -70,16 +67,13 @@ class ProductController extends Controller
         ], 201);
     }
 
-    // تحديث منتج معين خاص بالسيلر الحالي
-    public function update(Request $request, $id)
+     public function update(Request $request, $id)
     {
         $seller = auth()->user();
 
-        // التأكد أن المنتج يخص السيلر الحالي
-        $product = Product::where('seller_id', $seller->id)->findOrFail($id);
+         $product = Product::where('seller_id', $seller->id)->findOrFail($id);
 
-        // عمل Validation مرن للتحديث
-        $data = $request->validate([
+         $data = $request->validate([
             'name' => 'sometimes|required|string',
             'description' => 'sometimes|required|string|max:255',
             'price' => 'sometimes|required|numeric', 
@@ -89,8 +83,7 @@ class ProductController extends Controller
             'category_id' => 'sometimes|required|exists:categories,id'
         ]);
 
-        // التعامل مع الصورة الجديدة وحذف القديمة لعدم تراكم الملفات
-        if ($request->hasFile('image')) {
+         if ($request->hasFile('image')) {
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
@@ -98,8 +91,7 @@ class ProductController extends Controller
             $data['image'] = $request->file('image')->store($folder, 'public');
         }
 
-        // تحديث المنتج بالبيانات المفحوصة فقط (أكثر أماناً من $request->all())
-        $product->update($data);
+         $product->update($data);
 
         return response()->json([
             'message' => 'Product updated successfully',
@@ -107,15 +99,13 @@ class ProductController extends Controller
         ]);
     }
 
-    // حذف منتج خاص بالسيلر
-    public function destroy($id)
+     public function destroy($id)
     {
         $seller = auth()->user();
 
         $product = Product::where('seller_id', $seller->id)->findOrFail($id);
 
-        // حذف صورة المنتج من السيرفر قبل حذف السجل
-        if ($product->image) {
+         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }
 
