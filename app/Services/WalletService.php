@@ -37,30 +37,29 @@ class WalletService
 }
   public function debit(User $user, $amount, $type, $description)
 {
+    \Log::info('Debit 1');
+
     $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
 
-    \Log::info('Debit Wallet', [
-        'user_id' => $user->id,
+    \Log::info('Debit 2', [
         'balance' => $wallet->balance,
         'amount' => $amount,
     ]);
 
     if ($wallet->balance < $amount) {
-        \Log::error('Insufficient balance', [
-            'balance' => $wallet->balance,
-            'amount' => $amount,
-        ]);
-
-        throw new \Exception('Insufficient balance');
+        \Log::info('Debit 3');
+        throw new Exception('Insufficient balance');
     }
+
+    \Log::info('Debit 4');
 
     DB::transaction(function () use ($wallet, $user, $amount, $type, $description) {
 
-        \Log::info('Before decrement');
+        \Log::info('Debit 5');
 
         $wallet->decrement('balance', $amount);
 
-        \Log::info('After decrement');
+        \Log::info('Debit 6');
 
         $wallet->transactions()->create([
             'type' => $type,
@@ -69,7 +68,7 @@ class WalletService
             'status' => 'confirmed'
         ]);
 
-        \Log::info('Transaction created');
+        \Log::info('Debit 7');
 
         LedgerEntry::create([
             'account_type' => get_class($user),
@@ -79,7 +78,9 @@ class WalletService
             'description' => $description
         ]);
 
-        \Log::info('Ledger created');
+        \Log::info('Debit 8');
     });
+
+    \Log::info('Debit 9');
 }
     }
