@@ -418,6 +418,11 @@ try {
     $stadium = $booking->stadium;
     $owner = $stadium->vendor ?? $stadium->user ?? null;
 
+
+Log::info('Admin',[
+    'admin'=>$admin
+]);
+
     $admin = User::where('role', 'admin')->first();
     if (!$admin) {
         Log::error('No admin user found - cannot process payout for booking ' . $booking->id);
@@ -501,12 +506,21 @@ Log::info([
     }
 
     foreach ($order->items as $item) {
+
+
+       Log::info('Seller Debug',[
+        'product_id'=>$item->product_id,
+        'seller_id'=>$item->product->seller_id ?? null,
+        'seller'=>$item->product->seller ?? null,
+    ]);
+
         $seller = $item->product->seller ?? null;
         if (!$seller) continue;
 
         $total = $item->price * $item->quantity;
         $platformFee = $total * 0.10;
         $sellerAmount = $total - $platformFee;
+Log::info('Crediting admin');
 
         // 1) الفلوس كلها بتدخل محفظة الأدمن الأول (تمثل رصيد باي موب)
         $walletService->credit(
@@ -515,6 +529,10 @@ Log::info([
             'credit',
             "Order #{$order->id} - gross amount received from Paymob"
         );
+
+
+        Log::info('Seller credited');
+Log::info('Debiting admin');
 
         // 2) بيتخصم نصيب الفيندور من الأدمن
         $walletService->debit(
