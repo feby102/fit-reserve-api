@@ -11,7 +11,7 @@ use Log;
 class CommissionService
 {
     public function distribute($amount, User $seller, $orderId)
-    {
+    {Log::info('Commission Service Started');
         try {
 
             $settings = Setting::first();
