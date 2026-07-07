@@ -547,27 +547,26 @@ Log::info('Admin', [
 Log::info('Debiting admin');
 
         // 2) بيتخصم نصيب الفيندور من الأدمن
-try {
+$walletService->credit(
+    $admin,
+    $total,
+    'credit',
+    "Order #{$order->id} - gross amount received from Paymob"
+);
 
-    $walletService->debit(
-        $admin,
-        $sellerAmount,
-        'debit',
-        "Order #{$order->id} - transferred to vendor #{$seller->id}"
-    );
+$walletService->debit(
+    $admin,
+    $sellerAmount,
+    'debit',
+    "Order #{$order->id} - transferred to vendor #{$seller->id}"
+);
 
-    $walletService->credit(
-        $seller,
-        $sellerAmount,
-        'credit',
-        "Order #{$order->id} item payout"
-    );
-
-} catch (\Throwable $e) {
-
-    Log::error($e->getMessage());
-    throw $e;
-}}
+$walletService->credit(
+    $seller,
+    $sellerAmount,
+    'credit',
+    "Order #{$order->id} item payout"
+);}
 });
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
     }
