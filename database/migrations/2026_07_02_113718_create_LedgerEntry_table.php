@@ -11,25 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('LedgerEntry', function (Blueprint $table) {
-            $table->id();
-
-            $table->morphs('account'); 
-    // user / vendor / admin
-
-    $table->string('type'); 
-    // credit | debit | commission | refund | booking | order
-
+     Schema::create('ledger_entries', function (Blueprint $table) {
+    $table->id();
+    $table->morphs('account'); // account_type + account_id
+    $table->string('type');
     $table->decimal('amount', 10, 2);
-
     $table->text('description')->nullable();
-
     $table->unsignedBigInteger('reference_id')->nullable();
-    // booking_id / order_id / transaction_id
-
     $table->string('reference_type')->nullable();
-            $table->timestamps();
-        });
+    $table->timestamps();
+});
     }
 
     /**
