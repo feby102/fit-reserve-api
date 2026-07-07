@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class LedgerEntry extends Model
 {
-    protected $table = 'LedgerEntry'; 
-    protected $fillable = [
+protected $table = 'ledger_entries';
+
+protected $fillable = [
         'account_type',
         'account_id',
         'type',
