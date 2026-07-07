@@ -519,9 +519,8 @@ Log::info([
     }
 
     $total = $item->price * $item->quantity;
-
-    app(\App\Services\CommissionService::class)
-        ->distribute($total, $seller);
+app(\App\Services\CommissionService::class)
+    ->distribute($total, $seller, $order->id);
 }});
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
     }
