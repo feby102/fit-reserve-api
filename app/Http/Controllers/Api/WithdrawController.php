@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Http\Controllers\Controller;
 use App\Models\WithdrawRequest;
 use Illuminate\Http\Request;
@@ -66,16 +68,12 @@ public function approve($id)
     DB::transaction(function() use($withdraw){
 
         $user=$withdraw->user;
-
-        $user->decrement('balance',$withdraw->amount);
-
-        app(\App\Services\LedgerService::class)
-            ->withdraw(
-                $user,
-                $withdraw->amount,
-                "Withdraw Request #{$withdraw->id}"
-            );
-
+app(\App\Services\WalletService::class)->debit(
+    $user,
+    $withdraw->amount,
+    'withdraw',
+    "Withdraw Request #{$withdraw->id}"
+);
         $withdraw->update([
             'status'=>'approved'
         ]);
