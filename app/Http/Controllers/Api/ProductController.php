@@ -18,8 +18,7 @@ class ProductController extends Controller
 
     public function publicShow($id){
 $product=Product::findOrFail($id);
-dd($product);
-return \response()->json($product);
+ return \response()->json($product);
 
     }
 
