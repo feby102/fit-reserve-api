@@ -11,6 +11,8 @@ use Exception;
 
 class WalletService
 {
+
+
    public function credit($user, $amount, $type, $description)
 {
     $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
