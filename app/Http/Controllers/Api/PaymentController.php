@@ -535,14 +535,28 @@ Log::info('Crediting admin');
 Log::info('Debiting admin');
 
         // 2) بيتخصم نصيب الفيندور من الأدمن
-        $walletService->debit(
-            $admin,
-            $sellerAmount,
-            'debit',
-            "Order #{$order->id} - transferred to vendor #{$seller->id}"
-        );
+  try {
 
-        // 3) ويتحط في محفظة الفيندور
+    Log::info('Debiting admin');
+
+    $walletService->debit(
+        $admin,
+        $sellerAmount,
+        'debit',
+        "Order #{$order->id} - transferred to vendor #{$seller->id}"
+    );
+
+    Log::info('Admin debited successfully');
+
+} catch (\Throwable $e) {
+
+    Log::error('Debit failed', [
+        'message' => $e->getMessage(),
+        'line' => $e->getLine(),
+        'file' => $e->getFile(),
+    ]);
+
+    throw $e;      // 3) ويتحط في محفظة الفيندور
         $walletService->credit(
             $seller,
             $sellerAmount,
@@ -551,7 +565,7 @@ Log::info('Debiting admin');
         );
 
         // العمولة (10%) فضلت في محفظة الأدمن أصلاً، مش محتاج نحطها تاني
-    }
+    }}
 });
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
     }
