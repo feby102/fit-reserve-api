@@ -35,18 +35,32 @@ class WalletService
         ]);
     });
 }
-    public function debit(User $user, $amount, $type, $description)
+  public function debit(User $user, $amount, $type, $description)
 {
     $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
 
+    \Log::info('Debit Wallet', [
+        'user_id' => $user->id,
+        'balance' => $wallet->balance,
+        'amount' => $amount,
+    ]);
+
     if ($wallet->balance < $amount) {
+        \Log::error('Insufficient balance', [
+            'balance' => $wallet->balance,
+            'amount' => $amount,
+        ]);
+
         throw new \Exception('Insufficient balance');
     }
 
     DB::transaction(function () use ($wallet, $user, $amount, $type, $description) {
-        //                              👆 ضيف $user هنا
+
+        \Log::info('Before decrement');
 
         $wallet->decrement('balance', $amount);
+
+        \Log::info('After decrement');
 
         $wallet->transactions()->create([
             'type' => $type,
@@ -55,6 +69,8 @@ class WalletService
             'status' => 'confirmed'
         ]);
 
+        \Log::info('Transaction created');
+
         LedgerEntry::create([
             'account_type' => get_class($user),
             'account_id' => $user->id,
@@ -62,6 +78,8 @@ class WalletService
             'amount' => -$amount,
             'description' => $description
         ]);
+
+        \Log::info('Ledger created');
     });
 }
     }
