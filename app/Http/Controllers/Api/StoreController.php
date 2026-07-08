@@ -33,7 +33,7 @@ public function index()
         return response()->json(['message' => 'Unauthorized'], 403);
     }
 
-     $stores = Store::where('vendor_id', $vendor->id)
+     $stores = Store::where('user_id', $vendor->id)
         ->withAvg('reviews', 'rating')
         ->latest()
         ->get();
@@ -78,7 +78,7 @@ public function show($id)
 
     // عرض الستور مع الريفيوز عشان الفيندور يتابعها
     $store = Store::with(['products', 'reviews.user'])
-        ->where('vendor_id', $vendor->id)
+        ->where('user_id', $vendor->id)
         ->findOrFail($id);
 
     $average = $store->reviews->avg('rating');
@@ -149,8 +149,7 @@ public function store(Request $request)
     ]);
 
     if ($request->hasFile('image')) {
-        // تأكدنا هنا إن المفتاح هو image عشان يتخزن صح في العمود الخاص به بقاعدة البيانات
-        $data['image'] = $request->file('image')->store('stores', 'public');
+         $data['image'] = $request->file('image')->store('stores', 'public');
     }
 
     $store->update($data);
