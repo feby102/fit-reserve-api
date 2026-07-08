@@ -257,7 +257,7 @@ Route::post('/academy-subscribe',[AcademySubscriptionController::class, 'store']
 Route::apiResource('/stores',StoreController::class);
 
 
-Route::get('/vendorProducts',[ProductController::class,'vendorProducts']);
+Route::get('/vendorProducts',[ProductController::class,'sellerProducts']);
 Route::put('/products/{product}',[ProductController::class,'update']);
 Route::post('/products',[ProductController::class,'store']);
 Route::delete('/products/{id}',[ProductController::class,'destroy']);
