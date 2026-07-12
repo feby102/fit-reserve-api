@@ -318,7 +318,7 @@ public function filterstadum(Request $request)
     $area = $request->area ?? $user->area;
 
     $stadiums = Stadium::query()
-        ->stadium($area)
+        ->Stadium($area)
         ->paginate(10);
 
     return response()->json($stadiums);
