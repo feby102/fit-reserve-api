@@ -311,13 +311,17 @@ public function topStadiums()
 }
 
 
+public function filter(Request $request)
+{
+    $user = auth()->user();
 
-public function filter(Request $request){
+    $area = $request->area ?? $user->area;
 
-$stadium=Stadium::query()->when($request->area,fn($q)=>
-$q->stadium($request->area)->paginate(10));
+    $stadiums = Stadium::query()
+        ->stadium($area)
+        ->paginate(10);
 
-return \response()->json($stadium);
+    return response()->json($stadiums);
 }
 
 }

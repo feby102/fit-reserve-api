@@ -34,13 +34,9 @@ public function getImageUrlAttribute()
         : null;
 }
 
-
-
-public function stadiumScope($query,$area){
-
-return $query->where('address',$area);
-
-
+public function scopeStadium($query, $area)
+{
+    return $query->where('address', 'like', "%{$area}%");
 }
 
 public function videos()
