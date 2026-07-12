@@ -316,7 +316,7 @@ public function filter(Request $request)
     $user = auth()->user();
 
     $area = $request->area ?? $user->area;
-
+dd($area);
     $stadiums = Stadium::query()
         ->Stadium($area)
         ->paginate(10);
