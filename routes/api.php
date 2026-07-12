@@ -90,7 +90,7 @@ Route::post('/bookings/{id}/status', [BookingController::class, 'updateStatus'])
   
 Route::get('/stadiums',[StadiumController::class,'publicIndex']);
 Route::get('/stadiums/{id}',[StadiumController::class,'publicShow']);
-Route::get('/filter',[StadiumController::class,'filter']);
+Route::get('/filter_stadium',[StadiumController::class,'filter']);
 
   
     

@@ -309,9 +309,9 @@ public function topStadiums()
 
     return response()->json($top);
 }
+ 
 
-
-public function filter(Request $request)
+public function filterstadum(Request $request)
 {
     $user = auth()->user();
 
