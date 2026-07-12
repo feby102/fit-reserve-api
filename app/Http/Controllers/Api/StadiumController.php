@@ -311,7 +311,7 @@ public function topStadiums()
 }
  
 
-public function filterstadum(Request $request)
+public function filter(Request $request)
 {
     $user = auth()->user();
 
