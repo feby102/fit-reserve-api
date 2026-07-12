@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Request;
 use Storage;
 
 class Stadium extends Model
@@ -33,6 +34,14 @@ public function getImageUrlAttribute()
         : null;
 }
 
+
+
+public function stadiumScope($query,$area){
+
+return $query->where('address',$area);
+
+
+}
 
 public function videos()
 {

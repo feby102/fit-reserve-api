@@ -310,4 +310,14 @@ public function topStadiums()
     return response()->json($top);
 }
 
+
+
+public function filter(Request $request){
+
+$stadium=Stadium::query()->when($request->area,fn($q)=>
+$q->stadium($request->area)->paginate(10));
+
+return \response()->json($stadium);
+}
+
 }
