@@ -310,15 +310,15 @@ public function topStadiums()
     return response()->json($top);
 }
  
-
 public function filter(Request $request)
 {
-    $user = auth()->user();
-// dd(Stadium::pluck('address'));
-    $area = $request->area ?? $user->area;
+     $area = $request->input('area') ?? auth()->user()?->area;
+
     $stadiums = Stadium::where('status', 'approved')
-    ->stadium($area)
-    ->paginate(10);
+         ->when($area, function ($query) use ($area) {
+            return $query->stadium($area);
+        })
+        ->paginate(10);
 
     return response()->json($stadiums);
 }
