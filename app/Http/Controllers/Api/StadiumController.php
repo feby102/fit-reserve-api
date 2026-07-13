@@ -314,7 +314,7 @@ public function topStadiums()
 public function filter(Request $request)
 {
     $user = auth()->user();
-dd(Stadium::first());
+dd(Stadium::pluck('address'));
     $area = $request->area ?? $user->area;
      $stadiums = Stadium::query()
         ->Stadium($area)
