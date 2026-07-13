@@ -314,10 +314,9 @@ public function topStadiums()
 public function filter(Request $request)
 {
     $user = auth()->user();
-
+dd(Stadium::first());
     $area = $request->area ?? $user->area;
-dd($area);
-    $stadiums = Stadium::query()
+     $stadiums = Stadium::query()
         ->Stadium($area)
         ->paginate(10);
 
