@@ -316,9 +316,9 @@ public function filter(Request $request)
     $user = auth()->user();
 // dd(Stadium::pluck('address'));
     $area = $request->area ?? $user->area;
-     $stadiums = Stadium::query()
-        ->Stadium($area)
-        ->paginate(10);
+    $stadiums = Stadium::where('status', 'approved')
+    ->stadium($area)
+    ->paginate(10);
 
     return response()->json($stadiums);
 }
