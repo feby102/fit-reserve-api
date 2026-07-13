@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('conversations', function (Blueprint $table) {
-           $table->id();
-            $table->foreignId('user_one_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('user_two_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('status', ['open', 'closed'])->default('open');
-            $table->timestamps(); 
+         $table->id();
+        $table->foreignId('user_one_id')->constrained('users')->cascadeOnDelete();
+        $table->foreignId('user_two_id')->constrained('users')->cascadeOnDelete();
+        $table->string('title')->nullable(); // أضفنا حقل الـ title هنا وجعلناه اختيارياً
+        $table->enum('status', ['open', 'closed'])->default('open');
         });
     }
 

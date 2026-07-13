@@ -18,14 +18,21 @@ class ConversationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $data=$request->validate(['title'=>'required|string' ]);
-    $conversation=Conversation::create(['title' => $request->title]);
-    $conversation->participants()->attach($request->user()->id);
-    return  \response()->json([$conversation,201]);
-    
-        }
+   public function store(Request $request)
+{
+    $data = $request->validate([
+        'title' => 'nullable|string',
+        'user_two_id' => 'required|exists:users,id'   
+    ]);
+
+    $conversation = Conversation::create([
+        'title' => $data['title'] ?? null,
+        'user_one_id' => $request->user()->id, 
+           'user_two_id' => $data['user_two_id'], 
+               ]);
+
+    return response()->json($conversation, 201);
+}
 
      
         public function assignuser(Request $request,Conversation $conversation)
