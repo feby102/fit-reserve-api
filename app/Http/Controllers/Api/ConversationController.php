@@ -25,12 +25,37 @@ class ConversationController extends Controller
         'user_two_id' => 'required|exists:users,id'   
     ]);
 
+
+    $user_one_id=$request->user()->id;
+    $user_two_id=$data['user_two_id'];
+
+    if ($user_one_id == $user_two_id) {
+        return response()->json(['message' => 'You cannot start a conversation with yourself.'], 400);
+    }
+
+$conversation=Conversation::where(function($query) use($user_one_id,$user_two_id){
+
+$query->where('user_one_id',$user_one_id)->where('user_two_id',$user_two_id);
+
+
+})
+    ->orWhere(function($query) use($user_one_id,$user_two_id){
+        
+    $query->where('user_one_id',$user_two_id)->where('user_two_id',$user_one_id);
+    
+    
+    
+    })->first();
+
+
+if(!$conversation){
+
     $conversation = Conversation::create([
         'title' => $data['title'] ?? null,
         'user_one_id' => $request->user()->id, 
            'user_two_id' => $data['user_two_id'], 
                ]);
-
+}
     return response()->json($conversation, 201);
 }
 
