@@ -9,7 +9,7 @@ class Conversation extends Model
 protected $fillable = ['title', 'status', 'user_one_id', 'user_two_id'];
     public function messages()
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class)->latest();
     }
     
    public function userOne()
@@ -28,4 +28,6 @@ protected $fillable = ['title', 'status', 'user_one_id', 'user_two_id'];
     {
         return $this->belongsToMany(user::class,'conversation_user');
     }
-}
+
+ 
+    }

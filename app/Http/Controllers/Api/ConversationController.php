@@ -11,10 +11,17 @@ class ConversationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+  public function index()
     {
-        return \response()->json(Conversation::with('participants')->get());    }
+        // جلب المحادثات الخاصة بالمستخدم الحالي فقط   
+        $userId = auth()->id();
+        $conversations = Conversation::where('user_one_id', $userId)
+            ->orWhere('user_two_id', $userId)
+            ->with(['userOne', 'userTwo'])
+            ->get();
 
+        return response()->json($conversations);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -56,7 +63,7 @@ if(!$conversation){
            'user_two_id' => $data['user_two_id'], 
                ]);
 }
-    return response()->json($conversation, 201);
+    return response()->json($conversation, 200);
 }
 
      
@@ -71,7 +78,7 @@ else{
 }
 
 
-    return  \response()->json([ 'message'=>'user assgined in conversation successfull',200]);
+    return  \response()->json([ 'message'=>'user assgined in conversation successfull'],200);
     
         }
 

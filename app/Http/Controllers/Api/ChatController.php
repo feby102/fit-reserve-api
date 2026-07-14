@@ -28,6 +28,25 @@ class ChatController extends Controller
         ]);
     }
 
+
+public function getMessages(Request $request, $conversationId)
+    {
+
+$user_one_id=\auth()->user()->id;
+$conversation=Conversation::where('id',$conversationId)
+->where(function ($query) use ($user_one_id) {
+    $query->where('user_one_id',$user_one_id);
+});
+ 
+$messages =Message::where('conversation_id',$conversation->id)
+->with('sender')->latest()->paginate(20);
+
+
+return response()->json($messages);
+
+
+
+    }
     // إرسال رسالة
     public function sendMessage(Request $request)
     {
