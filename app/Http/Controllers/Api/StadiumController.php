@@ -77,7 +77,7 @@ public function publicShow(int $id)
 ])->findOrFail($id);
 
     $stadium->makeHidden([
-        'id','vendor_id','status','created_at','updated_at'
+        'id','status','created_at','updated_at'
     ]);
 
     $average = $stadium->reviews->avg('rating');
