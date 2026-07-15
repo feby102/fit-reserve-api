@@ -187,10 +187,12 @@ Route::post('/videos/{id}/report', [VideoController::class, 'report']);
   Route::post('users/{id}/block',[ChatController::class,'blockUser']); 
   Route::get('chats/reports',[ChatController::class,'reports']);  
   Route::get('chats/flagged',[ChatController::class,'flaggedMessages']); 
-    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
-    
+    Route::post('/chat/send', [ChatController::class, 'sendMessage']);    
+Route::get('/conversations/{conversationId}/messages', [ChatController::class, 'getMessages']);
 
-    Route::get('/conversations', [ConversationController::class, 'index']);           
+
+
+Route::get('/conversations', [ConversationController::class, 'index']);           
     Route::post('/conversations', [ConversationController::class, 'store']);          
     Route::post('/conversations/{conversation}/assign', [ConversationController::class, 'assignuser']);  
 
