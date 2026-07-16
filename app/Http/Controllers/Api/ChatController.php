@@ -36,7 +36,7 @@ $user_one_id=\auth()->user()->id;
 $conversation=Conversation::where('id',$conversationId)
 ->where(function ($query) use ($user_one_id) {
     $query->where('user_one_id',$user_one_id);
-});
+})->first();;
  
 $messages =Message::where('conversation_id',$conversation->id)
 ->with('sender')->latest()->paginate(20);
