@@ -30,23 +30,29 @@ class ChatController extends Controller
 
 
 public function getMessages(Request $request, $conversationId)
-    {
+{
+     $userId = auth()->id(); 
 
-$user_one_id=\auth()->user()->id;
-$conversation=Conversation::where('id',$conversationId)
-->where(function ($query) use ($user_one_id) {
-    $query->where('user_one_id',$user_one_id);
-})->first();;
- 
-$messages =Message::where('conversation_id',$conversation->id)
-->with('sender')->latest()->paginate(20);
+     $conversation = Conversation::where('id', $conversationId)
+        ->where(function ($query) use ($userId) {
+            $query->where('user_one_id', $userId)
+                  ->orWhere('user_two_id', $userId);
+        })
+        ->first();  
+     if (!$conversation) {
+        return response()->json([
+            'message' => 'Unauthorized or Conversation not found.'
+        ], 403); }
+
+     $messages = Message::where('conversation_id', $conversation->id)
+        ->with('sender')
+        ->latest()
+        ->paginate(20);
+
+    return response()->json($messages);
+}
 
 
-return response()->json($messages);
-
-
-
-    }
     // إرسال رسالة
     public function sendMessage(Request $request)
     {
