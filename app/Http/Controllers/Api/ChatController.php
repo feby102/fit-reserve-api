@@ -93,7 +93,7 @@ public function getMessages(Request $request, $conversationId)
 
             if ($validated['type'] === 'image') {
                 $request->validate([
-                    'file' => 'image|mimes:jpg,jpeg,png|min:1'
+                    'file' => 'image|mimes:jpg,jpeg,png|max:10240'
                 ]);
                 $folder = 'chat/images';
             } else {
