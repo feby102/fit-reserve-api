@@ -98,8 +98,7 @@ public function getMessages(Request $request, $conversationId)
                 $folder = 'chat/images';
             } else {
                 $request->validate([
-                    'file' => 'mimes:mp3,wav,ogg,m4a|max:10240'
-                ]);
+'file' => 'mimes:mp3,wav,ogg,m4a,mp4,x-m4a|max:10240'                ]);
                 $folder = 'chat/audio';
             }
 
