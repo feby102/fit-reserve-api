@@ -63,11 +63,7 @@ public function getMessages(Request $request, $conversationId)
             'type'            => 'required|in:text,image,audio',
             'receiver_id'     => 'required|exists:users,id'
         ]);
-dd(
-    $request->file('file')->getMimeType(),
-    $request->file('file')->getClientMimeType(),
-    $request->file('file')->getClientOriginalName()
-);
+
         $userId = auth()->id();
 
         //   تأمين: التأكد إن المستخدم جزء من المحادثة
