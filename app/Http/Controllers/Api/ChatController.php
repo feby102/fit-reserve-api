@@ -93,7 +93,7 @@ public function getMessages(Request $request, $conversationId)
 
             if ($validated['type'] === 'image') {
                 $request->validate([
-                    'file' => 'image|mimes:jpg,jpeg,png|max:10240'
+                    'file' => 'image|mimes:jpg,jpeg,png|min:1'
                 ]);
                 $folder = 'chat/images';
             } else {
@@ -102,7 +102,11 @@ public function getMessages(Request $request, $conversationId)
                 ]);
                 $folder = 'chat/audio';
             }
-
+dd(
+    $request->file('file')->getMimeType(),
+    $request->file('file')->getClientMimeType(),
+    $request->file('file')->getClientOriginalName()
+);
             $file_path = $request->file('file')->store($folder, 'public');
         }
 
