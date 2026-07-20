@@ -22,22 +22,14 @@ class Message extends Model
     ];  
     
     
- 
-protected $appends = ['file_url'];
+   protected $appends = ['file_url'];
 
-public function getFileUrlAttribute()
-{
-    return $this->file_path
-        ? Storage::url($this->file_path)
-        : null;
-}
-
-protected function image(): Attribute
-{
-    return Attribute::make(
-        get: fn ($value) => $value ? url(Storage::url($value)) : null,
-    );
-}
+    public function getFileUrlAttribute()
+    {
+        return $this->file_path
+            ? asset('storage/' . $this->file_path)
+            : null;
+    }
 
     
     
