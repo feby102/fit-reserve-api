@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage;
+
+
 class Message extends Model
 {
  protected $fillable = [
@@ -14,7 +19,31 @@ class Message extends Model
         'file_path',
         'type',
         'is_flagged'
-    ];   public function sender()
+    ];  
+    
+    
+ 
+protected $appends = ['file_url'];
+
+public function getFileUrlAttribute()
+{
+    return $this->file_path
+        ? Storage::url($this->file_path)
+        : null;
+}
+
+protected function image(): Attribute
+{
+    return Attribute::make(
+        get: fn ($value) => $value ? url(Storage::url($value)) : null,
+    );
+}
+
+    
+    
+    
+    
+    public function sender()
     {
         return $this->belongsTo(User::class, 'sender_id');
     }
