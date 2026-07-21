@@ -36,7 +36,7 @@ class NotificationController extends Controller
 
 
 
-$service->sendToUser($data['user_id'],$data['title'],$data['message']);
+$service->sendToUser($data);
 
 
 

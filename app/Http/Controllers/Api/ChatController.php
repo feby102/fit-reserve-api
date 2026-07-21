@@ -118,7 +118,7 @@ public function getMessages(Request $request, $conversationId)
 
 
 $data=[
-'user_id'=> $message->receiver_id,
+'user_id' => $message->receiver_id,
 'title'=>auth()->user()->name
 
 
