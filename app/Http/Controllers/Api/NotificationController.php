@@ -53,7 +53,7 @@ $service->sendToUser($data);
         //         'created_at' => now()->toDateTimeString()
         //     ]);
 
-        return response()->json(['message'=>'Notification sent']);
+        return response()->json(['message'=>'Notification sent',$data]);
     }
 
     // إرسال إشعار عام لكل المستخدمين
