@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 
@@ -25,7 +26,7 @@ class NotificationController extends Controller
         ]);
     }
 
-     public function sendToUser(Request $request)
+     public function sendToUser(Request $request,NotificationService $service)
     {
         $data = $request->validate([
             'user_id'=>'required',
@@ -33,17 +34,24 @@ class NotificationController extends Controller
             'message'=>'required'
         ]);
 
-         $notification = Notification::create($data);
 
-        // إرسال للفايزبيز
-        Firebase::database()
-            ->getReference("notifications/{$data['user_id']}")
-            ->push([
-                'title' => $data['title'],
-                'message' => $data['message'],
-                'is_read' => false,
-                'created_at' => now()->toDateTimeString()
-            ]);
+
+$service->sendToUser($data['user_id'],$data['title'],$data['message']);
+
+
+
+
+        //  $notification = Notification::create($data);
+
+        // // إرسال للفايزبيز
+        // Firebase::database()
+        //     ->getReference("notifications/{$data['user_id']}")
+        //     ->push([
+        //         'title' => $data['title'],
+        //         'message' => $data['message'],
+        //         'is_read' => false,
+        //         'created_at' => now()->toDateTimeString()
+        //     ]);
 
         return response()->json(['message'=>'Notification sent']);
     }

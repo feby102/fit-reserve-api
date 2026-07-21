@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -54,7 +55,7 @@ public function getMessages(Request $request, $conversationId)
 
 
     // إرسال رسالة
-    public function sendMessage(Request $request)
+    public function sendMessage(Request $request,NotificationService $notificationService)
     {
         $validated = $request->validate([
             'conversation_id' => 'required|exists:conversations,id',
@@ -114,6 +115,10 @@ public function getMessages(Request $request, $conversationId)
             'file_path'       => $file_path,
             'type'            => $validated['type'],
         ]);
+
+ $notificationService->sendToUser($validated['receiver_id'],'NEW message',$validated['message']);
+
+
 
         $message->load('sender');
 
