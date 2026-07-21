@@ -116,7 +116,7 @@ public function getMessages(Request $request, $conversationId)
             'type'            => $validated['type'],
         ]);
 
- $notificationService->sendToUser($validated['receiver_id'],'NEW message',[$validated['message'],$file_path,$validated['type']]);
+ $notificationService->sendToUser($validated['receiver_id'],'NEW message',$message);
 
 
 
