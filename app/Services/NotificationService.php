@@ -9,19 +9,20 @@ use Kreait\Laravel\Firebase\Facades\Firebase;
 class NotificationService{
 
 
-public function sendToUser($userId,$title,$message){
+public function sendToUser(array $data){
 
         Notification::create([
-            'user_id' => $userId,
-            'title' => $title,
-            'message' => $message,
+            'user_id' => $data['userId'],
+            'title' => $data['title'],
+            'message' => $data['message'],
         ]);
 
         Firebase::database()
-            ->getReference("notifications/$userId")
+            ->getReference("notifications/{$data['userId']}")
             ->push([
-                'title' => $title,
-                'message' => $message,
+                'title' => $data['title'],
+                'message' => $data['message'],
+                'image'=>$data['image']??null,
                 'is_read' => false,
                 'created_at' => now()->toDateTimeString(),
             ]);

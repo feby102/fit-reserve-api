@@ -116,7 +116,36 @@ public function getMessages(Request $request, $conversationId)
             'type'            => $validated['type'],
         ]);
 
- $notificationService->sendToUser($validated['receiver_id'],'NEW message',$message);
+
+$data=[
+'user_id'=> $message->receiver_id,
+'title'=>auth()->user()->name
+
+
+];
+ 
+switch ($message->type){
+
+case  'text' :
+    $data['message']=$message->message;
+    break;
+
+case 'image':
+    $data['image']=$message->image;
+    break;
+
+case 'audio':
+$data['message']=$message->message;
+    break;
+
+
+}
+
+
+
+
+
+ $notificationService->sendToUser( $data);
 
 
 
