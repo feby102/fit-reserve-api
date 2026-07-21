@@ -12,7 +12,7 @@ class NotificationService{
 public function sendToUser(array $data){
 
         Notification::create([
-            'user_id' => $data['userId'],
+    'user_id' => $data['user_id'],
             'title' => $data['title'],
             'message' => $data['message'],
         ]);
