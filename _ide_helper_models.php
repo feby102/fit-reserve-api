@@ -15,8 +15,8 @@ namespace App\Models{
 /**
  * @property int $id
  * @property int $vendor_id
- * @property string $name
  * @property string $type
+ * @property string $name
  * @property string $location
  * @property int $is_active
  * @property numeric $price_per_hour
@@ -349,12 +349,12 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string|null $image
- * @property int $vendor_id
+ * @property int $seller_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $products
  * @property-read int|null $products_count
- * @property-read \App\Models\User|null $seller
+ * @property-read \App\Models\User $seller
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category query()
@@ -362,8 +362,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereSellerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Category whereVendorId($value)
  */
 	class Category extends \Eloquent {}
 }
@@ -513,9 +513,8 @@ namespace App\Models{
  * @property int $id
  * @property int $user_one_id
  * @property int $user_two_id
+ * @property string|null $title
  * @property string $status
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Message> $messages
  * @property-read int|null $messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $participants
@@ -525,10 +524,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereUserOneId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereUserTwoId($value)
  */
@@ -566,6 +564,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Coupon whereVendorId($value)
  */
 	class Coupon extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken query()
+ */
+	class DeviceToken extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -769,6 +777,36 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $account_type
+ * @property int $account_id
+ * @property string $type
+ * @property numeric $amount
+ * @property string|null $description
+ * @property int|null $reference_id
+ * @property string|null $reference_type
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $account
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereAccountType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereReferenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereReferenceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LedgerEntry whereUpdatedAt($value)
+ */
+	class LedgerEntry extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int $user_id
  * @property int $points
  * @property string $type
@@ -800,6 +838,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Conversation $conversation
+ * @property-read mixed $file_url
  * @property-read \App\Models\User $receiver
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Report> $reports
  * @property-read int|null $reports_count
@@ -877,6 +916,7 @@ namespace App\Models{
  * @property numeric $total_price
  * @property string $status
  * @property string|null $payment_method
+ * @property string $payment_status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderItem> $items
@@ -887,6 +927,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order wherePaymentStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereTotalPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUpdatedAt($value)
@@ -1085,6 +1126,7 @@ namespace App\Models{
  * @property int $category_id
  * @property int $store_id
  * @property int|null $vendor_id
+ * @property int $seller_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Category $category
@@ -1092,7 +1134,7 @@ namespace App\Models{
  * @property-read int|null $order_items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Review> $reviews
  * @property-read int|null $reviews_count
- * @property-read \App\Models\User|null $seller
+ * @property-read \App\Models\User $seller
  * @property-read \App\Models\Store $store
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product byCategory($category_id)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
@@ -1106,6 +1148,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSellerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereStoreId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereVendorId($value)
@@ -1277,6 +1320,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium stadium($area)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Stadium whereCreatedAt($value)
@@ -1364,7 +1408,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property int|null $user_id
+ * @property int $user_id
  * @property string $name
  * @property string|null $description
  * @property string|null $logo
@@ -1503,6 +1547,8 @@ namespace App\Models{
  * @property-read int|null $tokens_count
  * @property-read \App\Models\Vendor|null $vendor
  * @property-read \App\Models\Wallet|null $wallet
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\WithdrawRequest> $withdrawRequests
+ * @property-read int|null $withdraw_requests_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
@@ -1736,6 +1782,36 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|WalletTransaction whereWalletId($value)
  */
 	class WalletTransaction extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property numeric $amount
+ * @property string $status
+ * @property string|null $bank_name
+ * @property string|null $account_number
+ * @property string|null $wallet_number
+ * @property string|null $reason
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereAccountNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereBankName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WithdrawRequest whereWalletNumber($value)
+ */
+	class WithdrawRequest extends \Eloquent {}
 }
 
 namespace App\Models{

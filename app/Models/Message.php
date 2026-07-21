@@ -54,4 +54,10 @@ class Message extends Model
     {
         return $this->hasMany(Report::class);
     }
-}
+
+
+  public function isRead():bool{
+        return $this->read_at!=null;
+       }
+
+    }

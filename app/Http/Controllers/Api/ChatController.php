@@ -8,6 +8,7 @@ use App\Models\Message;
 use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
+use App\Events\MessageRead;
 
 class ChatController extends Controller
 {
@@ -142,24 +143,20 @@ $data['message']=$message->message;
 }
 
 
-
-
-
  $notificationService->sendToUser( $data);
 
 
 
         $message->load('sender');
 
-        $receiver = User::find($validated['receiver_id']);
+        $receiver_id = User::find($validated['receiver_id']);
 
-        //   real-time broadcasting
-        broadcast(new \App\Events\MessageSent($message, $receiver))->toOthers();
-
-        return response()->json([
-            'status' => 'success',
-            'data'   => $message
-        ]);
+event(new \App\Events\MessageSent($message, $request->receiver_id));
+     if ($request->ajax() || $request->wantsJson()) {
+        return response()->json(['message' => $message]);
+    }
+    
+     
     }
 
      public function closeConversation($id)
@@ -203,4 +200,19 @@ $data['message']=$message->message;
 
         return response()->json($messages);
     }
+
+
+ public function markAsRead($conversation_id)
+{
+    $userId = auth()->id();
+
+     Message::where('conversation_id', $conversation_id)
+        ->where('receiver_id', $userId)
+        ->whereNull('read_at')
+        ->update(['read_at' => now()]);
+
+broadcast(new MessageRead($conversation_id, $userId))->toOthers();
+    return response()->json(['status' => 'Messages marked as read']);
 }
+
+    }

@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
 public function boot(): void
 {
-    
     \Illuminate\Database\Eloquent\Relations\Relation::morphMap([
         'stadium'   => \App\Models\Stadium::class,
         'academy'   => \App\Models\Academy::class,
@@ -32,7 +31,7 @@ public function boot(): void
         'challenge' => \App\Models\Challenge::class,
     ]);
     
-    \Illuminate\Support\Facades\Broadcast::routes(['middleware' => ['auth:api']]);
+    \Illuminate\Support\Facades\Broadcast::routes();
     require base_path('routes/channels.php');
 
     Sanctum::authenticateAccessTokensUsing(function ($accessToken, $isValid) {
