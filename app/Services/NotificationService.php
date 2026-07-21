@@ -1,6 +1,11 @@
 <?php 
 namespace App\Services;
 
+use App\Models\Notification;
+use App\Models\User;
+ use Illuminate\Http\Request;
+use Kreait\Laravel\Firebase\Facades\Firebase;
+
 class NotificationService{
 
 
@@ -27,4 +32,3 @@ public function sendToUser($userId,$title,$message){
 
 
 
-}
