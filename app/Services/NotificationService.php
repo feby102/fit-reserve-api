@@ -18,7 +18,7 @@ public function sendToUser(array $data){
         ]);
 
         Firebase::database()
-            ->getReference("notifications/{$data['userId']}")
+            ->getReference("notifications/{$data['user_id']}")
             ->push([
                 'title' => $data['title'],
                 'message' => $data['message'],
