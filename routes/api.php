@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CoachBookingController;
 use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\DeviceTokenController;
 use App\Http\Controllers\Api\GymController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
@@ -62,6 +63,13 @@ Route::get('/paymob/callback', [PaymentController::class, 'callback']);
 Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
 
   Route::middleware('auth:user-api,vendor-api')->group(function(){
+
+
+
+Route::post('/device-token', [DeviceTokenController::class, 'store']);
+    Route::delete('/device-token', [DeviceTokenController::class, 'destroy']);
+
+
 
  Route::get('/showuser',[UserController::class,'show']);
 

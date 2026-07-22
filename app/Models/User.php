@@ -26,6 +26,12 @@ protected $fillable = [
 ];
  
 
+public function deviceTokens()
+{
+    return $this->hasMany(DeviceToken::class);
+}
+
+
 public function referrer() {
     return $this->belongsTo(User::class, 'referred_by');
 }

@@ -151,6 +151,7 @@ $data['message']=$message->message;
 
         $receiver_id = User::find($validated['receiver_id']);
 
+        
 event(new \App\Events\MessageSent($message, $request->receiver_id));
      if ($request->ajax() || $request->wantsJson()) {
         return response()->json(['message' => $message]);
