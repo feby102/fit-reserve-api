@@ -35,7 +35,7 @@ class MessageSent implements \Illuminate\Contracts\Broadcasting\ShouldBroadcastN
      */
 public function broadcastOn()
     {
-return new \Illuminate\Broadcasting\Channel('chat.' . $this->message->conversation_id);    }
+return new \Illuminate\Broadcasting\PrivateChannel('chat.' . $this->message->conversation_id);    }
 
 
 
