@@ -56,109 +56,105 @@ public function getMessages(Request $request, $conversationId)
 
 
     // إرسال رسالة
-    public function sendMessage(Request $request,NotificationService $notificationService)
-    {
-        $validated = $request->validate([
-            'conversation_id' => 'required|exists:conversations,id',
-            'message'         => 'nullable|string',
-            'file'            => 'nullable|file|max:10240',
-            'type'            => 'required|in:text,image,audio',
-            'receiver_id'     => 'required|exists:users,id'
-        ]);
+public function sendMessage(Request $request, NotificationService $notificationService)
+{
+    $validated = $request->validate([
+        'conversation_id' => 'required|exists:conversations,id',
+        'message'         => 'nullable|string',
+        'file'            => 'nullable|file|max:10240',
+        'type'            => 'required|in:text,image,audio',
+        'receiver_id'     => 'required|exists:users,id'
+    ]);
 
-        $userId = auth()->id();
+    $userId = auth()->id();
 
-        //   تأمين: التأكد إن المستخدم جزء من المحادثة
-        $conversation = Conversation::where('id', $validated['conversation_id'])
-            ->where(function ($q) use ($userId) {
-                $q->where('user_one_id', $userId)
-                  ->orWhere('user_two_id', $userId);
-            })->first();
+    // 1. تأمين: التأكد إن المستخدم جزء من المحادثة
+    $conversation = Conversation::where('id', $validated['conversation_id'])
+        ->where(function ($q) use ($userId) {
+            $q->where('user_one_id', $userId)
+              ->orWhere('user_two_id', $userId);
+        })->first();
 
-        if (!$conversation) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+    if (!$conversation) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
+
+    // 2. تحقق منطقي حسب النوع
+    if ($validated['type'] === 'text' && empty($validated['message'])) {
+        return response()->json(['error' => 'Text message required'], 422);
+    }
+
+    if (in_array($validated['type'], ['image', 'audio']) && !$request->hasFile('file')) {
+        return response()->json(['error' => 'File required'], 422);
+    }
+
+    $file_path = null;
+
+    // 3. رفع الملف حسب النوع
+    if ($request->hasFile('file')) {
+        if ($validated['type'] === 'image') {
+            $request->validate([
+                'file' => 'image|mimes:jpg,jpeg,png|max:10240'
+            ]);
+            $folder = 'chat/images';
+        } else {
+            $request->validate([
+                'file' => 'mimes:mp3,wav,ogg,m4a,mp4,x-m4a|max:10240'
+            ]);
+            $folder = 'chat/audio';
         }
 
-        //   تحقق منطقي حسب النوع
-        if ($validated['type'] === 'text' && !$validated['message']) {
-            return response()->json(['error' => 'Text message required'], 422);
-        }
+        $file_path = $request->file('file')->store($folder, 'public');
+    }
 
-        if (in_array($validated['type'], ['image', 'audio']) && !$request->hasFile('file')) {
-            return response()->json(['error' => 'File required'], 422);
-        }
+    // 4. إنشاء الرسالة
+    $message = Message::create([
+        'conversation_id' => $conversation->id,
+        'sender_id'       => $userId,
+        'receiver_id'     => $validated['receiver_id'],
+        'message'         => $validated['message'],
+        'file_path'       => $file_path,
+        'type'            => $validated['type'],
+    ]);
 
-        $file_path = null;
+    // 5. تجهيز بيانات الإشعار حسب نوع الرسالة
+    $notificationText = match ($message->type) {
+        'text'  => $message->message,
+        'image' => '📷 أرسل لك صورة',
+        'audio' => '🎤 أرسل لك تسجيلاً صوتياً',
+        default => 'أرسل لك رسالة جديدة',
+    };
 
-        //   رفع الملف حسب النوع
-        if ($request->hasFile('file')) {
+    $notificationData = [
+        'user_id'         => $message->receiver_id,
+        'title'           => auth()->user()->name,
+        'message'         => $notificationText,
+        'conversation_id' => (string) $message->conversation_id,
+        'type'            => 'chat_message',
+    ];
 
-            if ($validated['type'] === 'image') {
-                $request->validate([
-                    'file' => 'image|mimes:jpg,jpeg,png|max:10240'
-                ]);
-                $folder = 'chat/images';
-            } else {
-                $request->validate([
-'file' => 'mimes:mp3,wav,ogg,m4a,mp4,x-m4a|max:10240'                ]);
-                $folder = 'chat/audio';
-            }
+    // 6. إرسال Push Notification عبر الفايربيز
+    try {
+        $notificationService->sendToUser($notificationData);
+    } catch (\Exception $e) {
+        \Log::error("Failed to send chat push notification: " . $e->getMessage());
+    }
 
-            $file_path = $request->file('file')->store($folder, 'public');
-        }
+    // 7. إرسال الـ Real-time Event عبر WebSockets (Pusher/Reverb)
+    $message->load('sender');
 
-        //   إنشاء الرسالة
-        $message = Message::create([
-            'conversation_id' => $conversation->id,
-            'sender_id'       => $userId,
-            'receiver_id'     => $validated['receiver_id'],
-            'message'         => $validated['message'],
-            'file_path'       => $file_path,
-            'type'            => $validated['type'],
-        ]);
+    try {
+        event(new \App\Events\MessageSent($message, $validated['receiver_id']));
+    } catch (\Exception $e) {
+        \Log::error("WebSocket Event Error: " . $e->getMessage());
+    }
 
-
-$data=[
-'user_id' => $message->receiver_id,
-'title'=>auth()->user()->name
-
-
-];
- 
-switch ($message->type){
-
-case  'text' :
-    $data['message']=$message->message;
-    break;
-
-case 'image':
-    $data['image']=$message->image;
-    break;
-
-case 'audio':
-$data['message']=$message->message;
-    break;
-
-
+    // 8. إرجاع الـ Response
+    return response()->json([
+        'success' => true,
+        'message' => $message
+    ], 201);
 }
-
-
- $notificationService->sendToUser( $data);
-
-
-
-        $message->load('sender');
-
-        $receiver_id = User::find($validated['receiver_id']);
-
-        
-event(new \App\Events\MessageSent($message, $request->receiver_id));
-     if ($request->ajax() || $request->wantsJson()) {
-        return response()->json(['message' => $message]);
-    }
-    
-     
-    }
 
      public function closeConversation($id)
     {
