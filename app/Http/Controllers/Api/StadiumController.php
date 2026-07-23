@@ -23,15 +23,9 @@ public function publicIndex()
         ->get()
         ->makeHidden(['vendor_id', 'status', 'created_at', 'updated_at']);
 
-   $stadiums->transform(function ($item) {
-    $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
-
-    // if ($item->image) {
-    //     $item->image = url('/deploy/file/' . $item->image);
-    // }
-
-    // return $item;
- 
+    $stadiums->transform(function ($item) {
+        $item->reviews_avg_rating = round($item->reviews_avg_rating ?? 0, 1);
+        return $item;
     });
 
     return response()->json($stadiums);
