@@ -26,17 +26,14 @@ class NotificationService {
             'title'   => $data['title'],
             'message' => $data['message'],
             'type'    => $data['type'] ?? 'general',
-            'data'    => $extraData, // تخزين مصفوفة الداتا والـ status كـ JSON
-        ]);
+            'data'    => $extraData,  ]);
 
-        // 3. إرسال Push Notification عبر FCM
-        $tokens = $user->deviceTokens()->pluck('token')->toArray();
+         $tokens = $user->deviceTokens()->pluck('token')->toArray();
 
         if (!empty($tokens)) {
             $messaging = Firebase::messaging();
 
-            // تحويل كل قيم الداتا لـ string لضمان قبول FCM لها
-            $fcmPayload = array_map('strval', array_merge([
+             $fcmPayload = array_map('strval', array_merge([
                 'type'    => $data['type'] ?? 'general',
                 'user_id' => (string) $user->id,
             ], $extraData));

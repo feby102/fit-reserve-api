@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
+use App\Models\Message;
 use Illuminate\Http\Request;
 
 class ConversationController extends Controller
@@ -20,7 +21,8 @@ class ConversationController extends Controller
             ->with(['userOne', 'userTwo'])
             ->get();
 
-        return response()->json($conversations);
+            $message=Message::where('conversation_id',$conversations->id)->latest();
+        return response()->json(['conversattion'=>$conversations,'lastest message'=>$message]);
     }
     /**
      * Store a newly created resource in storage.

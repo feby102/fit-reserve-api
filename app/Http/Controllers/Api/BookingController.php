@@ -29,6 +29,7 @@ use App\Models\Studio;
 use App\Models\StudioPackage;
 use App\Models\Vendor;
 use App\Models\Wallet;
+use App\Services\NotificationService;
 use App\Services\WalletService;
 use Carbon\Carbon;
 use Carbon\Doctrine\CarbonType;
@@ -502,7 +503,7 @@ return response()->json([
         //قبول او رفض
 
 
-public function updateStatus(Request $request, $id)
+public function updateStatus(Request $request, $id,NotificationService $notificationService)
 {
 $data=$request->validate([
     'status'=>'required|in:confirmed,rejected',
@@ -517,7 +518,25 @@ Notification::create([
             'title'   => 'Your booking has been accepted!',
             'message' => 'The admin has approved your booking for ' . $booking->bookable->name,
         ]);
-    } 
+  
+  
+  
+  
+$notificationService->sendToUser([
+    'user_id' => $booking->user_id,
+    'title'   => 'Booking Accepted',
+    'message' =>  'The admin has approved your booking for ' . $booking->bookable->name,
+    'type'    => 'booking',
+    'status'  =>  $data['status'] ,
+    'extra_data' => [
+        'booking_id'    => $booking->id,
+        'booking_type' =>$booking->bookable_type ,
+    ]
+]);
+ 
+  
+  
+        } 
    
     else {
         $booking->update([
@@ -533,7 +552,26 @@ app(\App\Services\RefundService::class)
             'title'   => 'Unfortunately, the reservation was declined',
             'message' => 'Reason for rejection: ' . $request->rejection_reason,
         ]);
+
+
+
+
+$notificationService->sendToUser([
+    'user_id' => $booking->user_id,
+    'title'   => 'Unfortunately, the reservation was declined',
+    'message' =>  'Reason for rejection: ' . $request->rejection_reason,
+    'type'    => 'booking',
+    'status'  =>  $data['status'] ,
+    'extra_data' => [
+        'booking_id'    => $booking->id,
+        'booking_type' =>$booking->bookable_type ,
+    ]
+]);
+ 
+
+
     }
+          
 
     return response()->json(['message' => 'The booking status has been successfully updated.']);
 }
