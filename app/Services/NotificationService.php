@@ -3,19 +3,6 @@ namespace App\Services;
 
 use App\Models\Notification;
 use App\Models\User;
- use Illuminate\Http\Request;
-use Kreait\Laravel\Firebase\Facades\Firebase;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
-
-
-
-<?php 
-
-namespace App\Services;
-
-use App\Models\Notification;
-use App\Models\User;
 use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
