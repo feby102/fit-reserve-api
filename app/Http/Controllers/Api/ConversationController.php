@@ -12,18 +12,20 @@ class ConversationController extends Controller
     /**
      * Display a listing of the resource.
      */
-  public function index()
-    {
-        // جلب المحادثات الخاصة بالمستخدم الحالي فقط   
-        $userId = auth()->id();
-        $conversations = Conversation::where('user_one_id', $userId)
-            ->orWhere('user_two_id', $userId)
-            ->with(['userOne', 'userTwo'])
-            ->get();
+ public function index()
+{
+    $userId = auth()->id();
 
-            $message=Message::where('conversation_id',$conversations->id)->latest();
-        return response()->json(['conversattion'=>$conversations,'lastest message'=>$message]);
-    }
+    $conversations = Conversation::where('user_one_id', $userId)
+        ->orWhere('user_two_id', $userId)
+        ->with(['userOne', 'userTwo', 'latestMessage'])   
+        ->get();
+
+    return response()->json([
+        'status' => true,
+        'conversations' => $conversations
+    ]);
+}
     /**
      * Store a newly created resource in storage.
      */

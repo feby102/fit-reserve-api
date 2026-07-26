@@ -30,4 +30,11 @@ protected $fillable = ['title', 'status', 'user_one_id', 'user_two_id'];
     }
 
  
+
+    public function latestMessage(){
+
+
+return $this->hasOne(Message::class)->latestOfMany();
+
+    }
     }
