@@ -68,8 +68,7 @@ public function sendMessage(Request $request, NotificationService $notificationS
 
     $userId = auth()->id();
 
-    // 1. تأمين: التأكد إن المستخدم جزء من المحادثة
-    $conversation = Conversation::where('id', $validated['conversation_id'])
+     $conversation = Conversation::where('id', $validated['conversation_id'])
         ->where(function ($q) use ($userId) {
             $q->where('user_one_id', $userId)
               ->orWhere('user_two_id', $userId);
@@ -79,8 +78,7 @@ public function sendMessage(Request $request, NotificationService $notificationS
         return response()->json(['error' => 'Unauthorized'], 403);
     }
 
-    // 2. تحقق منطقي حسب النوع
-    if ($validated['type'] === 'text' && empty($validated['message'])) {
+     if ($validated['type'] === 'text' && empty($validated['message'])) {
         return response()->json(['error' => 'Text message required'], 422);
     }
 
@@ -90,8 +88,7 @@ public function sendMessage(Request $request, NotificationService $notificationS
 
     $file_path = null;
 
-    // 3. رفع الملف حسب النوع
-    if ($request->hasFile('file')) {
+     if ($request->hasFile('file')) {
         if ($validated['type'] === 'image') {
             $request->validate([
                 'file' => 'image|mimes:jpg,jpeg,png|max:10240'
@@ -107,8 +104,7 @@ public function sendMessage(Request $request, NotificationService $notificationS
         $file_path = $request->file('file')->store($folder, 'public');
     }
 
-    // 4. إنشاء الرسالة
-    $message = Message::create([
+     $message = Message::create([
         'conversation_id' => $conversation->id,
         'sender_id'       => $userId,
         'receiver_id'     => $validated['receiver_id'],
@@ -131,6 +127,7 @@ public function sendMessage(Request $request, NotificationService $notificationS
         'message'         => $notificationText,
         'conversation_id' => (string) $message->conversation_id,
         'type'            => 'chat_message',
+        
     ];
 
     // 6. إرسال Push Notification عبر الفايربيز
