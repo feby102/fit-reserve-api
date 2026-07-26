@@ -21,7 +21,7 @@ class ConversationController extends Controller
             ->with(['userOne', 'userTwo'])
             ->get();
 
-            // $message=Message::where('conversation_id',$conversations->id)->latest();
+            $message=Message::where('conversation_id',$conversations->id)->latest();
         return response()->json(['conversattion'=>$conversations,'lastest message'=>$message]);
     }
     /**
