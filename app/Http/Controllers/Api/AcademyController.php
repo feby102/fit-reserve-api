@@ -5,8 +5,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Academy;
 use App\Models\AcademyType;
-use App\Services\NotificationService;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\NotificationService;
