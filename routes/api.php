@@ -381,6 +381,12 @@ Route::middleware(['auth:sanctum','admin'])->group(function () {
 
 
 Route::post('/academy-type',[AcademyController::class,'storeAcademyType']);
+ Route::post('/academy/{id}/approve',[AcademyController::class, 'approve']);
+    Route::post('/academy/{id}/reject', [AcademyController::class, 'reject']);
+
+
+     Route::post('/gym/{id}/approve',[GymController::class, 'approve']);
+    Route::post('/gym/{id}/reject', [GymController::class, 'reject']);
 
 
     Route::get('/settings', [SettingController::class, 'index']);

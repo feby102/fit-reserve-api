@@ -77,10 +77,7 @@ public function publicShow(int $id)
         'average_rating' => round($average ?? 0, 1),
     ]);
 }
-
-/**
- * عرض الجيم الخاص بالـ Vendor مع متوسط التقييم
- */
+ 
 public function show(string $id)
 {
     $vendor = auth()->user();
@@ -373,4 +370,44 @@ public function topGyms()
 
     return response()->json($top);
 }
-    }
+   
+
+
+//approve
+public function approve($id)
+{
+ 
+    $gym = Gym::findOrFail($id);
+$gym->update(['status'=>'approved']);
+
+return response()->json([
+
+        'message' => 'Approved'
+
+    ]);
+}
+
+
+
+
+
+//reject
+public function reject($id)
+{ 
+
+    $gym = Gym::findOrFail($id);
+$gym->update(['status' => 'rejected']);
+
+return response()->json([
+
+        'message' => 'Rejected'
+
+    ]);
+}
+
+
+
+
+
+
+}

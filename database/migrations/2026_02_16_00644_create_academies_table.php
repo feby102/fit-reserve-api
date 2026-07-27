@@ -22,6 +22,8 @@ $table->foreignId('vendor_id')
             $table->boolean('is_active')->default(true);
             $table->decimal('price_per_hour',10,2);
             $table->string('image')->nullable();
+            $table->enum('status', ['pending','approved','rejected'])->default('pending');
+
             $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });

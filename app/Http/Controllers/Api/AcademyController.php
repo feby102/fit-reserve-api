@@ -228,4 +228,41 @@ public function storeAcademyType(Request $request)
     return response()->json($top);
 }
 
+
+
+
+//approve
+public function approve($id)
+{
+ 
+    $Academy = Academy::findOrFail($id);
+$Academy->update(['status'=>'approved']);
+
+return response()->json([
+
+        'message' => 'Approved'
+
+    ]);
+}
+
+
+
+
+
+//reject
+public function reject($id)
+{ 
+
+    $Academy = Academy::findOrFail($id);
+$Academy->update(['status' => 'rejected']);
+
+return response()->json([
+
+        'message' => 'Rejected'
+
+    ]);
+}
+
+
+
 }

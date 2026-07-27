@@ -9,7 +9,7 @@ use Storage;
 class Gym extends Model
 {
     protected $fillable = ['name','type','vendor_id','location','description',
-        'image','is_verified'
+        'image','is_verified','status'
 ];
 
 

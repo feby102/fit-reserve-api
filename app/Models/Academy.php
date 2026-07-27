@@ -9,7 +9,7 @@ use Storage;
 class Academy extends Model
 {
   protected $fillable = [ 'type','vendor_id','name','location','is_active','price_per_hour',
-        'image','is_verified'
+        'image','is_verified','status'
 ];
 
 protected $appends = ['image_url'];   

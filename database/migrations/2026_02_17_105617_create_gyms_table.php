@@ -21,6 +21,8 @@ $table->foreignId('vendor_id')
              $table->string('location');
              $table->text('description')->nullable();
              $table->string('image')->nullable();
+             $table->enum('status', ['pending','approved','rejected'])->default('pending');
+
              $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });
