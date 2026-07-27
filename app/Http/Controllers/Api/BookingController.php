@@ -27,6 +27,7 @@ use App\Models\StadiumSchedule;
 use App\Models\StadiumSubscription;
 use App\Models\Studio;
 use App\Models\StudioPackage;
+use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Wallet;
 use App\Services\NotificationService;
@@ -61,7 +62,7 @@ public function vendorBookings()
 
 
 
-    public function store(Request $request)
+    public function store(Request $request, NotificationService $notificationService)
     {
 $data=$request->validate([
 
@@ -264,7 +265,7 @@ $commissionRate = $settings ? $settings->commission_rate : 0;
 
 
 
-DB::transaction(function () use ($commissionRate,$vendor,$request, $start_datetime, $user, $wallet, $bookable, $total, $data, $hours, $end_datetime) {
+DB::transaction(function () use ($commissionRate,$notificationService, $vendor,$request, $start_datetime, $user, $wallet, $bookable, $total, $data, $hours, $end_datetime) {
 
 $subscription = null;  
 
@@ -444,16 +445,32 @@ $wallet->transactions()->create([
             ]);
 
             
-
+$admin=User::where('role','admin')->first();
         
 
             Notification::create([
-                'user_id' => $user->id,
+                'user_id' => $admin->id,
                 'title' => 'Booking Reminder',
-                'message' => 'Your booking starts at ' . $data['start_time']
+                'message' => ' booking starts at ' . $data['start_time']
             ]);
+
+     
+$notificationService->sendToUser([
+    'user_id' => $admin->id,
+    'title'   => 'A new booking',
+    'message' =>  'A new booking awaits your review',
+    'type'    => 'booking',
+    'status'  =>  'wating' ,
+    'extra_data' => [
+        'booking_id'    => $booking->id,
+        'booking_type' =>$booking->bookable_type ,
+    ]
+]);
+
+
         });
 
+   
         return response()->json(['message' => 'Booking successful']);
     }
 

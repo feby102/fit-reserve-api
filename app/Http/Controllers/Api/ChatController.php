@@ -121,13 +121,19 @@ public function sendMessage(Request $request, NotificationService $notificationS
         default => 'أرسل لك رسالة جديدة',
     };
 
+ 
+
     $notificationData = [
         'user_id'         => $message->receiver_id,
         'title'           => auth()->user()->name,
         'message'         => $notificationText,
         'conversation_id' => (string) $message->conversation_id,
-        'type'            => 'chat_message',
+        'type'            => 'chat',
         
+        'extra_data' => [
+        'sender_id'    => $userId,
+       'status'  =>  'success'  ,
+    ]
     ];
 
     // 6. إرسال Push Notification عبر الفايربيز

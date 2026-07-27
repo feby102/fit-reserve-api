@@ -394,8 +394,7 @@ Log::info('Webhook Flags', [
     // أولاً: الحجوزات (الملاعب والجيم)
     $booking = \App\Models\Booking::where('id', $merchantOrderId)->first();
     
-    // لو ملقيناش بالـ merchant_order_id، وفيه عمود في الجدول اسمه paymob_order_id، ندور بيه كـ حماية احتياطية
-    if (!$booking && \Illuminate\Support\Facades\Schema::hasColumn('bookings', 'paymob_order_id')) {
+     if (!$booking && \Illuminate\Support\Facades\Schema::hasColumn('bookings', 'paymob_order_id')) {
         $booking = \App\Models\Booking::where('paymob_order_id', $paymobOrderId)->first();
     }
 
@@ -405,7 +404,7 @@ Log::info('Webhook Flags', [
         }
 try {
 
-    DB::transaction(function () use ($order, $transactionId, $paymobOrderId) {
+    DB::transaction(function () use ($order, $transactionId, $paymobOrderId,$booking) {
   $updateData = [
         'payment_status'  => 'paid',
         'status'          => 'confirmed',
@@ -419,9 +418,7 @@ try {
     $owner = $stadium->vendor ?? $stadium->user ?? null;
 
 
-Log::info('Admin',[
-    'admin'=>$admin
-]);
+ 
 
     $admin = User::where('role', 'admin')->first();
     if (!$admin) {
@@ -560,8 +557,7 @@ public function payWithVisaForVerification(Request $request, $pendingVerificatio
         return response()->json(['message' => 'Failed to create Paymob order'], 500);
     }
 
-    // 🔥 تعديل حاسم: حفظ يدوي صريح لضمان التخزين بالداتابيز وتجنب مشاكل الـ $fillable
-    $pendingVerification->paymob_order_id = $paymob_order_id;
+     $pendingVerification->paymob_order_id = $paymob_order_id;
     $pendingVerification->save();
 
     Log::info('Saved paymob_order_id into PendingVerification ID: ' . $pendingVerification->id . ' with Order ID: ' . $paymob_order_id);
@@ -594,7 +590,7 @@ public function payWithVisaForVerification(Request $request, $pendingVerificatio
     return response()->json(['payment_url' => $url]);
 }
 
-// 2️⃣ دفع فودافون كاش للتوثيق - نسخة معدلة ومؤمنة
+//  دفع فودافون كاش للتوثيق - نسخة معدلة ومؤمنة
 public function payWithWalletForVerification(Request $request, $pendingVerification, $phone_number)
 {
     $user   = auth()->user();
@@ -624,8 +620,7 @@ public function payWithWalletForVerification(Request $request, $pendingVerificat
         return response()->json(['message' => 'Failed to create Paymob order'], 500);
     }
 
-    // 🔥 تعديل حاسم: حفظ يدوي صريح لضمان التخزين بالداتابيز وتجنب مشاكل الـ $fillable
-    $pendingVerification->paymob_order_id = $paymob_order_id;
+     $pendingVerification->paymob_order_id = $paymob_order_id;
     $pendingVerification->save();
 
     Log::info('Saved paymob_order_id into PendingVerification ID: ' . $pendingVerification->id . ' with Order ID: ' . $paymob_order_id);
@@ -769,12 +764,12 @@ public function payWithWalletForVerification(Request $request, $pendingVerificat
 
     public function callback(Request $request)
 {
-    // بايموب بتبعت في الـ URL متغير اسمه success بـ true أو false
-    $success = $request->query('success');
+     $success = $request->query('success');
     
     if ($success === 'true') {
         return response()->json(['message' => 'Payment Successful! You can return to the app now.']);
-    }
+   
+        }
 
     return response()->json(['message' => 'Payment Failed or Canceled.']);
 }
@@ -793,21 +788,19 @@ public function payWithVisaForBooking(Request $request, $booking)
 
     if (!$token) return response()->json(['message' => 'Paymob auth failed'], 500);
 
-    // 2. Create Paymob Order (ونبعت الـ id كـ merchant_order_id)
-    $paymobOrder = Http::post($base . '/api/ecommerce/orders', [
+     $paymobOrder = Http::post($base . '/api/ecommerce/orders', [
         'auth_token'        => $token,
         'delivery_needed'   => false,
         'amount_cents'      => $amount_cents,
         'currency'          => 'EGP',
-        'merchant_order_id' => $booking->id, // ربط صريح
+        'merchant_order_id' => $booking->id,  
         'items'             => []
     ])->json();
 
     $paymob_order_id = $paymobOrder['id'] ?? null;
     if (!$paymob_order_id) return response()->json(['message' => 'Failed to create Paymob order'], 500);
 
-    // 🔥 الحفظ السحري لـ paymob_order_id جوه جدول الحجوزات لتفادي الـ 404
-    $booking->paymob_order_id = $paymob_order_id;
+     $booking->paymob_order_id = $paymob_order_id;
     $booking->save();
 
     // 3. Payment Key
