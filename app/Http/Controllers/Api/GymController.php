@@ -390,7 +390,10 @@ $notificationService->sendToUser([
     'message' => 'Congratulations! Your Gym has been approved. You can now start working on it.',
     'type'    => 'approve',
     'status'  => 'success',
-   
+     'extra_data' => [
+  'gym_id' => $gym->id
+            ]
+ 
 ]);
 
 
@@ -425,6 +428,9 @@ $notificationService->sendToUser([
     'message' => 'Unfortunately, your request to build a Gym has been rejected.',
     'type'    => 'reject',
     'status'  => 'Rejected',
+   'extra_data' => [
+  'gym_id' => $gym->id
+            ]
    
 ]);
 

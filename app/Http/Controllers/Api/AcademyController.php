@@ -248,7 +248,9 @@ $notificationService->sendToUser([
     'message' => 'Congratulations! Your academy has been approved. You can now start working on it.',
     'type'    => 'approve',
     'status'  => 'success',
-   
+   'extra_data' => [
+       'academy_id' => $Academy->id
+            ]
 ]);
 
 
@@ -276,7 +278,7 @@ public function reject($id, NotificationService $notificationService)
             'user_id'    => $user->id,
             'title'      => 'Academy Rejection',
             'message'    => 'Unfortunately, your request to build an Academy has been rejected.',
-            'type'       => 'academy_rejected',
+            'type'       => 'reject',
             'status'     => 'rejected',
             'extra_data' => [
                 'academy_id' => $academy->id

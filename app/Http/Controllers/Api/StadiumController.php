@@ -238,6 +238,9 @@ $notificationService->sendToUser([
     'message' => 'Congratulations! Your stadium has been approved. You can now start working on it.',
     'type'    => 'approve',
     'status'  => 'success',
+   'extra_data' => [
+  'stadium_id' => $stadium->id
+            ]
    
 ]);
 return response()->json([
@@ -266,6 +269,9 @@ $notificationService->sendToUser([
     'message' => 'Unfortunately, your request to build a stadium has been rejected.',
     'type'    => 'reject',
     'status'  => 'Rejected',
+    'extra_data' => [
+  'stadium_id' => $stadium->id
+            ]
    
 ]);
 
