@@ -7,11 +7,10 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
-use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class NotificationController extends Controller
 {
-    // جلب الإشعارات الخاصة بالمستخدم
+    // 1. جلب الإشعارات الخاصة بالمستخدم
     public function myNotifications()
     {
         $user = auth()->user();
@@ -22,102 +21,73 @@ class NotificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $notifications
+            'data'    => $notifications
         ]);
     }
 
-     public function sendToUser(Request $request,NotificationService $service)
+    // 2. إرسال إشعار لمستخدم واحد (عن طريق الـ API)
+    public function sendToUser(Request $request, NotificationService $service)
     {
         $data = $request->validate([
-            'user_id'=>'required',
-            'title'=>'required',
-            'message'=>'required'
+            'user_id'    => 'required|exists:users,id',
+            'title'      => 'required|string',
+            'message'    => 'required|string',
+            'type'       => 'nullable|string',
+            'extra_data' => 'nullable|array'
         ]);
 
+        $service->sendToUser($data);
 
-
-$service->sendToUser($data);
-
-
-
-
-        //  $notification = Notification::create($data);
-
-        // // إرسال للفايزبيز
-        // Firebase::database()
-        //     ->getReference("notifications/{$data['user_id']}")
-        //     ->push([
-        //         'title' => $data['title'],
-        //         'message' => $data['message'],
-        //         'is_read' => false,
-        //         'created_at' => now()->toDateTimeString()
-        //     ]);
-
-        return response()->json(['message'=>'Notification sent',$data]);
+        return response()->json([
+            'message' => 'Notification sent successfully',
+            'data'    => $data
+        ]);
     }
 
-    // إرسال إشعار عام لكل المستخدمين
-    public function sendToAll(Request $request)
+    // 3. إرسال إشعار عام لكل المستخدمين
+    public function sendToAll(Request $request, NotificationService $service)
     {
         $data = $request->validate([
-            'title' => 'required',
-            'message' => 'required'
+            'title'   => 'required|string',
+            'message' => 'required|string',
+            'type'    => 'nullable|string',
         ]);
 
         $users = User::all();
 
         foreach ($users as $user) {
-            // حفظ في DB
-            Notification::create([
+            $service->sendToUser([
                 'user_id' => $user->id,
-                'title' => $data['title'],
-                'message' => $data['message']
+                'title'   => $data['title'],
+                'message' => $data['message'],
+                'type'    => $data['type'] ?? 'general_announcement',
             ]);
-
-            // إرسال للفايزبيز
-            Firebase::database()
-                ->getReference("notifications/{$user->id}")
-                ->push([
-                    'title' => $data['title'],
-                    'message' => $data['message'],
-                    'is_read' => false,
-                    'created_at' => now()->toDateTimeString()
-                ]);
         }
 
-        return response()->json(['message' => 'Notification sent to all']);
+        return response()->json(['message' => 'Notification sent to all users']);
     }
 
-    // إشعار لفئة معينة
-    public function sendToRole(Request $request)
+    // 4. إشعار لفئة/دور معين (Role)
+    public function sendToRole(Request $request, NotificationService $service)
     {
         $data = $request->validate([
-            'title'=>'required',
-            'message'=>'required',
-            'role'=>'required',
+            'title'   => 'required|string',
+            'message' => 'required|string',
+            'role'    => 'required|string',
+            'type'    => 'nullable|string',
         ]);
 
-        $users = User::where('role',$request->role)->get();
+        $users = User::where('role', $request->role)->get();
 
-        foreach($users as $user){
-            // حفظ في DB
-            Notification::create([
-                'user_id'=>$user->id,
-                'title'=>$data['title'],
-                'message'=>$data['message']
+        foreach ($users as $user) {
+            $service->sendToUser([
+                'user_id' => $user->id,
+                'title'   => $data['title'],
+                'message' => $data['message'],
+                'type'    => $data['type'] ?? 'role_announcement',
             ]);
-
-            // إرسال للفايزبيز
-            Firebase::database()
-                ->getReference("notifications/{$user->id}")
-                ->push([
-                    'title' => $data['title'],
-                    'message' => $data['message'],
-                    'is_read' => false,
-                    'created_at' => now()->toDateTimeString()
-                ]);
         }
 
-        return response()->json(['message'=>'Notification sent']);
+        return response()->json(['message' => "Notification sent to role: {$request->role}"]);
     }
 }

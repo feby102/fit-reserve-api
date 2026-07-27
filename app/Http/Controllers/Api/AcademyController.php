@@ -264,31 +264,30 @@ return response()->json([
 
 
 //reject
-public function reject($id,NotificationService $notificationService)
+public function reject($id, NotificationService $notificationService)
 { 
+    $academy = Academy::findOrFail($id);
+    $academy->update(['status' => 'rejected']);
 
-    $Academy = Academy::findOrFail($id);
-$Academy->update(['status' => 'rejected']);
+    $user = $academy->vendor;
 
-$user=$Academy->vendor;
+    if ($user) {
+        $notificationService->sendToUser([
+            'user_id'    => $user->id,
+            'title'      => 'Academy Rejection',
+            'message'    => 'Unfortunately, your request to build an Academy has been rejected.',
+            'type'       => 'academy_rejected',
+            'status'     => 'rejected',
+            'extra_data' => [
+                'academy_id' => $academy->id
+            ]
+        ]);
+    }
 
-$notificationService->sendToUser([
-    'user_id' => $user->id,
-    'title'   => 'Stadium rejection',
-    'message' => 'Unfortunately, your request to build a Academy has been rejected.',
-    'type'    => 'reject',
-    'status'  => 'Rejected',
-   
-]);
-
-
-return response()->json([
-
+    return response()->json([
         'message' => 'Rejected'
-
     ]);
 }
-
 
 
 }
