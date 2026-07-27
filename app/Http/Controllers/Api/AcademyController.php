@@ -5,9 +5,12 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Academy;
 use App\Models\AcademyType;
+use App\Services\NotificationService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\NotificationService;
+
 class AcademyController extends Controller
 {use AuthorizesRequests;
 
@@ -232,11 +235,23 @@ public function storeAcademyType(Request $request)
 
 
 //approve
-public function approve($id)
+public function approve($id,NotificationService $notificationService)
 {
  
     $Academy = Academy::findOrFail($id);
 $Academy->update(['status'=>'approved']);
+
+$user=$Academy->vendor;
+
+$notificationService->sendToUser([
+    'user_id' => $user->id,
+    'title'   => 'Academy approval',
+    'message' => 'Congratulations! Your academy has been approved. You can now start working on it.',
+    'type'    => 'approve',
+    'status'  => 'success',
+   
+]);
+
 
 return response()->json([
 
@@ -250,11 +265,23 @@ return response()->json([
 
 
 //reject
-public function reject($id)
+public function reject($id,NotificationService $notificationService)
 { 
 
     $Academy = Academy::findOrFail($id);
 $Academy->update(['status' => 'rejected']);
+
+$user=$Academy->vendor;
+
+$notificationService->sendToUser([
+    'user_id' => $user->id,
+    'title'   => 'Stadium rejection',
+    'message' => 'Unfortunately, your request to build a Academy has been rejected.',
+    'type'    => 'reject',
+    'status'  => 'Rejected',
+   
+]);
+
 
 return response()->json([
 

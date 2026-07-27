@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use Illuminate\Support\Facades\DB;
 use App\Models\Review;
+use App\Services\NotificationService;
 use Storage;
 
 class StadiumController extends Controller
@@ -223,12 +224,22 @@ if (!$vendor) {
 
 
 //approve
-public function approve($id)
+public function approve($id,NotificationService $notificationService)
 {
  
     $stadium = Stadium::findOrFail($id);
 $stadium->update(['status'=>'approved']);
 
+$user=$stadium->vendor;
+
+$notificationService->sendToUser([
+    'user_id' => $user->id,
+    'title'   => 'Stadium approval',
+    'message' => 'Congratulations! Your stadium has been approved. You can now start working on it.',
+    'type'    => 'approve',
+    'status'  => 'success',
+   
+]);
 return response()->json([
 
         'message' => 'Approved'
@@ -241,11 +252,22 @@ return response()->json([
 
 
 //reject
-public function reject($id)
+public function reject($id,NotificationService $notificationService)
 { 
 
     $stadium = Stadium::findOrFail($id);
 $stadium->update(['status' => 'rejected']);
+
+$user=$stadium->vendor;
+
+$notificationService->sendToUser([
+    'user_id' => $user->id,
+    'title'   => 'Stadium rejection',
+    'message' => 'Unfortunately, your request to build a stadium has been rejected.',
+    'type'    => 'reject',
+    'status'  => 'Rejected',
+   
+]);
 
 return response()->json([
 

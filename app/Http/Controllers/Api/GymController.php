@@ -11,6 +11,7 @@ use App\Models\GymPlan;
 use App\Models\GymSchedule;
 use App\Models\GymSubscription;
 use App\Models\Stadium;
+use App\Services\NotificationService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -374,11 +375,24 @@ public function topGyms()
 
 
 //approve
-public function approve($id)
+public function approve($id,NotificationService $notificationService)
 {
  
     $gym = Gym::findOrFail($id);
 $gym->update(['status'=>'approved']);
+
+
+$user=$gym->vendor;
+
+$notificationService->sendToUser([
+    'user_id' => $user->id,
+    'title'   => 'Academy approval',
+    'message' => 'Congratulations! Your Gym has been approved. You can now start working on it.',
+    'type'    => 'approve',
+    'status'  => 'success',
+   
+]);
+
 
 return response()->json([
 
@@ -388,15 +402,31 @@ return response()->json([
 }
 
 
+ 
+
+
 
 
 
 //reject
-public function reject($id)
+public function reject($id,NotificationService $notificationService)
 { 
 
     $gym = Gym::findOrFail($id);
 $gym->update(['status' => 'rejected']);
+
+
+
+$user=$gym->vendor;
+
+$notificationService->sendToUser([
+    'user_id' => $user->id,
+    'title'   => 'Gym rejection',
+    'message' => 'Unfortunately, your request to build a Gym has been rejected.',
+    'type'    => 'reject',
+    'status'  => 'Rejected',
+   
+]);
 
 return response()->json([
 
