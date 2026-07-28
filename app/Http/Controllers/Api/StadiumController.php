@@ -169,8 +169,7 @@ $n=$notificationService->sendToUser([
 
 ]);
 
-\dd($n);
-
+ 
         return response()->json([
             'message' => 'Stadium created successfully',
             'stadium' => $stadium
