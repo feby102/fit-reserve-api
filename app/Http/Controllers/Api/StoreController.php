@@ -138,7 +138,7 @@ $notificationService->sendToUser([
     'title'   =>  'New Verification Request',
     'message' =>  'A new store verification request is waiting for your review',
     'type'    => 'Request',   
-    'data'    => [
+    'extra_data'    => [
        
         'facility_id'    => $store->id,
         'facility_type' => 'store',

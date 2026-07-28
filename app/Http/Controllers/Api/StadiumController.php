@@ -157,7 +157,7 @@ $n=$notificationService->sendToUser([
     'title'   =>  'New Verification Request',
     'message' =>  'A new stadium verification request is waiting for your review',
     'type'    => 'Request',   
-    'data'    => [
+    'extra_data'    => [
        
         'facility_id'    => $stadium->id,
         'facility_type' => 'stadium',

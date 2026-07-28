@@ -152,7 +152,7 @@ $notificationService->sendToUser([
     'title'   =>  'New Verification Request',
     'message' =>  'A new academy verification request is waiting for your review',
     'type'    => 'Request',   
-    'data'    => [
+    'extra_data'    => [
        
         'facility_id'    => $academy->id,
         'facility_type' => 'academy',

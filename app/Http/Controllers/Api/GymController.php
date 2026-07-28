@@ -145,7 +145,7 @@ $notificationService->sendToUser([
     'title'   =>  'New Verification Request',
     'message' =>  'A new Gym verification request is waiting for your review',
     'type'    => 'Request',   
-    'data'    => [
+    'extra_data'    => [
        
         'facility_id'    => $gym->id,
         'facility_type' => 'gym',
