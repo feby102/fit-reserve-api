@@ -148,7 +148,7 @@ $academy = Academy::create([
 $admin=User::where('role','admin')->first();
 
 $notificationService->sendToUser([
-'user_id' => $admin,
+'user_id' => $admin->id,
     'title'   =>  'New Verification Request',
     'message' =>  'A new academy verification request is waiting for your review',
     'type'    => 'Request',   

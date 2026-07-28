@@ -153,7 +153,7 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 $admin=User::where('role','admin')->first();
 
 $notificationService->sendToUser([
-'user_id' => $admin,
+'user_id' => $admin->id,
     'title'   =>  'New Verification Request',
     'message' =>  'A new stadium verification request is waiting for your review',
     'type'    => 'booking',   
