@@ -145,17 +145,17 @@ $academy = Academy::create([
 
 
 
-$admin=User::where('role','admin')->get();
+$admin=User::where('role','admin')->first();
 
 $notificationService->sendToUser([
 'user_id' => $admin,
     'title'   =>  'New Verification Request',
     'message' =>  'A new academy verification request is waiting for your review',
-    'type'    => 'booking',   
+    'type'    => 'Request',   
     'data'    => [
        
         'facility_id'    => $academy->id,
-        'facility_type' => 'Request',
+        'facility_type' => 'academy',
         'vendor_id'     =>$vendor->id,
          'vendor_name'        => $vendor->name,  
 

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('message');
                $table->json('data')->nullable();
-            $table->enum('type',['booking','payment','verification','chat','reject','approve'])->nullable();
+            $table->enum('type',['booking','payment','verification','chat','reject','approve','Request'])->nullable();
             $table->boolean('is_read')->default(false);
 
             $table->timestamps();

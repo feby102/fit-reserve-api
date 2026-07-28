@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Store;
+use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class StoreController extends Controller
@@ -90,7 +92,7 @@ public function show($id)
 }
  
  
-public function store(Request $request)
+public function store(Request $request, NotificationService $notificationService)
 {
     $user = auth()->user();
 
@@ -125,6 +127,30 @@ public function store(Request $request)
 
         
     ]);
+
+
+
+
+$admin=User::where('role','admin')->first();
+
+$notificationService->sendToUser([
+'user_id' => $admin,
+    'title'   =>  'New Verification Request',
+    'message' =>  'A new store verification request is waiting for your review',
+    'type'    => 'Request',   
+    'data'    => [
+       
+        'facility_id'    => $store->id,
+        'facility_type' => 'store',
+        'vendor_id'     =>$user->id,
+         'vendor_name'        => $user->name,  
+
+    ],
+
+
+]);
+
+
 
     return response()->json($store);
 }

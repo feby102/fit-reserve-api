@@ -138,7 +138,7 @@ $gym=Gym::create([
 'image' => $data['image'] ?? null,
  ]);
 
-$admin=User::where('role','admin')->get();
+$admin=User::where('role','admin')->first();
 
 $notificationService->sendToUser([
 'user_id' => $admin,
