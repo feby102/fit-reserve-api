@@ -5,7 +5,8 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Academy;
 use App\Models\AcademyType;
- use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\NotificationService;
@@ -105,7 +106,7 @@ public function index()
 
 
 //create new academy
-public function store(Request $request)
+public function store(Request $request ,NotificationService $notificationService)
     {
 $vendor = auth()->user();
 
@@ -138,6 +139,33 @@ $academy = Academy::create([
     'location'=>$request->location,
     'price_per_hour'=>$request->price_per_hour,
 'image' => $data['image'] ?? null,]);
+
+
+
+
+
+
+$admin=User::where('role','admin')->get();
+
+$notificationService->sendToUser([
+'user_id' => $admin,
+    'title'   =>  'New Verification Request',
+    'message' =>  'A new academy verification request is waiting for your review',
+    'type'    => 'booking',   
+    'data'    => [
+       
+        'facility_id'    => $academy->id,
+        'facility_type' => 'Request',
+        'vendor_id'     =>$vendor->id,
+         'vendor_name'        => $vendor->name,  
+
+    ],
+
+
+]);
+
+
+
   return response()->json([
             'message'=>'Academy created',
             'academy'=>$academy

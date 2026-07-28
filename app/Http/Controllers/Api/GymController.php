@@ -11,6 +11,7 @@ use App\Models\GymPlan;
 use App\Models\GymSchedule;
 use App\Models\GymSubscription;
 use App\Models\Stadium;
+use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -60,6 +61,11 @@ public function index()
 
     return response()->json($gyms);
 }
+
+
+
+
+
 public function publicShow(int $id)
 {
     $gym = Gym::with([
@@ -100,7 +106,9 @@ public function show(string $id)
 }
 
 
-     public function store(Request $request)
+
+
+     public function store(Request $request ,NotificationService $notificationService)
     {
 $this->authorize('create',Stadium::class);
 
@@ -129,6 +137,29 @@ $gym=Gym::create([
 'vendor_id' => $vendor->id,
 'image' => $data['image'] ?? null,
  ]);
+
+$admin=User::where('role','admin')->get();
+
+$notificationService->sendToUser([
+'user_id' => $admin,
+    'title'   =>  'New Verification Request',
+    'message' =>  'A new Gym verification request is waiting for your review',
+    'type'    => 'Request',   
+    'data'    => [
+       
+        'facility_id'    => $gym->id,
+        'facility_type' => 'gym',
+        'vendor_id'     =>$vendor->id,
+         'vendor_name'        => $vendor->name,  
+
+    ],
+
+
+
+
+
+]);
+
 
 return \response()->json([ 'message'=>'Gym created',
             'Gym'=>$gym]);

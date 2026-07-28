@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use Illuminate\Support\Facades\DB;
 use App\Models\Review;
+use App\Models\User;
 use App\Services\NotificationService;
 use Storage;
 
@@ -116,7 +117,7 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 
 //create 
 
-    public function store(Request $request)
+    public function store(Request $request ,NotificationService $notificationService)
     {
                  $this->authorize('create',Stadium::class);   
 
@@ -145,6 +146,30 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
             'vendor_id' => $vendor->id,
             'status' => 'pending'
         ]));
+
+
+
+
+$admin=User::where('role','admin')->get();
+
+$notificationService->sendToUser([
+'user_id' => $admin,
+    'title'   =>  'New Verification Request',
+    'message' =>  'A new stadium verification request is waiting for your review',
+    'type'    => 'booking',   
+    'data'    => [
+       
+        'facility_id'    => $stadium->id,
+        'facility_type' => 'Request',
+        'vendor_id'     =>$vendor->id,
+         'vendor_name'        => $vendor->name,  
+
+    ],
+
+
+]);
+
+
 
         return response()->json([
             'message' => 'Stadium created successfully',
