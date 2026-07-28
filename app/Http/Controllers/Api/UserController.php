@@ -7,6 +7,7 @@ use App\Models\PendingVerification;
 use App\Models\Ranking;
 use App\Models\User;
 use App\Models\VerificationRequest;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -69,7 +70,7 @@ class UserController extends Controller
         return response()->json($requests);
     }
 
-    public function requestToVerify(Request $request)
+    public function requestToVerify(Request $request,NotificationService $notificationService)
     {
         $data = $request->validate([
             'name'            => 'required|string',
@@ -129,7 +130,39 @@ class UserController extends Controller
                 $request->phone_number
             );
         }
-    }
+    
+    
+    $user=\auth()->user();
+    $admin=User::where('role','admin')->first();
+
+ $notificationService->sendToUser([
+'user_id' => $admin->id,
+    'title'   =>  'New Verification Request',
+    'message' =>  'A new verification request is waiting for your review',
+    'type'    => 'verification',   
+    'extra_data'    => [
+       
+        'user_id'=>$user->id  
+       ,'name'=>$user->name
+        , 'phone'=>$user->phone
+        , 'role'=>$user->role
+        , 'city'=>$user->city
+        , 'area'=>$user->area
+        , 'email'=>$user->email  
+
+    ],
+
+
+]);
+
+    
+    
+    
+    
+        }
+
+
+
 
     // توثيق الحسابات
     public function approve($id)
