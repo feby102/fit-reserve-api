@@ -152,7 +152,7 @@ $Stadium = Stadium::where('vendor_id', $vendor->id)->findOrFail($id)
 
 $admin=User::where('role','admin')->first();
 
-$notificationService->sendToUser([
+$n=$notificationService->sendToUser([
 'user_id' => $admin->id,
     'title'   =>  'New Verification Request',
     'message' =>  'A new stadium verification request is waiting for your review',
@@ -169,7 +169,7 @@ $notificationService->sendToUser([
 
 ]);
 
-
+\dd($n);
 
         return response()->json([
             'message' => 'Stadium created successfully',
