@@ -44,4 +44,18 @@ public function broadcastAs()
     {
         return 'message.sent';
     }
+
+
+public function broadcastWith()
+{
+    \Log::info("BroadcastWith Executed");
+
+    return [
+        'message' => $this->message->load('sender')->toArray(),
+    ];
 }
+
+
+
+
+    }
