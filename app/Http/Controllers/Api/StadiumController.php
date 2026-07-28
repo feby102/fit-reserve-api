@@ -156,11 +156,11 @@ $notificationService->sendToUser([
 'user_id' => $admin->id,
     'title'   =>  'New Verification Request',
     'message' =>  'A new stadium verification request is waiting for your review',
-    'type'    => 'booking',   
+    'type'    => 'Request',   
     'data'    => [
        
         'facility_id'    => $stadium->id,
-        'facility_type' => 'Request',
+        'facility_type' => 'stadium',
         'vendor_id'     =>$vendor->id,
          'vendor_name'        => $vendor->name,  
 
