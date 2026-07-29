@@ -22,14 +22,25 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 // });
 
 
-Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
+// Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
 
-    Log::info('Broadcast Auth',[
-        'user'=>$user->id,
-        'conversation'=>$conversation_id
+//     Log::info('Broadcast Auth',[
+//         'user'=>$user->id,
+//         'conversation'=>$conversation_id
+//     ]);
+
+//     return $user->conversations()
+//         ->where('id',$conversation_id)
+//         ->exists();
+// });
+
+
+Route::post('/broadcasting/auth-test', function (Illuminate\Http\Request $request) {
+
+    return response()->json([
+        'user' => auth()->user(),
+        'id' => auth()->id(),
+        'token' => $request->bearerToken(),
     ]);
 
-    return $user->conversations()
-        ->where('id',$conversation_id)
-        ->exists();
-});
+})->middleware('auth:user-api');
