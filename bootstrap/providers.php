@@ -3,5 +3,7 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\AuthServiceProvider::class,
-     Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class, 
- ];
+    App\Providers\BroadcastServiceProvider::class,
+
+    Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+];

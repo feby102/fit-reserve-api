@@ -41,9 +41,9 @@ return [
     ],
 
     'vendor-api' => [
-        'driver' => 'sanctum',
-        'provider' => 'vendors',
-    ],
+    'driver' => 'sanctum',
+    'provider' => 'users',
+],
 
     'user-api' => [
         'driver' => 'sanctum',
