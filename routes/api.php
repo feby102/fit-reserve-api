@@ -62,7 +62,7 @@ Route::get('/paymob/callback', [PaymentController::class, 'callback']);
 
 Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
 
-  Route::middleware('auth:user-api,vendor-api')->group(function(){
+  Route::middleware('auth:user-api')->group(function(){
  
 
 Route::post('/device-token', [DeviceTokenController::class, 'store']);
@@ -234,7 +234,7 @@ Route::post('wallet/transfer',[UserController::class,'transfer']);
 
 
 
-Route::middleware('auth:user-api,vendor-api')->prefix('/vendor')->group(function(){
+Route::middleware('auth:user-api')->prefix('/vendor')->group(function(){
 
 Route::apiResource('/stadiums',StadiumController::class);
     Route::get('/stadiums/{id}/stats',[StadiumController::class, 'stats']);
