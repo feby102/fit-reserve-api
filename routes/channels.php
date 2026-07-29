@@ -22,16 +22,17 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 // });
 
  
+
 Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
 
-    Log::info('CHANNEL ENTERED', [
-        'user' => $user->id,
+    Log::info('CHANNEL CALLBACK', [
+        'user' => $user,
+        'id' => $user?->id,
         'conversation' => $conversation_id,
     ]);
 
     return true;
 });
-
 
 // Route::post('/broadcasting/auth-test', function (Illuminate\Http\Request $request) {
 
