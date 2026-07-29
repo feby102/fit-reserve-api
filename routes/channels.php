@@ -12,14 +12,24 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 // });
 
 
+// Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
+//     \Log::info("Channel Auth", [
+//         'user_id' => $user->id,
+//         'conversation_id' => $conversation_id,
+//     ]);
+
+//     return true;
+// });
+
+
 Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
-    \Log::info("Channel Auth", [
-        'user_id' => $user->id,
-        'conversation_id' => $conversation_id,
+
+    Log::info('Broadcast Auth',[
+        'user'=>$user->id,
+        'conversation'=>$conversation_id
     ]);
 
-    return true;
+    return $user->conversations()
+        ->where('id',$conversation_id)
+        ->exists();
 });
-
-
-
