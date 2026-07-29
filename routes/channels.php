@@ -7,8 +7,18 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 
-Broadcast::channel('chat.{conversation_id}',function($user,$conversation_id){
-return $user->conversations()->where('id',$conversation_id)->exists();
+// Broadcast::channel('chat.{conversation_id}',function($user,$conversation_id){
+// return $user->conversations()->where('id',$conversation_id)->exists();
+// });
+
+
+Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
+    \Log::info("Channel Auth", [
+        'user_id' => $user->id,
+        'conversation_id' => $conversation_id,
+    ]);
+
+    return true;
 });
 
 
