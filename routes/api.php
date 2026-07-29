@@ -63,7 +63,13 @@ Route::get('/paymob/callback', [PaymentController::class, 'callback']);
 Route::post('/payment/webhook', [PaymentController::class, 'webhook']);
 
   Route::middleware('auth:user-api')->group(function(){
- 
+ Route::post('/broadcast-test', function (Request $request) {
+    return response()->json([
+        'check' => auth()->check(),
+        'user'  => auth()->user(),
+        'id'    => auth()->id(),
+    ]);
+})->middleware('auth:user-api');
 
 Route::post('/device-token', [DeviceTokenController::class, 'store']);
     Route::delete('/device-token', [DeviceTokenController::class, 'destroy']);
