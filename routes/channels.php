@@ -21,17 +21,15 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 //     return true;
 // });
 
-
+ 
 Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
 
-    Log::info('Broadcast Auth',[
-        'user'=>$user->id,
-        'conversation'=>$conversation_id
+    Log::info('CHANNEL ENTERED', [
+        'user' => $user->id,
+        'conversation' => $conversation_id,
     ]);
 
-    return $user->conversations()
-        ->where('id',$conversation_id)
-        ->exists();
+    return true;
 });
 
 
