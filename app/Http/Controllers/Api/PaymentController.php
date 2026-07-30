@@ -540,8 +540,7 @@ if ($pending) {
             'phone_number'      => $pending->phone_number,
             'price'             => $pending->price,
 
-            // أهم 3 حقول
-            'paymob_order_id'   => $pending->paymob_order_id,
+             'paymob_order_id'   => $pending->paymob_order_id,
             'transaction_id'    => $transactionId,
             'payment_status'    => 'paid',
 
@@ -555,6 +554,38 @@ if ($pending) {
         'message' => 'Verification payment completed'
     ]);
 }
+
+
+
+
+
+$participant = ChallengeParticipant::where(
+    'paymob_order_id',
+    $paymobOrderId
+)->first();
+
+if ($participant) {
+
+    $participant->update([
+        'payment_status' => 'paid',
+        'transaction_id' => $transactionId,
+        'status' => 'accepted',
+    ]);
+
+    // توزيع الفلوس
+    app(\App\Services\CommissionService::class)
+        ->distribute(
+            $participant->challenge->price,
+            $participant->challenge->vendor,
+            $participant->id
+        );
+
+    return response()->json([
+        'message' => 'Challenge payment completed'
+    ]);
+}
+
+
 
     return response()->json(['message' => 'No matching records found'], 200);
 }
@@ -863,6 +894,211 @@ public function payWithVisaForBooking(Request $request, $booking)
     $url = 'https://accept.paymob.com/api/acceptance/iframes/' . env('PAYMOB_IFRAME_ID') . '?payment_token=' . $payment_token;
     return response()->json(['payment_url' => $url]);
 }
+
+
+
+
+
+
+
+
+ 
+public function payWithVisaForChallenge(Request $request, ChallengeParticipant $participant)
+{
+    $user = auth()->user();
+
+    $amount = $participant->challenge->price;
+
+    $base = env("PAYMOB_BASE_URL");
+
+    $amount_cents = $amount * 100;
+
+    // Generate Token
+    $token = Http::post($base . '/api/auth/tokens', [
+        'api_key' => env('PAYMOB_API_KEY')
+    ])->json()['token'] ?? null;
+
+    if (!$token) {
+        return response()->json([
+            'message' => 'Paymob auth failed'
+        ],500);
+    }
+
+    // Create Order
+    $paymobOrder = Http::post($base.'/api/ecommerce/orders',[
+        'auth_token'        => $token,
+        'delivery_needed'   => false,
+        'amount_cents'      => $amount_cents,
+        'currency'          => 'EGP',
+        'merchant_order_id' => $participant->id,
+        'items'             => []
+    ])->json();
+
+    $paymob_order_id = $paymobOrder['id'] ?? null;
+
+    if(!$paymob_order_id){
+        return response()->json([
+            'message'=>'Failed to create Paymob order'
+        ],500);
+    }
+
+    $participant->update([
+        'paymob_order_id'=>$paymob_order_id,
+        'payment_method'=>'visa'
+    ]);
+
+    // Payment Key
+    $payment_token = Http::post($base.'/api/acceptance/payment_keys',[
+        'auth_token'=>$token,
+        'amount_cents'=>$amount_cents,
+        'expiration'=>3600,
+        'order_id'=>$paymob_order_id,
+        'currency'=>'EGP',
+        'integration_id'=>env('PAYMOB_VISA_INTEGRATION_ID'),
+
+        'billing_data'=>[
+            'first_name'=>$user->name,
+            'last_name'=>$user->name,
+            'email'=>$user->email,
+            'phone_number'=>$user->phone,
+            'apartment'=>'NA',
+            'floor'=>'NA',
+            'street'=>'NA',
+            'building'=>'NA',
+            'shipping_method'=>'NA',
+            'postal_code'=>'12345',
+            'city'=>'Cairo',
+            'country'=>'EG',
+            'state'=>'Cairo',
+        ]
+    ])->json()['token'] ?? null;
+
+    if(!$payment_token){
+        return response()->json([
+            'message'=>'Failed to generate payment key'
+        ],500);
+    }
+
+    return response()->json([
+        'payment_url'=>"https://accept.paymob.com/api/acceptance/iframes/".env('PAYMOB_IFRAME_ID')."?payment_token=".$payment_token
+    ]);
+}
+
+
+
+public function payWithWalletForChallenge(
+    Request $request,
+    ChallengeParticipant $participant,
+    $phone_number
+)
+{
+    $user = auth()->user();
+
+    $amount = $participant->challenge->price;
+
+    $base = env("PAYMOB_BASE_URL");
+
+    $amount_cents = $amount * 100;
+
+    // Token
+    $token = Http::post($base.'/api/auth/tokens',[
+        'api_key'=>env('PAYMOB_API_KEY')
+    ])->json()['token'] ?? null;
+
+    if(!$token){
+        return response()->json([
+            'message'=>'Paymob auth failed'
+        ],500);
+    }
+
+    // Order
+    $paymobOrder = Http::post($base.'/api/ecommerce/orders',[
+        'auth_token'=>$token,
+        'delivery_needed'=>false,
+        'amount_cents'=>$amount_cents,
+        'currency'=>'EGP',
+        'merchant_order_id'=>$participant->id,
+        'items'=>[]
+    ])->json();
+
+    $paymob_order_id = $paymobOrder['id'] ?? null;
+
+    if(!$paymob_order_id){
+        return response()->json([
+            'message'=>'Failed to create Paymob order'
+        ],500);
+    }
+
+    $participant->update([
+        'paymob_order_id'=>$paymob_order_id,
+        'payment_method'=>'vodafone_cash'
+    ]);
+
+    // Payment Key
+    $payment_token = Http::post($base.'/api/acceptance/payment_keys',[
+        'auth_token'=>$token,
+        'amount_cents'=>$amount_cents,
+        'expiration'=>3600,
+        'order_id'=>$paymob_order_id,
+        'currency'=>'EGP',
+        'integration_id'=>env('PAYMOB_WALLET_INTEGRATION_ID'),
+
+        'billing_data'=>[
+            'first_name'=>$user->name,
+            'last_name'=>$user->name,
+            'email'=>$user->email,
+            'phone_number'=>$phone_number,
+            'apartment'=>'NA',
+            'floor'=>'NA',
+            'street'=>'NA',
+            'building'=>'NA',
+            'shipping_method'=>'NA',
+            'postal_code'=>'12345',
+            'city'=>'Cairo',
+            'country'=>'EG',
+            'state'=>'Cairo',
+        ]
+    ])->json()['token'] ?? null;
+
+    if(!$payment_token){
+        return response()->json([
+            'message'=>'Failed to generate payment key'
+        ],500);
+    }
+
+    // Wallet
+    $walletResponse = Http::post($base.'/api/acceptance/payments/pay',[
+        'source'=>[
+            'identifier'=>$phone_number,
+            'subtype'=>'WALLET'
+        ],
+        'payment_token'=>$payment_token
+    ]);
+
+    $walletData = $walletResponse->json();
+
+    $url =
+        $walletData['iframe_redirection_url']
+        ?? $walletData['iframe_url']
+        ?? $walletData['redirection_url']
+        ?? $walletData['redirect_url']
+        ?? null;
+
+    if(!$url){
+        return response()->json([
+            'message'=>'Failed to generate wallet payment url',
+            'paymob_response'=>$walletData
+        ],500);
+    }
+
+    return response()->json([
+        'payment_url'=>$url
+    ]);
+}
+
+
+
+
 
 
         }

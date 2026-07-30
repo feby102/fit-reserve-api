@@ -12,10 +12,16 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;  
 use App\Http\Controllers\Api\PaymentController;
 use App\Services\NotificationService;
+use Illuminate\Support\Facades\Http;
 
 class ChallengeController extends Controller
 {
 use AuthorizesRequests;
+
+
+
+
+
 
 public function publicIndex()
 {
@@ -301,8 +307,21 @@ $vendor = $challenge->vendor;
         DB::transaction(function () use ($wallet, $challenge, $user,$vendor) {
 
             $wallet->decrement('balance', $challenge->price);
-$vendor->increment('balance', $challenge->price);
+$walletService = app(\App\Services\WalletService::class);
 
+$walletService->debit(
+    $user,
+    $challenge->price,
+    'debit',
+    "Challenge #{$challenge->id}"
+);
+
+app(\App\Services\CommissionService::class)
+    ->distribute(
+        $challenge->price,
+        $vendor,
+        $challenge->id
+    );
             $wallet->transactions()->create([
                 'type' => 'debit',
                 'amount' => $challenge->price,

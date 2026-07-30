@@ -17,6 +17,10 @@ return new class extends Migration
            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
            $table->enum('status',['pending','accepted','rejected'])->default('pending');
            $table->boolean('is_banned')->default(false);
+           $table->string('payment_method')->nullable();
+$table->string('payment_status')->default('pending');
+$table->string('paymob_order_id')->nullable();
+$table->string('transaction_id')->nullable();
             $table->timestamps();
         });
     }
