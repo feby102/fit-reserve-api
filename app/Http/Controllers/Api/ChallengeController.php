@@ -269,12 +269,34 @@ public function payForChallenge(Request $request, $challenge_id)
 
 
     $data = $request->validate([
-        'payment_method' => 'required|in:wallet,visa'
+       'payment_method' => 'required|in:wallet,visa,vodafone_cash',
+'phone_number' => 'required_if:payment_method,vodafone_cash'
     ]);
+
+    
 
     $user = auth()->user();
     $challenge = Challenge::findOrFail($challenge_id);
 $vendor = $challenge->vendor;
+
+
+if ($data['payment_method'] == 'vodafone_cash') {
+
+    $participant = ChallengeParticipant::create([
+        'challenge_id'   => $challenge->id,
+        'user_id'        => $user->id,
+        'status'         => 'pending',
+        'payment_status' => 'pending',
+        'payment_method' => 'vodafone_cash',
+    ]);
+
+    return app(PaymentController::class)
+        ->payWithWalletForChallenge(
+            $request,
+            $participant,
+            $request->phone_number
+        );
+}
 
     if (!in_array($challenge->status, ['ongoing', 'upcoming'])) {
         return response()->json(['message' => 'Challenge not available'], 400);
@@ -306,7 +328,7 @@ $vendor = $challenge->vendor;
 
         DB::transaction(function () use ($wallet, $challenge, $user,$vendor) {
 
-            $wallet->decrement('balance', $challenge->price);
+            
 $walletService = app(\App\Services\WalletService::class);
 
 $walletService->debit(
@@ -352,7 +374,7 @@ app(\App\Services\CommissionService::class)
     'payment_method'  => 'visa',
 ]);
 
-$paymentController = new PaymentController();
+ 
 
 return $paymentController->payWithVisaForChallenge(
     $request,
