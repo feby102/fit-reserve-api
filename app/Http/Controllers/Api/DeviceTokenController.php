@@ -19,7 +19,7 @@ $data=$request->validate([
 
 DeviceToken::updateOrCreate([
 
-'user_id'=>\auth()->id
+'user_id'=>\auth()->id()
 , 'device_type'=>$data['device_type']??null]
 ,[ 'token'=>$data['token']]
 
