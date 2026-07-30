@@ -522,6 +522,40 @@ app(\App\Services\CommissionService::class)
         return response()->json(['message' => 'Order paid and confirmed successfully'], 200);
     }
 
+$pending = PendingVerification::where('paymob_order_id', $paymobOrderId)->first();
+
+if ($pending) {
+
+    if (!$isSuccess) {
+        return response()->json(['message' => 'Payment not completed'], 200);
+    }
+
+    DB::transaction(function () use ($pending, $transactionId) {
+
+        VerificationRequest::create([
+            'user_id'           => $pending->user_id,
+            'role'              => $pending->role,
+            'documents'         => $pending->documents,
+            'payment_method'    => $pending->payment_method,
+            'phone_number'      => $pending->phone_number,
+            'price'             => $pending->price,
+
+            // أهم 3 حقول
+            'paymob_order_id'   => $pending->paymob_order_id,
+            'transaction_id'    => $transactionId,
+            'payment_status'    => 'paid',
+
+            'status'            => 'pending',
+        ]);
+
+        $pending->delete();
+    });
+
+    return response()->json([
+        'message' => 'Verification payment completed'
+    ]);
+}
+
     return response()->json(['message' => 'No matching records found'], 200);
 }
 
@@ -548,7 +582,8 @@ public function payWithVisaForVerification(Request $request, $pendingVerificatio
         'delivery_needed' => false,
         'amount_cents'    => $amount_cents,
         'currency'        => 'EGP',
-        'items'           => []
+        'items'           => [],
+        'merchant_order_id' => $pendingVerification->id,
     ])->json();
 
     $paymob_order_id = $paymobOrder['id'] ?? null;
@@ -611,7 +646,8 @@ public function payWithWalletForVerification(Request $request, $pendingVerificat
         'delivery_needed' => false,
         'amount_cents'    => $amount_cents,
         'currency'        => 'EGP',
-        'items'           => []
+        'items'           => [],
+        'merchant_order_id' => $pendingVerification->id,
     ])->json();
 
     $paymob_order_id = $paymobOrder['id'] ?? null;
@@ -688,7 +724,7 @@ public function payWithWalletForVerification(Request $request, $pendingVerificat
             $verificationRequest->user->notify(new \App\Notifications\VerificationRefunded($verificationRequest));
             return true;
         }
-
+$this->processRefund($verificationRequest);
         return false;
     }
 

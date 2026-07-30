@@ -30,26 +30,7 @@ class AuthController extends Controller
 
     return DB::transaction(function () use ($validatedData) {
 
-//       if ($validatedData['role'] === 'vendor') {
-
-//     $vendor = Vendor::create([
-//         'name'     => $validatedData['name'],
-//         'phone'    => $validatedData['phone'],
-//         'city'     => $validatedData['city'],
-//         'area'     => $validatedData['area'],
-//         'email'    => $validatedData['email'],
-//         'password' => Hash::make($validatedData['password']),
-//     ]);
-
-//      $token = $vendor->createToken('vendor-token')->plainTextToken;
-
-//     return response()->json([
-//         'message' => 'Vendor registered successfully',
-//         'vendor'  => $vendor,
-//         'token'   => $token   
-//     ], 201);
-// }
-         $referrer = null;
+          $referrer = null;
 
         if (!empty($validatedData['referral_code'])) {
             $referrer = User::where(
@@ -118,18 +99,7 @@ $referrer->wallet->transactions()->create([
         ]);
     }
 
-     //$vendor = Vendor::where('phone', $request->phone)->first();
-
-//     if ($vendor && Hash::check($request->password, $vendor->password)) {
-
-// $token = $vendor->createToken('vendor-token')->plainTextToken;
-//         return response()->json([
-//             'message' => 'تم تسجيل دخول التاجر بنجاح',
-//             'type'    => 'vendor',
-//             'vendor'  => $vendor,
-//             'token'   => $token
-//         ]);
-//     }
+   
 
     return response()->json([
         'message' => 'بيانات الدخول غير صحيحة'
@@ -144,8 +114,7 @@ public function sendResetCode(Request $request)
 
     $email = $request->email;
 
-    //  $account = User::where('email', $email)->first() ?? Vendor::where('email', $email)->first();
-
+ 
 $account = User::where('email',$email)->first();
 
     if (!$account) {
@@ -192,9 +161,7 @@ $account = User::where('email',$email)->first();
         ], 422);
     }
 
-    // البحث عن الحساب في الجدولين لتحديثه
-    // $account = User::where('email', $request->email)->first() ?? Vendor::where('email', $request->email)->first();
-
+ 
 $account = User::where('email',$request->email)->first();
 
     if ($account) {

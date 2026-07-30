@@ -70,7 +70,11 @@ class UserController extends Controller
         return response()->json($requests);
     }
 
-    public function requestToVerify(Request $request,NotificationService $notificationService)
+
+
+
+
+public function requestToVerify(Request $request,NotificationService $notificationService)
     {
         $data = $request->validate([
             'name'            => 'required|string',
@@ -165,7 +169,7 @@ class UserController extends Controller
 
 
     // توثيق الحسابات
-    public function approve($id)
+    public function approve($id,NotificationService $notificationService)
     {
         $verificationRequest = VerificationRequest::findOrFail($id);
 
@@ -178,12 +182,25 @@ class UserController extends Controller
         $verificationRequest->user->update([
             'role' => $verificationRequest->role
         ]);
+$user=\auth()->user();
+
+
+$notificationService->sendToUser([
+    'user_id' => $user->id,
+    'title'   => 'verify your account',
+    'message' => 'Congratulations! Your request to verify your account has been approved.',
+    'type'    => 'approve',
+    'status'  => 'success',
+   
+]);
+
+
 
         return response()->json(['message' => 'تم قبول الطلب']);
     }
 
     // ارفض طلب
-    public function reject(Request $request, $id)
+    public function reject(Request $request, $id,NotificationService $notificationService)
     {
         $request->validate(['reason' => 'required|string']);
 
@@ -214,13 +231,25 @@ if ($verificationRequest->payment_status === 'paid') {
             $this->processRefund($verificationRequest);
         }
 
+$user=\auth()->user();
+
+ $notificationService->sendToUser([
+            'user_id'    => $user->id,
+            'title'      => 'Academy Rejection',
+            'message'    => 'Unfortunately, your request to build an Academy has been rejected.',
+            'type'       => 'reject',
+            'status'     => 'rejected',
+             
+        ]);
+
+
+
         return response()->json([
             'message' => 'تم رفض الطلب' . ($verificationRequest->refresh()->payment_status === 'refunded' ? ' وجاري إرجاع الفلوس' : '')
         ]);
     }
 
-    // تحويل الكود المتكرر العشوائي إلى الدالة الصحيحة المسؤولة عن الارتجاع
-    private function processRefund($verificationRequest)
+     private function processRefund($verificationRequest)
     {
         Http::withHeaders(['Content-Type' => 'application/json'])
             ->post(env('PAYMOB_BASE_URL') . '/api/acceptance/void_refund/refund', [
