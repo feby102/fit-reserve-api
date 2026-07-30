@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;  
 use App\Http\Controllers\Api\PaymentController;
+use App\Services\NotificationService;
 
 class ChallengeController extends Controller
 {
@@ -136,7 +137,7 @@ return \response()->json($ongoing);
 
 
 //accapt or reject
-public function updateParticipant(Request $request, $id)
+public function updateParticipant(Request $request, $id,NotificationService $notificationService)
 {
     $participant = ChallengeParticipant::findOrFail($id);
     $vendor = auth()->user();
@@ -162,6 +163,27 @@ public function updateParticipant(Request $request, $id)
             ? "Approved: " . $challenge->title
             : "Rejected: " . $challenge->title
     ]);
+
+ $notificationService->sendToUser([
+            'user_id'    => $participant->user_id,
+           'title' => $request->status == 'accepted'
+            ? 'You have been accepted'
+            : 'Request rejected',
+        'message' => $request->status == 'accepted'
+            ? "Approved: " . $challenge->title
+            : "Rejected: " . $challenge->title
+            ,
+            'type'       =>  $request->status == 'accepted'
+            ? 'approve'
+            : 'reject',
+            'status'     => 'rejected',
+            'extra_data' => [
+                'challenge_id' => $challenge->id
+            ]
+        ]);
+
+
+
 
     return response()->json($participant);
 }
@@ -216,7 +238,7 @@ public function status(Request $request, $id)
         return response()->json(['message' => 'Unauthorized: Vendor profile not found'], 403);
     }
 
-    $vendorId = $user->vendor->id;
+    $vendorId = \auth()->$user()->id;
 
      $challenge = Challenge::whereHas('academy', function ($q) use ($vendorId) {
         $q->where('vendor_id', $vendorId);
@@ -303,7 +325,20 @@ $vendor->increment('balance', $challenge->price);
 
         $paymentController = new PaymentController();
 
-        return $paymentController->payWithVisa($request, $challenge->price);
+       $participant = ChallengeParticipant::create([
+    'challenge_id'    => $challenge->id,
+    'user_id'         => $user->id,
+    'status'          => 'pending',
+    'payment_status'  => 'pending',
+    'payment_method'  => 'visa',
+]);
+
+$paymentController = new PaymentController();
+
+return $paymentController->payWithVisaForChallenge(
+    $request,
+    $participant
+);
     }
 }
 

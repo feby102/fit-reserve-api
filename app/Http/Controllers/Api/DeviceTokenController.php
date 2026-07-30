@@ -12,7 +12,7 @@ class DeviceTokenController extends Controller
 
 $data=$request->validate([
 
-'title'=>'required|string',
+'token'=>'required|string',
 'device_type'=>'required|in:android,ios,web'
 
 ]);

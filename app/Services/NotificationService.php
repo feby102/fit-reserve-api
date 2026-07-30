@@ -19,14 +19,12 @@ class NotificationService {
             return false;
         }
 
-        // 1. تجهيز البيانات الإضافية
-        $extraData = $data['extra_data'] ?? [];
+         $extraData = $data['extra_data'] ?? [];
         if (isset($data['status'])) {
             $extraData['status'] = $data['status'];
         }
 
-        // 2. الحفظ في قاعدة بيانات MySQL
-        Notification::create([
+         Notification::create([
             'user_id' => $data['user_id'],
             'title'   => $data['title'],
             'message' => $data['message'],
@@ -82,7 +80,7 @@ class NotificationService {
         $formatted = [];
         foreach ($data as $key => $value) {
             if (is_array($value)) {
-                $formatted[$key] = json_encode($value); // تحويل الـ Array لـ JSON string
+                $formatted[$key] = json_encode($value);   
             } else {
                 $formatted[$key] = (string) $value;
             }
