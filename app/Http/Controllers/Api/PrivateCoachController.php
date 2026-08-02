@@ -18,10 +18,18 @@ class PrivateCoachController extends Controller
  
 public function publicIndex()
 {
-
-return PrivateCoach::with('academy','locations','services')->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
-        ->latest()->get();
-
+    return PrivateCoach::with([
+            'academy',
+            'locations',
+            'services',
+            'reviews' => function($q) {
+                // جلب التقييمات الظاهرة فقط ويمكنك ترتيبها حسب الأحدث
+                $q->where('is_hidden', false)->latest();
+            }
+        ])
+        ->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->latest()
+        ->get();
 }
 
 
