@@ -19,7 +19,7 @@ class PrivateCoachController extends Controller
 public function publicIndex()
 {
 
-return PrivateCoach::with('academy','locations','services')->get()->makeHidden(['id','user_id','status','created_at','updated_at']);
+return PrivateCoach::with('academy','locations','services')->get();
 
 }
 
@@ -33,7 +33,7 @@ return PrivateCoach::with('academy','locations','services')->get()->makeHidden([
 
          $coaches = PrivateCoach::with('academy','locations','services')
             ->whereIn('academy_id', $academiesIds)->get()
-            ->makeHidden(['id','academy_id' ,'created_at','updated_at'])
+             
             ;
 
         return response()->json($coaches);
