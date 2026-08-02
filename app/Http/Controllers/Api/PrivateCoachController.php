@@ -19,7 +19,8 @@ class PrivateCoachController extends Controller
 public function publicIndex()
 {
 
-return PrivateCoach::with('academy','locations','services')->get();
+return PrivateCoach::with('academy','locations','services')->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->latest()->get();
 
 }
 
@@ -32,7 +33,8 @@ return PrivateCoach::with('academy','locations','services')->get();
          $academiesIds = $user->academies()->pluck('id');
 
          $coaches = PrivateCoach::with('academy','locations','services')
-            ->whereIn('academy_id', $academiesIds)->get()
+            ->whereIn('academy_id', $academiesIds)->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
+        ->latest()->get()
              
             ;
 
@@ -120,9 +122,19 @@ $coach = PrivateCoach::create($data);
  
     public function publicShow($id)
     {
-        $coach = PrivateCoach::with('academy','locations','services')->findOrFail($id)
-        ->makeHidden(['id','user_id','status','created_at','updated_at']);
-        return response()->json($coach);
+        $coach = PrivateCoach::with(['academy','locations','services'
+        ,'reviews'=>function($q){
+
+           $q->where('is_hidden', false)->with('user:id,name');
+        }
+        
+        ])->findOrFail($id);
+
+         $average = $coach->reviews->avg('rating');
+       return response()->json([
+        'coach' => $coach,
+        'average_rating' => round($average ?? 0, 1),
+    ]);
     }
 
 
@@ -132,7 +144,7 @@ $user = auth('user-api')->user();
 $academiesIds = $user->academies()->pluck('id');
 
 $coach = PrivateCoach::whereIn('academy_id', $academiesIds)
-    ->findOrFail($id);
+   ->with( 'reviews.user')->findOrFail($id);
     return response()->json($coach);
 
 }
