@@ -10,19 +10,30 @@ use Illuminate\Http\Request;
 class VideoController extends Controller
 {
     public function index(){
-
-    $videos=Video::with('user','academy','coach','reports')->get();
-            return response()->json($videos);
+$videos = Video::with(['user', 'academy', 'coach','stadium','store','gym'])
+    ->where('status', 'approved')  
+        ->latest()
+    ->paginate(10);         
+       return response()->json($videos);
 
     }
 
 
-public function latestVideos(){
 
-return Video::orderByDesc('created_at')->take(5)->get();
 
+
+    
+public function latestVideos()
+{
+    $videos = Video::with(['user', 'academy', 'coach','stadium','store','gym'])
+        ->latest()  
+        ->take(5)
+        ->get();
+
+    return response()->json([
+        'data' => $videos
+    ]);
 }
-
 
 
 
@@ -33,11 +44,13 @@ public function store(Request $request)
             'title'        => 'required|string|max:255',
             'description'  => 'nullable|string',
             'url'          => 'required|url',  
-            'type'         => 'required|in:user,academy,coach',
+            'type'         => 'required|in:user,academy,coach,stadium,store,gym',
             'academy_id'   => 'nullable|exists:academies,id',
             'coach_id'     => 'nullable|exists:private_coaches,id',
              'stadium_id'   => 'nullable|exists:stadiums,id',
             'gym_id'     => 'nullable|exists:gyms,id',
+            'store_id'     => 'nullable|exists:stores,id',
+            
        
         ]);
 
@@ -52,6 +65,7 @@ $video = Video::create([
     'coach_id'    => $request->coach_id,
     'stadium_id'  => $request->stadium_id,  
     'gym_id'      => $request->gym_id,
+    'store_id'      => $request->store_id,
     'views'       => 0,
     'likes'       => 0,
     'dislikes'    => 0,
@@ -84,22 +98,13 @@ $video = Video::create([
 
 
 
+public function destroy($id)
+{
+    $video = Video::where('user_id', auth()->id())->findOrFail($id);
+    $video->delete();
 
-      public function destroy($id)
-    {
-        $user=\auth()->user();
-        $video = Video::where('user_id',$user->id)->findOrFail($id);
-        if(!$video){ 
-            return response()->json([
-            'message' => 'Unauthorized'
-        ], 403);
-        }
-        else{
-        $video->delete();
-                return response()->json(['message'=>'Video deleted']);
-
+    return response()->json(['message' => 'Video deleted successfully']);
 }
-    }
 
  
      public function stats($id)
