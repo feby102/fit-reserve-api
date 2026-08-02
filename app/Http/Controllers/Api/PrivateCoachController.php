@@ -23,8 +23,7 @@ public function publicIndex()
             'locations',
             'services',
             'reviews' => function($q) {
-                // جلب التقييمات الظاهرة فقط ويمكنك ترتيبها حسب الأحدث
-                $q->where('is_hidden', false)->latest();
+                 $q->where('is_hidden', false)->latest();
             }
         ])
         ->withAvg(['reviews' => fn($q) => $q->where('is_hidden', false)], 'rating')
