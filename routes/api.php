@@ -418,8 +418,7 @@ Route::get('videos/{id}/reports',[VideoController::class,'reports']);
     Route::post('/verifications/{id}/reject', [UserController::class, 'reject']);
 
  
-     Route::post('users/{id}',[UserController::class,'update']);
-
+ 
     Route::get('{id}/wallet', [UserController::class, 'wallet']);  
    
     Route::post('users/{id}',[UserController::class,'update']);
