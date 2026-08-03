@@ -76,4 +76,12 @@ public function packages()
     return $this->hasMany(PrivateCoachPackage::class);
 }
 
- }
+ 
+
+public function schedules()
+{
+    return $this->hasMany(CoachSchedule::class);
+}
+
+
+}

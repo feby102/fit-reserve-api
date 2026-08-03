@@ -376,6 +376,10 @@ namespace App\Models{
  * @property int $academy_id
  * @property int $max_players
  * @property numeric $price
+ * @property string|null $payment_status
+ * @property string|null $payment_method
+ * @property string|null $paymob_order_id
+ * @property string|null $transaction_id
  * @property int $duration
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -396,9 +400,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge whereDuration($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge whereMaxPlayers($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge wherePaymentMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge wherePaymentStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge wherePaymobOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge whereTransactionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Challenge whereVendorId($value)
  */
@@ -482,6 +490,15 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CoachSchedule newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CoachSchedule newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CoachSchedule query()
+ */
+	class CoachSchedule extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property int $private_coach_id
  * @property string $name
@@ -515,6 +532,7 @@ namespace App\Models{
  * @property int $user_two_id
  * @property string|null $title
  * @property string $status
+ * @property-read \App\Models\Message|null $latestMessage
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Message> $messages
  * @property-read int|null $messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $participants
@@ -568,10 +586,22 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * @property-read \App\Models\User|null $user
+ * @property int $id
+ * @property int $user_id
+ * @property string $token
+ * @property string|null $device_type
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken whereDeviceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|DeviceToken whereUserId($value)
  */
 	class DeviceToken extends \Eloquent {}
 }
@@ -891,7 +921,7 @@ namespace App\Models{
  * @property int $user_id
  * @property string $title
  * @property string $message
- * @property int $is_read
+ * @property bool $is_read
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User $user
@@ -1525,6 +1555,8 @@ namespace App\Models{
  * @property-read int|null $challenges_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $conversations
  * @property-read int|null $conversations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\DeviceToken> $deviceTokens
+ * @property-read int|null $device_tokens_count
  * @property-read mixed $average_rating
  * @property-read mixed $total_points
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LoyaltyPoint> $loyaltyPoints

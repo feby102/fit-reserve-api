@@ -262,4 +262,26 @@ public function topCoaches()
 
 
 
+
+
+
+public function setSchedules(Request $request)
+{
+
+$data=$request->validate([])
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
 }

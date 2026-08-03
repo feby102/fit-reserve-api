@@ -66,7 +66,6 @@ public function show($id)
 
     return response()->json($challenge);
 }
-
 public function store(Request $request)
 {
     $data = $request->validate([
@@ -78,24 +77,29 @@ public function store(Request $request)
         'status' => 'required|in:upcoming,ongoing,completed'
     ]);
 
-    $vendor = auth()->user();
+    $user = auth()->user();
 
-     $academy = Academy::findOrFail($data['academy_id']);
+    // جلب الـ vendor المرتبط بالـ user الحساب الحالي
+    $vendor = $user->vendor; // أو حسب اسم العلاقة عندك في موديل User
 
+    if (!$vendor) {
+        return response()->json(['message' => 'Vendor profile not found for this user.'], 404);
+    }
+
+    $academy = Academy::findOrFail($data['academy_id']);
+
+    // التحقق باستخدام vendor->id الصحيح
     if ($academy->vendor_id != $vendor->id) {
         return response()->json(['message' => 'Unauthorized'], 403);
     }
-     $challengeData = array_merge($data, [
-            'vendor_id' => $vendor->id
-        ]);
 
+    $challengeData = array_merge($data, [
+        'vendor_id' => $vendor->id  ]);
 
     $challenge = Challenge::create($challengeData);
 
     return response()->json($challenge);
 }
-
-
 
 public function update(Request $request, $id)
 {
