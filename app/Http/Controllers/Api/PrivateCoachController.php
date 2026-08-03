@@ -7,6 +7,7 @@ use App\Models\Academy;
 use App\Models\CoachLocation;
 use App\Models\CoachService;
 use App\Models\PrivateCoach;
+use App\Models\User;
 use App\Models\Vendor;
 use Hash;
 use Illuminate\Http\Request;
@@ -62,71 +63,86 @@ public function publicIndex()
     ]);
 
     $user = auth()->user();
-    
-     $vendor = \App\Models\Vendor::where('id', $user->id)->first();
 
-    if ($vendor) {
-         if (empty($data['academy_id'])) {
+     if ($user->role === 'coach' && empty($data['academy_id'])) {
+
+         $alreadyRegistered = PrivateCoach::where('user_id', $user->id)
+            ->whereNull('academy_id')
+            ->exists();
+
+        if ($alreadyRegistered) {
+            return response()->json([
+                'message' => 'You are already registered as a freelance coach.'
+            ], 422);
+        }
+
+         $vendor = Vendor::create([
+            'name'     => $user->name,
+            'email'    => $user->email,
+            'phone'    => $user->phone,
+            'city'     => $user->city,
+            'area'     => $user->area,
+            'password' => $user->password,
+            'balance'  => 0,
+        ]);
+
+        $data['vendor_id']  = $vendor->id;
+        $data['user_id']    = $user->id;
+        $data['academy_id'] = null;
+
+    } 
+     elseif (Academy::where('vendor_id', $user->id)->exists() || $user->role === 'vendor') {
+
+        if (empty($data['academy_id'])) {
             return response()->json(['message' => 'As a vendor, you must specify an academy.'], 422);
         }
 
-         if (empty($data['user_id'])) {
+        if (empty($data['user_id'])) {
             return response()->json(['message' => 'As a vendor, you must provide a valid user_id for the coach.'], 422);
         }
 
+         $alreadyInAcademy = PrivateCoach::where('user_id', $data['user_id'])
+            ->where('academy_id', $data['academy_id'])
+            ->exists();
+
+        if ($alreadyInAcademy) {
+            return response()->json([
+                'message' => 'This coach is already added to this academy.'
+            ], 422);
+        }
+
          $academyExists = \App\Models\Academy::where('id', $data['academy_id'])
-                                            ->where('vendor_id', $vendor->id)  
-                                            ->exists();
+            ->where('vendor_id', $user->id)  
+            ->exists();
 
         if (!$academyExists) {
-            return response()->json([
-                'message' => 'This academy does not belong to you.'
-            ], 403);
+            return response()->json(['message' => 'This academy does not belong to you.'], 403);
         }
 
-         $isCoach = \App\Models\User::where('id', $data['user_id'])->where('role', 'coach')->exists();
-        if (!$isCoach) {
-            return response()->json(['message' => 'The provided user_id does not belong to a coach account.'], 422);
-        }
+        $data['vendor_id'] = $user->id;
 
-    } elseif ($user->role === 'coach') {
-        $vendor = Vendor::create([
-    'name'     => $user->name,
-    'email'    => $user->email,
-    'phone'    => $user->phone,
-    'city'     => $user->city,
-    'area'     => $user->area,
-    'password' => $user->password,
-    'balance'  => 0,
-]);
-
-$data['vendor_id'] = $vendor->id;
-$data['user_id'] = $user->id;
-$data['academy_id'] = null;
-
-$coach = PrivateCoach::create($data);
-
-
-     } else {
+    } 
+     else {
         return response()->json([
             'message' => 'Unauthorized. Only Coaches or Vendors can perform this action.'
         ], 403);
-    }    
-
-     if ($request->hasFile('image')) {
-        $path = $request->file('image')->store('coach', 'public');
-        $data['image'] = $path;   
     }
 
- 
-    $coach = PrivateCoach::create($data);
+     if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image')->store('coach', 'public');
+    }
 
+     $coach = PrivateCoach::create($data);
+      
     return response()->json([
         'message' => 'Coach created successfully',
         'coach'   => $coach->load('academy')
     ], 201);
 }
- 
+
+
+
+
     public function publicShow($id)
     {
         $coach = PrivateCoach::with(['academy','locations','services'

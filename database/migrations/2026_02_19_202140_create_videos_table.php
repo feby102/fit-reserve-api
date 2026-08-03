@@ -16,7 +16,7 @@ return new class extends Migration
              $table->string('title');
             $table->text('description')->nullable();
             $table->string('url'); 
-            $table->enum('type',['user','academy','coach']);
+            $table->enum('type',['user','academy','coach','stadium','store','gym']);
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
              $table->integer('views')->default(0);
             $table->integer('likes')->default(0);
