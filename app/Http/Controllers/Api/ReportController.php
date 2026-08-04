@@ -22,6 +22,13 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+
+
+public function test()
+{
+    return response()->json(['ok' => true]);
+}
+
     public function myReport(Request $request)
     {
         $data = $request->validate([
