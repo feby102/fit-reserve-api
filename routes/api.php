@@ -350,7 +350,7 @@ Route::get('/ongoing',[ChallengeController::class, 'ongoingCallenge']);
   Route::patch('/challenges/{id}/status', [ChallengeController::class, 'status']);
 
 Route::get('/my-report', [ReportController::class, 'myReport']);
-Route::get('/reports/test', [ReportController::class, 'test']);
+Route::get('/rpt-check-xyz', [ReportController::class, 'test']);
 Route::get('/reports/daily',[ReportController::class,'dailyReport']);
 Route::get('/reports/weekly',[ReportController::class,'weekly']);
 Route::get('/reports/monthly',[ReportController::class,'monthly']);
