@@ -15,12 +15,12 @@ protected $fillable = [
 
 'total_bookings',
 'report_date'
-,'vendor_id'
+ 
 ];
 
 
-    public function vendor()
+    public function user()
     {
-        return $this->belongsTo(Vendor::class);
+        return $this->belongsTo(User::class);
     }
 }
