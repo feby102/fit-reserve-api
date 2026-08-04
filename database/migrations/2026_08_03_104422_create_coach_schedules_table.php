@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('coach_schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('private_coach_id')->constrained('private_coaches')->onDelete('cascade');
-    $table->enum('day', ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']);
-    $table->time('start_time'); // مثلاً 10:00
-    $table->time('end_time');   // مثلاً 12:00
+            $table->enum('day', ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']);
+            $table->time('start_time');   
+            $table->time('end_time');    
             $table->timestamps();
         });
     }

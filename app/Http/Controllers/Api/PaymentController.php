@@ -18,7 +18,7 @@ use App\Models\PendingVerification;
 use App\Models\User;
 use App\Models\VerificationRequest;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\ChallengeParticipant;
 class PaymentController extends Controller
 {
     public function updateStatus(Request $request, $id)
