@@ -43,7 +43,7 @@ public function store(Request $request)
         $validator =$request->validate([
             'title'        => 'required|string|max:255',
             'description'  => 'nullable|string',
-            'url'          => 'required|url',  
+            'video'          => 'required|file|mimes:mp4,mov,avi|max:51200',  
             'type'         => 'required|in:user,academy,coach,stadium,store,gym',
             'academy_id'   => 'nullable|exists:academies,id',
             'coach_id'     => 'nullable|exists:private_coaches,id',
@@ -54,11 +54,13 @@ public function store(Request $request)
        
         ]);
 
+
+        $url=$request->file('video')->store('videos','public');
          
 $video = Video::create([
     'title'       => $request->title,
     'description' => $request->description,
-    'url'         => $request->url,
+    'url'         => $url,
     'type'        => $request->type,
     'user_id'     => auth()->id(),  
     'academy_id'  => $request->academy_id,
@@ -73,7 +75,7 @@ $video = Video::create([
 ]);
         return response()->json([
             'message' => 'Video uploaded successfully',
-            'data'    => $video->load(['academy', 'coach'])
+            'data'    => $video
         ], 201);
     }
 
