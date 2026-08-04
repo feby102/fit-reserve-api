@@ -240,9 +240,7 @@ Route::post('wallet/transfer',[UserController::class,'transfer']);
 
 
 
-
-Route::middleware('auth:user-api')->prefix('/vendor')->group(function(){
-
+Route::middleware('auth:sanctum')->prefix('/vendor')->group(function(){
 Route::apiResource('/stadiums',StadiumController::class);
     Route::get('/stadiums/{id}/stats',[StadiumController::class, 'stats']);
  Route::get('/stadium/heatmap',[StadiumController::class, 'heatmap']);
