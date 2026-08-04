@@ -47,6 +47,12 @@ Route::get('/clear-cache', function() {
 });
  
 
+Route::get('/test-report', function () {
+    return response()->json([
+        'success' => true
+    ]);
+});
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
