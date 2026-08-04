@@ -263,28 +263,38 @@ public function topCoaches()
 
 
 
-
-
+ 
 public function setSchedules(Request $request)
 {
-
-$data=$request->validate([
-    'private_coach_id'=>'required|exists:private_coaches,id',
-    'schedules'       => 'required|array|min:1',
-    'schedules.*.day'        => 'required|string|in:sunday,monday,tuesday,wednesday,thursday,friday,saturday'
-  , 'schedules.*.start_time' => 'required|date_format:H:i',
+    $request->validate([
+        'coach_id'               => 'required|exists:private_coaches,id',
+        'schedules'              => 'required|array|min:1',
+        'schedules.*.day'        => 'required|string|in:sunday,monday,tuesday,wednesday,thursday,friday,saturday',
+        'schedules.*.start_time' => 'required|date_format:H:i',
         'schedules.*.end_time'   => 'required|date_format:H:i|after:schedules.*.start_time',
     ]);
 
-
-$user = auth()->user();
+    $user = auth()->user();
     $coach = PrivateCoach::findOrFail($request->coach_id);
 
-// if($user->role=='coach'||$coach->vendor!=){}
+     if ($user->role === 'coach' && $coach->user_id !== $user->id) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
 
+    if ($user->role === 'vendor' && $coach->vendor_id !== $user->id) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
 
+    
+    $coach->schedules()->delete();
+
+     $schedules = $coach->schedules()->createMany($request->schedules);
+
+    return response()->json([
+        'message'   => 'Schedules updated successfully',
+        'schedules' => $schedules
+    ], 200);
 }
-
 
 
 
