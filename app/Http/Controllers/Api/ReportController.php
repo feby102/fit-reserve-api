@@ -176,14 +176,14 @@ class ReportController extends Controller
         $type = $data['type'];
         $today = Carbon::today();
 
-         $vendor = $request->user()->vendor;
+         $vendor = \auth()->user();
 
         if (!$vendor) {
             return response()->json(['message' => 'Vendor not found for this user'], 404);
         }
 
         $bookings = Booking::whereHas('bookable', function($query) use ($vendor) {
-    $query->where('vendor_id', $vendor->id);
+    $query->where('user_id', $vendor->id);
 })
 ->when($type == 'daily', fn($q) => $q->whereDate('start_time', $today))
 ->when($type == 'weekly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfWeek()))

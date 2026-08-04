@@ -268,12 +268,19 @@ public function topCoaches()
 public function setSchedules(Request $request)
 {
 
-$data=$request->validate([])
+$data=$request->validate([
+    'private_coach_id'=>'required|exists:private_coaches,id',
+    'schedules'       => 'required|array|min:1',
+    'schedules.*.day'        => 'required|string|in:sunday,monday,tuesday,wednesday,thursday,friday,saturday'
+  , 'schedules.*.start_time' => 'required|date_format:H:i',
+        'schedules.*.end_time'   => 'required|date_format:H:i|after:schedules.*.start_time',
+    ]);
 
 
+$user = auth()->user();
+    $coach = PrivateCoach::findOrFail($request->coach_id);
 
-
-
+if($user->role=='coach'||$coach->vendor!=){}
 
 
 }

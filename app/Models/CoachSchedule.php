@@ -11,7 +11,10 @@ class CoachSchedule extends Model
 
 
 
-public function cach
+public function coach(){
+
+return $this->belongsTo(PrivateCoach::class);
+}
 
 
 
