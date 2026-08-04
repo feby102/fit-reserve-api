@@ -169,6 +169,8 @@ class ReportController extends Controller
 
   public function myReport(Request $request)
     {
+
+      dd('دخل');
         $data = $request->validate([
             'type' => 'required|in:daily,weekly,monthly,yearly',
         ]);
