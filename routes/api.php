@@ -305,6 +305,9 @@ Route::get('/gyms/{id}', [GymController::class, 'show']);
 Route::apiResource('private-coaches',PrivateCoachController::class);
 Route::post('/coaches/location', [PrivateCoachController::class, 'addLocation']);
 Route::post('/coaches/service', [PrivateCoachController::class, 'addService']);
+Route::get('/coaches/{coach_id}/schedules', [PrivateCoachController::class, 'getSchedules']);
+    
+     Route::post('/coaches/schedules', [PrivateCoachController::class, 'setSchedules']);
 
 
 Route::get('/my-coach-bookings',[CoachBookingController::class,'myBookings']);

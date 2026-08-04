@@ -298,10 +298,14 @@ public function setSchedules(Request $request)
 
 
 
-public function test()
+public function getSchedules($coach_id)
 {
-    return response()->json(['ok' => true]);
-}
+    $coach = PrivateCoach::with('schedules')->findOrFail($coach_id);
 
+    return response()->json([
+        'coach_id'  => $coach->id,
+        'schedules' => $coach->schedules
+    ]);
+}
 
 }
