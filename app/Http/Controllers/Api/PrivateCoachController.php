@@ -288,7 +288,10 @@ $user = auth()->user();
 
 
 
-
+public function test()
+{
+    return response()->json(['ok' => true]);
+}
 
 
 }
