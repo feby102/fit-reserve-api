@@ -171,49 +171,48 @@ class ReportController extends Controller
     {
 
       dd('دخل');
-//         $data = $request->validate([
-//             'type' => 'required|in:daily,weekly,monthly,yearly',
-//         ]);
+        $data = $request->validate([
+            'type' => 'required|in:daily,weekly,monthly,yearly',
+        ]);
 
-//         $type = $data['type'];
-//         $today = Carbon::today();
-// $user = auth()->user();
+        $type = $data['type'];
+        $today = Carbon::today();
+$user = auth()->user();
 
-// if (!$user) {
-//     return response()->json(['message' => 'User not found'], 404);
-// }
+if (!$user) {
+    return response()->json(['message' => 'User not found'], 404);
+}
 
-// $bookings = Booking::whereHas('bookable', function ($query) use ($user) {
-//     $query->where('user_id', $user->id);
+$bookings = Booking::whereHas('bookable', function ($query) use ($user) {
+    $query->where('user_id', $user->id);
 
-// })
-// ->when($type == 'daily', fn($q) => $q->whereDate('start_time', $today))
-// ->when($type == 'weekly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfWeek()))
-// ->when($type == 'monthly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfMonth()))
-// ->when($type == 'yearly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfYear()))
-// ->get();
-//         $totalProfit = $bookings->sum('total_price');
-//         $totalBookings = $bookings->count();
-// $report = Report::updateOrCreate(
-// [
-//     'user_id' => $user->id,
-//     'type' => $type,
-//     'report_date' => $today,
-// ],
-// [
-//     'total_profit' => $totalProfit,
-//     'total_bookings' => $totalBookings,
-// ]
-// );
-
-//         return response()->json([
-//     'user_id' => $user->id,
-//     'user_name' => $user->name,
-//     'report_type' => $type,
-//     'report_date' => $today->toDateString(),
-//     'total_profit' => $totalProfit,
-//     'total_bookings' => $totalBookings,
-// ]);
+})
+->when($type == 'daily', fn($q) => $q->whereDate('start_time', $today))
+->when($type == 'weekly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfWeek()))
+->when($type == 'monthly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfMonth()))
+->when($type == 'yearly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfYear()))
+->get();
+        $totalProfit = $bookings->sum('total_price');
+        $totalBookings = $bookings->count();
+$report = Report::updateOrCreate(
+    [
+        'user_id'     => $user->id,
+        'type'        => $type,
+        'report_date' => $today,
+    ],
+    [
+        'total_profit'   => $totalProfit,
+        'total_bookings' => $totalBookings,
+    ]
+);
+        return response()->json([
+    'user_id' => $user->id,
+    'user_name' => $user->name,
+    'report_type' => $type,
+    'report_date' => $today->toDateString(),
+    'total_profit' => $totalProfit,
+    'total_bookings' => $totalBookings,
+]);
     }
 
  
