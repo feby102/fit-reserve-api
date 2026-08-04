@@ -175,15 +175,14 @@ class ReportController extends Controller
 
         $type = $data['type'];
         $today = Carbon::today();
+$user = auth()->user();
 
-         $vendor = \auth()->user();
+if (!$user) {
+    return response()->json(['message' => 'User not found'], 404);
+}
 
-        if (!$vendor) {
-            return response()->json(['message' => 'Vendor not found for this user'], 404);
-        }
-
-        $bookings = Booking::whereHas('bookable', function($query) use ($vendor) {
-    $query->where('user_id', $vendor->id);
+        $bookings = Booking::whereHas('bookable', function($query) use ($user) {
+    $query->where('user_id', $user->id);
 })
 ->when($type == 'daily', fn($q) => $q->whereDate('start_time', $today))
 ->when($type == 'weekly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfWeek()))
@@ -192,27 +191,26 @@ class ReportController extends Controller
 ->get();
         $totalProfit = $bookings->sum('total_price');
         $totalBookings = $bookings->count();
-
-         $report = Report::updateOrCreate(
-            [
-                'vendor_id' => $vendor->id,
-                'type' => $type,
-                'report_date' => $today,
-            ],
-            [
-                'total_profit' => $totalProfit,
-                'total_bookings' => $totalBookings,
-            ]
-        );
+$report = Report::updateOrCreate(
+[
+    'user_id' => $user->id,
+    'type' => $type,
+    'report_date' => $today,
+],
+[
+    'total_profit' => $totalProfit,
+    'total_bookings' => $totalBookings,
+]
+);
 
         return response()->json([
-            'vendor_id' => $vendor->id,
-            'vendor_name' => $vendor->name,
-            'report_type' => $type,
-            'report_date' => $today->toDateString(),
-            'total_profit' => $totalProfit,
-            'total_bookings' => $totalBookings,
-        ]);
+    'user_id' => $user->id,
+    'user_name' => $user->name,
+    'report_type' => $type,
+    'report_date' => $today->toDateString(),
+    'total_profit' => $totalProfit,
+    'total_bookings' => $totalBookings,
+]);
     }
 
  

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('type');// daily,weekly,monthly,yearly
             $table->decimal('total_profit', 10, 2)->default(0);
             $table->integer('total_bookings')->default(0);
