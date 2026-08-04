@@ -26,6 +26,9 @@ class ReportController extends Controller
 
     public function myReport(Request $request)
     {
+
+
+
         $data = $request->validate([
             'type' => 'required|in:daily,weekly,monthly,yearly',
         ]);
@@ -134,7 +137,14 @@ class ReportController extends Controller
 
     public function dailyReport()
     {
-        $vendor = auth()->user();
+     
+    
+    return response()->json([
+        'user' => auth()->user(),
+        'check' => auth()->check(),
+    ]);
+    
+    $vendor = auth()->user();
         $date = Carbon::today();
 
         $bookings = Booking::whereDate('created_at', $date)
