@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,11 +17,21 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         
         $middleware->validateCsrfTokens(except: [
-        'paymob/webhook', // تأكدي إن ده نفس مسار الراوت في api.php
-    ]);
+            'paymob/webhook',
+        ]);
         
-        $middleware->alias(['admin'=>\App\Http\Middleware\AdminMiddleware::class,]);
+        $middleware->alias(['admin' => \App\Http\Middleware\AdminMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        
+        // معالجة خطأ عدم تسجيل الدخول لـ API وإرجاع JSON دائماً
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Unauthenticated or Invalid Token.'
+                ], 401);
+            }
+        });
+
     })->create();

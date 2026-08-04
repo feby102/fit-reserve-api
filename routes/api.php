@@ -50,7 +50,7 @@ Route::get('/clear-cache', function() {
  
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/forgot-password', [AuthController::class, 'sendResetCode']);
 Route::post('/reset-password', [AuthController::class, 'reset']);
 
