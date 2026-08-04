@@ -181,8 +181,9 @@ if (!$user) {
     return response()->json(['message' => 'User not found'], 404);
 }
 
-        $bookings = Booking::whereHas('bookable', function($query) use ($user) {
+$bookings = Booking::whereHas('bookable', function ($query) use ($user) {
     $query->where('user_id', $user->id);
+
 })
 ->when($type == 'daily', fn($q) => $q->whereDate('start_time', $today))
 ->when($type == 'weekly', fn($q) => $q->where('start_time', '>=', Carbon::now()->startOfWeek()))

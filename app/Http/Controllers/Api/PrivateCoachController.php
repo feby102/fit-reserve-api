@@ -280,7 +280,7 @@ $data=$request->validate([
 $user = auth()->user();
     $coach = PrivateCoach::findOrFail($request->coach_id);
 
-if($user->role=='coach'||$coach->vendor!=){}
+// if($user->role=='coach'||$coach->vendor!=){}
 
 
 }
