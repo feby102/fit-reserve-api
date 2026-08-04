@@ -31,8 +31,7 @@ class ReportController extends Controller
         $type = $data['type'];
         $today = Carbon::today();
         $user = auth()->user();
-dd($user);
-        if (!$user) {
+         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
