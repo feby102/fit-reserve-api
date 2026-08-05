@@ -187,6 +187,12 @@ $vendor = auth()->user();
     'image' => 'nullable|image'
 ]);
 
+  if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('gyms', 'public');
+            $data['image'] = $path;   
+        
+
+}
 
 $gym->update($data);
 
