@@ -172,13 +172,13 @@ return \response()->json([ 'message'=>'Gym created',
 
     public function update(Request $request, string $id)
     {   
+$vendor = auth()->user();
 
         $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
 
      $this->authorize('update',$gym);   
     
-    $vendor = auth()->user();
-
+    
     $data = $request->validate([
     'name' => 'sometimes|string',
     'type' => 'sometimes|string',

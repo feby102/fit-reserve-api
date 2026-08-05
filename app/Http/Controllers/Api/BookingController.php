@@ -10,6 +10,7 @@ use App\Models\AcademyPlan;
 use App\Models\AcademyService;
 use App\Models\AcademySubscription;
 use App\Models\Booking;
+use App\Models\CoachSchedule;
 use App\Models\CoachService;
 use App\Models\Coupon;
 use App\Models\Facility;
@@ -88,6 +89,13 @@ $data=$request->validate([
 ]);
 
     $user=$request->user();
+    if($data['bookable_type']==='coach'){
+$CoachSchedule=CoachSchedule::findOrfail($data['bookable_id']);
+ $data=$request->validate([
+    'start_time'=>'required|date_format:H:i|exists:table,column'
+ ])
+
+    }
 $start_datetime=Carbon::parse($data['date'].' '.$data['start_time']);
 
     $wallet=$request->user()->wallet;
