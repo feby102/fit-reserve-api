@@ -110,7 +110,7 @@ public function show(string $id)
 
      public function store(Request $request ,NotificationService $notificationService)
     {
-$this->authorize('create',Stadium::class);
+$this->authorize('create',Gym::class);
 
         $data=$request->validate([
 'name'=>'required|string',
