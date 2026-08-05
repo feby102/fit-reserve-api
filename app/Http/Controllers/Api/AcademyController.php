@@ -82,7 +82,8 @@ public function index()
     $academy = Academy::with([
         'plans',
         'services',
-        'reviews.user'
+        'reviews.user', 'videos'
+
     ])
     ->where('vendor_id', $vendor->id)
     ->findOrFail($id);

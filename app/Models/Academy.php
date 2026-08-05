@@ -30,18 +30,11 @@ protected function image(): Attribute
     );
 }
 
-
-public function videos()
-{
-    return $this->hasMany(Video::class);
-}
-
-// public function vendor(){
-//     return $this->belongsTo(Vendor::class);
-// }
-
-
-
+ 
+     public function videos()
+    {
+        return $this->hasMany(Video::class)->where('status', 'approved')->latest();
+    }
 
 
 public function vendor(){
