@@ -171,7 +171,7 @@ return \response()->json([ 'message'=>'Gym created',
 
 
     public function update(Request $request, string $id)
-    {   
+    {   dd( $request->file('image'));
 $vendor = auth()->user();
 
         $gym = Gym::where('vendor_id', $vendor->id)->findOrFail($id);
