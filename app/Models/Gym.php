@@ -3,7 +3,7 @@
 namespace App\Models;
 
 
-use Attribute;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Storage;
 class Gym extends Model
@@ -23,13 +23,7 @@ public function getImageUrlAttribute()
 
     return null;  }
 
-
-protected function image(): Attribute
-{
-    return Attribute::make(
-        get: fn ($value) => $value ? url(Storage::url($value)) : null,
-    );
-}
+ 
 
 
 public function videos()
