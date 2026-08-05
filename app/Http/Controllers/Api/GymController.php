@@ -194,7 +194,11 @@ $vendor = auth()->user();
 
 }
 
-$gym->update($data);
+$gym->update([
+ $data,
+'image' => $data['image'] ?? null,
+
+]);
 
 return $gym;
     }
