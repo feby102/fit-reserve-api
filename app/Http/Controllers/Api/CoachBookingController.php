@@ -52,7 +52,7 @@ $booking = CoachBooking::create([
 
 'hours'=>$request->hours,
 
-'total_price'=>$total_price,
+// 'total_price'=>$total_price,
 
 'status'=>'confirmed'
 
