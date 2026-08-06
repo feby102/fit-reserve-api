@@ -351,10 +351,9 @@ return GymplansResource::collection($plans);
 public function Gymplans($id)
 {
 
-$plans = GymPlan::where('gym_id',$id)->get();
+$plan = GymPlan::where('gym_id', $id)->first();
 
-return GymplansResource::collection($plans);
-
+return new GymplansResource($plan);
 }
 
 
