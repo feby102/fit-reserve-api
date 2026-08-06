@@ -18,8 +18,7 @@ class GymplansResource extends JsonResource
         'name'=>$this->name,
           'gym_id'=> $this->gym_id,
         'duration'=>$this->duration,
-        'name'=>$this->name,
-        'price'=>$this->price,
+         'price'=>$this->price,
         'gym_plan'=>$this->id
         
         ];
