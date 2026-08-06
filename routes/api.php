@@ -146,6 +146,8 @@ Route::get('/reviews/{type}/{id}/average',[ReviewController::class,'average']);
  Route::get('/PublicIndex',[GymController::class,'PublicIndex']);
  Route::get('/gyms/{id}', [GymController::class, 'publicShow']);
 Route::get('/gym-plans',[GymController::class,'showplans']);
+Route::get('/gym-plans/{id}',[GymController::class,'Gymplans']);
+
 Route::post('/gym-subscribe',[GymController::class,'subscribe']) ;
 
 

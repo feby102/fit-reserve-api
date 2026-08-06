@@ -21,10 +21,23 @@ $data = $request->validate([
 
 $user=$request->user();
 $end_time=Carbon::parse($request->start_time)->addHour($request->hours);
+ 
+$schedule=CoachSchedule::where('id',$data['schedule_id'])->where('private_coach_id',$data['coach_id'])
+                        ->whereNull('is_booked')->first();
+ 
 
-$coach = PrivateCoach::findOrFail($request->private_coach_id);
-$total_price=$request->hours*$coach->price_per_hour;
+ if (!$schedule) {
 
+    return response()->json([
+        'message' => 'This slot is not available.'
+    ],422);
+
+}
+
+
+
+$coach = PrivateCoach::findOrFail($data['coach_id']);
+$total = $coach->price_per_hour;
 
 
 $booking = CoachBooking::create([
