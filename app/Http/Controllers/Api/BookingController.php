@@ -266,7 +266,7 @@ $commissionRate = $settings ? $settings->commission_rate : 0;
 
 
 
-DB::transaction(function () use ($commissionRate,$notificationService, $vendor,$request, $start_datetime, $user, $wallet, $bookable, $total, $data, $hours, $end_datetime) {
+DB::transaction(function () use ($commissionRate,$notificationService,$request, $start_datetime, $user, $wallet, $bookable, $total, $data, $hours, $end_datetime) {
 
 $subscription = null;  
 
@@ -427,12 +427,7 @@ $wallet->transactions()->create([
     'status' => 'confirmed'
 ]);
 
-         $wallet->transactions()->create([
-            'type' => 'debit',
-            'amount' => $total,
-            'description' => 'booking' . $data['bookable_type'] . ' num#' . $bookable->id,
-            'status' => 'confirmed'
-        ]);
+         
     }          
 
 

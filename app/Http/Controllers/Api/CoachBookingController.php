@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\CoachBooking;
 use App\Models\CoachSchedule;
 use App\Models\PrivateCoach;
+use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CoachBookingController extends Controller
 {
@@ -20,10 +22,9 @@ $data = $request->validate([
     ]);
 
 $user=$request->user();
-$end_time=Carbon::parse($request->start_time)->addHour($request->hours);
- 
+  
 $schedule=CoachSchedule::where('id',$data['schedule_id'])->where('private_coach_id',$data['coach_id'])
-                        ->whereNull('is_booked')->first();
+                        ->where('is_booked', false)->first();
  
 
  if (!$schedule) {
@@ -34,33 +35,80 @@ $schedule=CoachSchedule::where('id',$data['schedule_id'])->where('private_coach_
 
 }
 
-
+    $wallet=$request->user()->wallet;
 
 $coach = PrivateCoach::findOrFail($data['coach_id']);
 $total_price = $coach->price_per_hour;
 
 
+
+$settings = \App\Models\Setting::first();
+$commissionRate = $settings ? $settings->commission_rate : 0;  
+
+
+DB::transaction(function () use($commissionRate,$coach,$schedule,$total_price,$user,$data,$request,$wallet){
+
+if($data['payment_method']=="visa"){
+$paymentController=new PaymentController;
+return $paymentController->payWithvisa($request,$total_price);
+}
+
+
+
 $booking = CoachBooking::create([
-
-'user_id'=>$user->id,
-
-'private_coach_id'=>$coach->id,
-
-'start_time'=>$request->start_time,
-
-'end_time'=>$end_time,
-
-'hours'=>$request->hours,
-
-'total_price'=>$total_price,
-
-'status'=>'confirmed'
-
+    'user_id' => $user->id,
+    'private_coach_id' => $coach->id,
+    'schedule_id' => $schedule->id,
+    'start_time' => Carbon::parse($schedule->date.' '.$schedule->start_time),
+    'end_time' => Carbon::parse($schedule->date.' '.$schedule->end_time),
+    'payment_method' => $data['payment_method'],
+    'total_price' => $total_price,
+   'status' => 'pending'
 ]);
 
+$schedule->update([
+    'is_booked' => true,
+]);
+
+$settings = \App\Models\Setting::first();
+    $commissionRate = $settings ? $settings->commission_rate : 0;
+$commissionAmount = ($total_price * $commissionRate) / 100; 
 
 
-return response()->json(['message'=>'Coach booked','booking'=>$booking]);
+    $vendorNetProfit = $total_price - $commissionAmount;    
+    app(WalletService::class)->credit(
+    $coach->vendor->wallet,
+    $vendorNetProfit,
+    'coach_booking',
+    'Coach Booking #' . $booking->id
+);
+    
+app(WalletService::class)->debit(
+    $user,
+    $total_price,
+    'booking_payment',
+    'Booking #' . $booking->id
+);
+
+
+if ($settings) {
+        $settings->increment('total_admin_commissions', $commissionAmount);
+    }
+
+$wallet->transactions()->create([
+    'type' => 'debit',
+    'amount' => $total_price,
+    'description' => 'Coach booking #' . $booking->id,
+    'status' => 'confirmed'
+]);
+ 
+    
+
+
+
+});
+
+return response()->json(['message'=>'Coach booking successful']);
 
 
 }
