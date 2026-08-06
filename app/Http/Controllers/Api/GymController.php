@@ -350,17 +350,17 @@ return GymplansResource::collection($plans);
 
 public function Gymplans($id)
 {
+$plans = GymPlan::where('gym_id', $id)->get();
+ 
 
-$plan = GymPlan::where('gym_id', $id)->first();
-
- if (!$plan) {
+ if (!$plans) {
         return response()->json([
             'message' => 'No plans found for this gym'
         ], 404);
     }
 
 
-return new GymplansResource($plan);
+return GymplansResource::collection($plans);
 }
 
 

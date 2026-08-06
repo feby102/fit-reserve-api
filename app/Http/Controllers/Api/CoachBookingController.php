@@ -37,7 +37,7 @@ $schedule=CoachSchedule::where('id',$data['schedule_id'])->where('private_coach_
 
 
 $coach = PrivateCoach::findOrFail($data['coach_id']);
-$total = $coach->price_per_hour;
+$total_price = $coach->price_per_hour;
 
 
 $booking = CoachBooking::create([
@@ -52,7 +52,7 @@ $booking = CoachBooking::create([
 
 'hours'=>$request->hours,
 
-// 'total_price'=>$total_price,
+'total_price'=>$total_price,
 
 'status'=>'confirmed'
 
