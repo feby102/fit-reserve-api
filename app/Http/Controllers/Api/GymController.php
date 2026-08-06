@@ -353,6 +353,13 @@ public function Gymplans($id)
 
 $plan = GymPlan::where('gym_id', $id)->first();
 
+ if (!$plan) {
+        return response()->json([
+            'message' => 'No plans found for this gym'
+        ], 404);
+    }
+
+
 return new GymplansResource($plan);
 }
 
