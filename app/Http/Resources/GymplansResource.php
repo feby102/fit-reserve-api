@@ -20,7 +20,7 @@ class GymplansResource extends JsonResource
         'duration'=>$this->duration,
         'name'=>$this->name,
         'price'=>$this->price,
-        
+        'gym_plan'=>$this->id
         
         ];
     }

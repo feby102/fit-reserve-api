@@ -134,7 +134,7 @@ Route::get('/academies/{academy}/services',[AcademyServiceController::class,'ind
  Route::get('/coaches', [PrivateCoachController::class, 'publicIndex']);
  Route::get('/coaches/{id}', [PrivateCoachController::class, 'publicShow']);
 
-
+Route::get('/coaches/{coach}/available-slots',[CoachBookingController::class,'availableSlots']);
  
 
 Route::post('/reviews',[ReviewController::class,'store']);

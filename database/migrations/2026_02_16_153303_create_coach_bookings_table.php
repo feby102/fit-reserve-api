@@ -17,9 +17,10 @@ return new class extends Migration
 
     $table->foreignId('user_id')->constrained()->cascadeOnDelete();
     $table->foreignId('private_coach_id')->constrained()->cascadeOnDelete();
+    $table->foreignId('schedule_id')->constrained('coach_schedules')->cascadeOnDelete();
     $table->dateTime('start_time');
     $table->dateTime('end_time');
-    $table->integer('hours');
+     $table->string('payment_method')->default('cash'); // visa, cash, wallet
     $table->decimal('total_price',10,2);
     $table->enum('status',['confirmed','cancelled'])
         ->default('confirmed');

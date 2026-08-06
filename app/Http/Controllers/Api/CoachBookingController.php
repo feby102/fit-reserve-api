@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\CoachBooking;
+use App\Models\CoachSchedule;
 use App\Models\PrivateCoach;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -12,16 +13,11 @@ class CoachBookingController extends Controller
 {
     public function store(Request $request)
 {
-
-$request->validate([
-
-'private_coach_id'=>'required|exists:private_coaches,id',
-
-'start_time'=>'required|date',
-
-'hours'=>'required|integer'
-
-]);
+$data = $request->validate([
+        'coach_id' => 'required|exists:private_coaches,id',
+        'schedule_id' => 'required|exists:coach_schedules,id',
+        'payment_method' => 'required|in:wallet,visa,vodafone_cash',
+    ]);
 
 $user=$request->user();
 $end_time=Carbon::parse($request->start_time)->addHour($request->hours);
@@ -83,4 +79,32 @@ public function coachStats($coach_id)
         'total_bookings' => $totalBookings,
         'revenue' => $revenue
     ]);
-}}
+}
+
+
+
+
+
+
+public function availableSlots(Request $request,$coachId)
+{
+
+$day=Carbon::parse($request->day)->format('l');
+$slots = CoachSchedule::where('private_coach_id',$coachId)
+        ->where('day',$day)
+        ->whereNull('booking_id')
+        ->orderBy('start_time')
+        ->get();
+
+    return response()->json($slots);
+
+
+}
+
+
+
+
+
+
+
+}
