@@ -311,7 +311,10 @@ Route::get('/coaches/{coach_id}/schedules', [PrivateCoachController::class, 'get
     
      Route::post('/coaches/schedules', [PrivateCoachController::class, 'setSchedules']);
 
+
+
      
+     Route::get('/coach/{coach}/available-slots', [CoachBookingController::class, 'availableSlots']);
  Route::post('/coach/book', [CoachBookingController::class, 'store']);
 Route::get('/my-coach-bookings',[CoachBookingController::class,'myBookings']);
 Route::get('/coach/{id}/stats',[CoachBookingController::class,'coachStats']);
