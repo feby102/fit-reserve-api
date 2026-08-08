@@ -11,6 +11,17 @@ class Video extends Model
         'status','stadium_id','gym_id','store_id'
     ];
 
+
+
+protected $appends = ['url'];
+
+public function getUrlAttribute(){
+
+
+return $this->url?asset('storage/'.$this->url):null;
+
+}
+
     public function user()
     {
         return $this->belongsTo(User::class);
