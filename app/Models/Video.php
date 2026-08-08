@@ -12,15 +12,14 @@ class Video extends Model
     ];
 
 
+  protected $appends = ['url'];
 
-protected $appends = ['url'];
-
-public function getUrlAttribute(){
-
-
-return $this->url?asset('storage/'.$this->url):null;
-
-}
+    public function getUrlAttribute()
+    {
+        return !empty($this->attributes['url'])
+            ? asset('storage/' . $this->attributes['url'])
+            : null;
+    }
 
     public function user()
     {
